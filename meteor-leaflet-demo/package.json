@@ -1,0 +1,22 @@
+{
+  "name": "meteor-leaflet-demo",
+  "version": "1.0.0",
+  "description": "## Demo meteor run",
+  "main": "mobile-config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bevanhunt/meteor-leaflet-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bevanhunt/meteor-leaflet-demo/issues"
+  },
+  "homepage": "https://github.com/bevanhunt/meteor-leaflet-demo#readme",
+  "dependencies": {
+    "@babel/runtime": "7.0.0-beta.55"
+  }
+}

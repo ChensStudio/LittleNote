@@ -1,1 +1,9 @@
+OSM:
 https://wiki.openstreetmap.org/wiki/Main_Page
+https://learnosm.org/en/
+
+LeafLet:
+https://leafletjs.com/
+https://stackoverflow.com/questions/16571079/using-leaflet-with-meteor
+https://leafletjs.com/examples/custom-icons/
+

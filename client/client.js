@@ -18,7 +18,7 @@ Template.map.rendered = function() {
     doubleClickZoom: false
   }).setView([49.25044, -123.137], 13);
 
-  L.tileLayer.provider('Stamen.Terrain').addTo(map);
+  L.tileLayer.provider('Stamen.Terrain', {maxZoom: 16}).addTo(map);
 
 
   map.on('dblclick', function(event) {

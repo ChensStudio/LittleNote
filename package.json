@@ -1,21 +1,21 @@
 {
-  "name": "meteor-leaflet-demo",
+  "name": "littlenote",
   "version": "1.0.0",
-  "description": "## Demo meteor run",
+  "description": "A littlenote on MOAC chain",
   "main": "mobile-config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bevanhunt/meteor-leaflet-demo.git"
+    "url": "git+https://github.com/ChensStudio/LittleNote.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bevanhunt/meteor-leaflet-demo/issues"
+    "url": "https://github.com/ChensStudio/LittleNote/issues"
   },
-  "homepage": "https://github.com/bevanhunt/meteor-leaflet-demo#readme",
+  "homepage": "https://github.com/ChensStudio/LittleNote#readme",
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55"
   }

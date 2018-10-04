@@ -65,7 +65,7 @@ Template.map.rendered = function() {
 
     var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
     polygon = L.polygon(latlngs, {color: 'green'}).addTo(map);
-  })
+  });
 
   // add clustermarkers
   var markers = L.markerClusterGroup();

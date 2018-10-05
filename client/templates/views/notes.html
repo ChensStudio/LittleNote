@@ -1,0 +1,35 @@
+<template name="note">
+    <div class="notecontainer">
+        <div>
+            <div>
+                <span class="notelink">
+                    <a href={{notelink}}><i class="fas fa-link"></i></a>
+                </span> 
+                <span class="noteuser">{{noteuser}}</span>
+                <span class="notetime">{{notetime}}</span>
+            </div>
+            <div class="noteaccount">{{noteaccount}}</div>
+            <div class="notetext">{{notetext}}</div>
+            <div>
+                <span class="notelat">{{_ "app.Lat"}}{{notelat}}</span>
+                <span class="notelng">{{_ "app.Lng"}}{{notelng}}</span>
+            </div>
+        </div>
+        {{#if isForSell}}
+            <div class="forsell">{{noteforsellinfo}}</div>
+        {{else}}
+            <div class="notforsell">{{notenotforsell}}</div>
+        {{/if}}
+    </div>
+</template>
+
+<template name="notesbody">
+    <div class="subtitle">{{_ "app.NewNotes"}}</div>
+    <div class="rTable">
+        <div class="rTableBody">
+            {{#each notes}}
+                {{> note}}
+            {{/each}}
+        </div>
+    </div>
+</template>

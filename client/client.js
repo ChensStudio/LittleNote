@@ -1,3 +1,5 @@
+
+
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
@@ -26,7 +28,6 @@ Template.map.rendered = function() {
   var map = L.map('map', {
     doubleClickZoom: false
   }).setView([49.25044, -123.137], 13);
-  navigator.geolocation.getCurrentPosition(setPosition);
   // var map = L.map('map', {
   //   doubleClickZoom: false
   // }).setView([currLatitude, currLongitude], 13);
@@ -38,6 +39,8 @@ Template.map.rendered = function() {
       id: 'mapbox.streets',
       accessToken: 'sk.eyJ1IjoiYmlhamVlIiwiYSI6ImNqbXN2eWtpazI5emszcGs0MDdnc2JheGUifQ.bBoM1hQuhMOtL8bl87EtBg'
   }).addTo(map);
+
+  navigator.geolocation.getCurrentPosition(setPosition);
 
   map.on('dblclick', function(event) {
     Markers.insert({latlng: event.latlng});

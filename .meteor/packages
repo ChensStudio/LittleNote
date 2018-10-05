@@ -27,3 +27,4 @@ bevanhunt:leaflet
 crosswalk@1.7.1
 dynamic-import@0.4.2
 underscore
+tap:i18n

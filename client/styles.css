@@ -51,6 +51,69 @@ body {
   text-align: center;
 }
 
+/* for notes */
+.subtitle {
+  border-style: solid;
+  border-color: grey;
+  border-width: 0px 0px 1px 0px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+.notecontainer {
+  border-style: solid;
+  border-color: lightgrey;
+  border-width: 0px 0px 1px 0px;
+  margin-right: 3px;
+  margin-left: 3px;
+  padding: 2px 1px 2px 1px;
+}
+
+.notelink {
+  color: grey;
+  font-size: 11px;
+  font-color: grey;
+}
+
+.notelat {
+  color: grey;
+  font-size: 11px;
+  margin-left: 14px;
+  margin-bottom: 2px;
+  font-style: italic;
+}
+
+.notelng {
+  color: grey;
+  font-size: 11px;
+  margin-left: 14px;
+  margin-bottom: 2px;
+  font-style: italic;
+}
+
+.noteuser {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.notetime {
+  font-size: 11px;
+  color: grey;
+}
+
+.noteaccount {
+  margin-left: 14px;
+  font-size: 9px;
+  color: grey;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.notetext {
+  margin-left: 14px;
+  margin-bottom: 2px;
+}
+
+
 @media all and (max-width: 480px) {
   /* styles for iPhone/Android landscape (and really narrow browser windows) */
   html, body {

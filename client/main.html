@@ -1,6 +1,7 @@
 <head>
   <title>MOAC Little Note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
 
 <body>
@@ -14,7 +15,9 @@
         <div class="mapcontainer">
           <div id="map" class="map"></div>
         </div>
-        <div id="notes" class="notes"></div>
+        <div id="notes" class="notes">
+          {{> notesbody}}
+        </div>
       </div>
       <div class="notice">
         Post your note permanently on MOAC Blockchain<br>

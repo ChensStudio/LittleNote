@@ -8,7 +8,7 @@ import { Accounts } from './accounts.js';
 
 export const insert = new ValidatedMethod({
     name: 'accounts.insert',
-    validate: Notes.simpleSchema().pick([name, address]).validator({clean: true, filter: false}),
+    validate: Accounts.simpleSchema().pick([name, address]).validator({clean: true, filter: false}),
     run({name, address}) {
         const account={
             name,
@@ -16,7 +16,7 @@ export const insert = new ValidatedMethod({
             createdAt: new Date(),
         };
 
-        Notes.insert(note);
+        Accounts.insert(account);
     },
 });
 

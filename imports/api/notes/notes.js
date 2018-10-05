@@ -61,7 +61,11 @@ Notes.schema = new SimpleSchema({
   createdAt: {  //onchain
     type: Date,
     denyUpdate: true,
-  }
+  },
+  updatededAt: {  //onchain
+    type: Date,
+    denyUpdate: true,
+  },
 });
 
 Notes.attachSchema(Notes.schema);
@@ -76,6 +80,7 @@ Notes.publicFields = {
     note: 1,
     forSell: 1,
     createdAt: 1,
+    updatedAt: 1,
 };
 
 Factory.define('note', Notes, {});

@@ -14,6 +14,7 @@ var Markers = new Meteor.Collection('markers');
 Meteor.subscribe('markers');
 
 var currLatitude, currLongitude;
+var map;
 
 Template.map.rendered = function() {
   var setPosition =  function(position) {
@@ -25,9 +26,9 @@ Template.map.rendered = function() {
   }
   L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
 
-  var map = L.map('map', {
+  map = L.map('map', {
     doubleClickZoom: false
-  }).setView([49.25044, -123.137], 13);
+  }).setView([49.25044, -123.137], 4);
   // var map = L.map('map', {
   //   doubleClickZoom: false
   // }).setView([currLatitude, currLongitude], 13);
@@ -97,3 +98,14 @@ Template.map.rendered = function() {
     }
   });
 };
+
+Template.map.moveto = function(lat, lng, noteid) {
+  map.setView([lat, lng], 10);
+  if (noteid) {
+    var popup = L.popup();
+    popup
+      .setLatLng({lat:lat, lng:lng})
+      .setContent("lat " + lat + ", lng " + lng + ", noteid " + noteid)
+      .openOn(map);
+  }
+}

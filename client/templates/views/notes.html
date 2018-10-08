@@ -11,8 +11,7 @@
             <div class="noteaccount">{{noteaccount}}</div>
             <div class="notetext">{{notetext}}</div>
             <div>
-                <span class="notelat" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>{{_ "app.Lat"}}{{notelat}}</span>
-                <span class="notelng" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>{{_ "app.Lng"}}{{notelng}}</span>
+                <span class="notecoordinates" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>{{_ "app.Lat"}}{{notelat}}   {{_ "app.Lng"}}{{notelng}}</span>
                 {{#if isForSell}}
                     <span class="forsell">{{noteforsellinfo}}</span>
                 {{else}}

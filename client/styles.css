@@ -74,7 +74,7 @@ body {
   font-color: grey;
 }
 
-.notelat {
+.notecoordinates {
   color: grey;
   font-size: 11px;
   margin-left: 14px;
@@ -83,14 +83,10 @@ body {
   cursor:pointer;
 }
 
-.notelng {
-  color: grey;
-  font-size: 11px;
-  margin-left: 14px;
-  margin-bottom: 2px;
-  font-style: italic;
-  cursor:pointer;
+.notecoordinates:hover {
+  color: green;
 }
+
 
 .noteuser {
   font-size: 14px;
@@ -116,15 +112,38 @@ body {
 }
 
 .forsell {
-  border: 1px green;
+  border: 1px #1876ce;
   font-size: 11px;
   color: white;
   float: right;
-  background-color: green;
+  background-color: #1876ce;
   padding: 3px;
   border-radius: 4px;
   margin-right: 5px;
   cursor:pointer;
+}
+
+.forsell:hover {
+  border: 1px green;
+  background-color: green;
+}
+
+.postbtn {
+  display: block;
+  border: 1px #1876ce;
+  font-size: 11px;
+  color: white;
+  /*float: right;*/
+  background-color: #1876ce;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 0;
+  cursor:pointer;
+}
+
+.postbtn:hover {
+  border: 1px green;
+  background-color: green;
 }
 
 @media all and (max-width: 480px) {

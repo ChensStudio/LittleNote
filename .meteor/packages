@@ -27,7 +27,6 @@ crosswalk@1.7.1
 dynamic-import@0.4.2
 underscore
 tap:i18n
-<<<<<<< HEAD
 es5-shim
 ecmascript
 dburles:factory
@@ -37,8 +36,6 @@ dburles:collection-helpers
 mdg:validated-method
 mdg:validation-error
 aldeed:collection2-core
-=======
 twbs:bootstrap
 peppelg:bootstrap-3-modal
 panter:qrcode
->>>>>>> d8967a623871e4ee5b0e012ae86f33fa6d404e32

@@ -9,12 +9,12 @@ import { Notes } from './notes.js';
 export const insert = new ValidatedMethod({
     name: 'notes.insert',
     validate: Notes.simpleSchema().pick([address, location, grid, note]).validator({clean: true, filter: false}),
-    run({address, location, grid, note}) {
+    run({address, location, grid, noteText}) {
         const note={
             address,
             location,
             grid,
-            note,
+            noteText,
             forsell: false,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -84,7 +84,7 @@ const NOTES_METHODS = _.pluck([
 ], 'name');
 
 if (Meteor.isServer) {
-  // Only allow 5 list operations per connection per second
+  // Only allow 5 note operations per connection per second
   DDPRateLimiter.addRule({
     name(name) {
       return _.contains(NOTES_METHODS, name);

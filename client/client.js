@@ -1,5 +1,3 @@
-
-
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {

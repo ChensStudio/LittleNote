@@ -26,7 +26,7 @@ const ACCOUNTS_METHODS = _.pluck([
 ], 'name');
 
 if (Meteor.isServer) {
-  // Only allow 5 list operations per connection per second
+  // Only allow 5 account operations per connection per second
   DDPRateLimiter.addRule({
     name(name) {
       return _.contains(ACCOUNTS_METHODS, name);

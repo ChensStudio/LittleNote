@@ -1,3 +1,6 @@
+import '/imports/startup/server';
+
+
 // marker collection
 var Markers = new Meteor.Collection('markers');
 Meteor.publish("markers", function () {

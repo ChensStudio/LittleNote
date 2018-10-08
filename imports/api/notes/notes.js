@@ -1,13 +1,14 @@
 import { Mongo } from 'meteor/mongo';
 import { Factory } from 'meteor/dburles:factory';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import SimpleSchema from 'simpl-schema';
+// import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { TAPi18n } from 'meteor/tap:i18n';
 
 class NotesCollection extends Mongo.Collection {
   insert(note, callback, language = 'en') {
     const ourNote = note;
     if (!ourNote.note) {
-      const defaultName = TAPi18n.__('notes.insert.list', null, language);
+      const defaultName = TAPi18n.__('notes.insert.note', null, language);
       let nextLetter = 'A';
       ourNote.name = `${defaultName} ${nextLetter}`;
     }
@@ -22,6 +23,17 @@ class NotesCollection extends Mongo.Collection {
 
 export const Notes = new NotesCollection('notes');
 
+const addressSchema = new SimpleSchema({
+    latitude: {
+        type: Number,
+        // required: true,
+    },
+    longtitude: {
+        type: Number,
+        // required: true,
+    },
+});
+
 // Deny all client-side updates since we will be using methods to manage this collection
 Notes.deny({
   insert() { return true; },
@@ -34,20 +46,16 @@ Notes.schema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-  address: {    //owner address onchain
+  address: {    //owner address onchain, index searchbyaddress, tagbyaddress
     type: String,
-    denyUpdate: true,
   },
   location:{    //onchain
-      latitude: {
-          type: Number
-      },
-      longtitude: {
-          type: Number
-      }
+      type: addressSchema,
+    //   required: true,
   },
-  grid: {  //onchain //XXXXXYYYYY
-      type: Number
+  grid: {  //onchain //XXXXYYYY
+      type: SimpleSchema.Integer,
+      optional: false,
   },
   note: {   //onchain
     type: String,
@@ -56,15 +64,15 @@ Notes.schema = new SimpleSchema({
   },
   forSell:{
     type: Boolean,
-    default: false,
+    // default: false,
   },
   createdAt: {  //onchain
     type: Date,
-    denyUpdate: true,
+    // denyUpdate: true,
   },
-  updatededAt: {  //onchain
+  updatedAt: {  //onchain
     type: Date,
-    denyUpdate: true,
+    // denyUpdate: true,
   },
 });
 

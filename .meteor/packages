@@ -4,7 +4,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-insecure@1.0.7
 webapp@1.6.0
 browser-policy@1.1.0
 meteor-base@1.4.0
@@ -28,3 +27,12 @@ crosswalk@1.7.1
 dynamic-import@0.4.2
 underscore
 tap:i18n
+es5-shim
+ecmascript
+dburles:factory
+aldeed:simple-schema
+aldeed:collection2
+dburles:collection-helpers
+mdg:validated-method
+mdg:validation-error
+aldeed:collection2-core

@@ -8,9 +8,11 @@ Template.notesbody.helpers({
             ,notetime: "2018/10/14 15:00 UTC"
             ,noteuser: "C Ronaldo"
             ,noteaccount: "0xbc84fbf220e0301ae032d315eccd00c29838687d"
-            ,notelat: "7.6869"
-            ,notelng: "45.0703"
+            ,notelat: "45.0703"
+            ,notelng: "7.6869"
             ,isForSell: false
+            ,noteforsellinfo: "1.25 MOAC"
+            ,noteid: 111
         }
         ,{
             notelink: "https://google.com"
@@ -18,9 +20,11 @@ Template.notesbody.helpers({
             ,notetime: "2018/10/14 15:00 UTC"
             ,noteuser: "L Messi"
             ,noteaccount: "0x2a24ed9b55112201cb46a55defac682099885058"
-            ,notelat: "2.1734"
-            ,notelng: "41.3851"
+            ,notelat: "41.3851"
+            ,notelng: "2.1734"
             ,isForSell: true
+            ,noteforsellinfo: "1.36 MOAC"
+            ,noteid: 12
         }
     ],
     'isMicroMessage': function () {
@@ -117,22 +121,45 @@ Template.note.helpers({
 });
 
 Template.note.events({
-    'click .contractClick': function(e) {
+    'click .forsell': function(e) {
         myContract = $(e.target).data('contract');
         // myContract = e.target.dataset.contract;
         Modal.show('qrModal');
+    },
+    'click .notelat': function(e) {
+        var lat = parseFloat($(e.target).data('lat'));
+        var lng = parseFloat($(e.target).data('lng'));
+        var noteid = $(e.target).data('noteid');
+        console.log('click .notelat', lat, lng);
+        Template.map.move(lat, lng, noteid);
+    },
+    'click .notelng': function(e) {
+        var lat = parseFloat($(e.target).data('lat'));
+        var lng = parseFloat($(e.target).data('lng'));
+        var noteid = $(e.target).data('noteid');
+        console.log('click .notelng', lat, lng);
+        Template.map.moveto(lat, lng, noteid);
     }
+    // ,
+    // 'click .notevalue': function(e) {
+    //     var lat = parseFloat($(e.target).data('lat'));
+    //     var lng = parseFloat($(e.target).data('lng'));
+    //     var noteid = $(e.target).data('noteid');
+    //     console.log('click .notecontainer', lat, lng, noteid);
+    //     Template.map.move(lat, lng, noteid);
+    // }
+
  });
 
-// Template.qrModal.helpers({
-//     contract: function(){
-//         return myContract;
-//     },
-//     tx: function(){
-//         return "moac:"+myContract+"?amount=1.000000&token=MOAC";
-//     },
-//     clipboard: function(){
-//         var clipboard = new Clipboard('.btn');
-//     }
-// });
+Template.qrModal.helpers({
+    contract: function(){
+        return myContract;
+    },
+    tx: function(){
+        return "moac:"+myContract+"?amount=1.000000&token=MOAC";
+    },
+    clipboard: function(){
+        var clipboard = new Clipboard('.btn');
+    }
+});
 

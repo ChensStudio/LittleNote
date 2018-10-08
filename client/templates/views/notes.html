@@ -1,6 +1,6 @@
 <template name="note">
-    <div class="notecontainer">
-        <div>
+    <div class="notecontainer" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>
+        <div class="notevalue"  data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>
             <div>
                 <span class="notelink">
                     <a href={{notelink}}><i class="fas fa-link"></i></a>
@@ -11,15 +11,15 @@
             <div class="noteaccount">{{noteaccount}}</div>
             <div class="notetext">{{notetext}}</div>
             <div>
-                <span class="notelat">{{_ "app.Lat"}}{{notelat}}</span>
-                <span class="notelng">{{_ "app.Lng"}}{{notelng}}</span>
+                <span class="notelat" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>{{_ "app.Lat"}}{{notelat}}</span>
+                <span class="notelng" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>{{_ "app.Lng"}}{{notelng}}</span>
+                {{#if isForSell}}
+                    <span class="forsell">{{noteforsellinfo}}</span>
+                {{else}}
+                    <div class="notforsell">{{notenotforsell}}</div>
+                {{/if}}
             </div>
         </div>
-        {{#if isForSell}}
-            <div class="forsell">{{noteforsellinfo}}</div>
-        {{else}}
-            <div class="notforsell">{{notenotforsell}}</div>
-        {{/if}}
     </div>
 </template>
 
@@ -31,5 +31,20 @@
                 {{> note}}
             {{/each}}
         </div>
+    </div>
+</template>
+
+<template name="qrModal">
+    <div class="modal fade qrbox" style="color:black">
+        {{>qrcode text=tx size=256}}
+        <br><br>
+        <input id="foo" style="width:500px" type="text" value={{contract}} readonly>
+        <button class="btn" data-clipboard-action="copy" data-clipboard-target="#foo">{{_ "app.Copy"}}</button>
+        {{clipboard}}
+        <br><br>
+        <div class="pre">{{_ "app.QRDesc"}}</div>
+        {{_ "app.GasSetting"}}
+        <br>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
     </div>
 </template>

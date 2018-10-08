@@ -30,7 +30,7 @@ tap:i18n
 es5-shim
 ecmascript
 dburles:factory
-aldeed:simple-schema
+aldeed:simple-schema@1.5.3
 aldeed:collection2
 dburles:collection-helpers
 mdg:validated-method
@@ -39,3 +39,4 @@ aldeed:collection2-core
 twbs:bootstrap
 peppelg:bootstrap-3-modal
 panter:qrcode
+ddp-rate-limiter

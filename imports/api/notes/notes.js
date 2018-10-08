@@ -5,13 +5,13 @@ import SimpleSchema from 'simpl-schema';
 import { TAPi18n } from 'meteor/tap:i18n';
 
 class NotesCollection extends Mongo.Collection {
-  insert(note, callback, language = 'en') {
+  insert(note, callback) {
     const ourNote = note;
-    if (!ourNote.note) {
-      const defaultName = TAPi18n.__('notes.insert.note', null, language);
-      let nextLetter = 'A';
-      ourNote.name = `${defaultName} ${nextLetter}`;
-    }
+    // if (!ourNote.note) {
+    //   const defaultName = TAPi18n.__('notes.insert.note', null, language);
+    //   let nextLetter = 'A';
+    //   ourNote.name = `${defaultName} ${nextLetter}`;
+    // }
     return super.insert(ourNote, callback);
   }
 
@@ -23,7 +23,7 @@ class NotesCollection extends Mongo.Collection {
 
 export const Notes = new NotesCollection('notes');
 
-const addressSchema = new SimpleSchema({
+const locationSchema = new SimpleSchema({
     latitude: {
         type: Number,
         // required: true,
@@ -50,8 +50,7 @@ Notes.schema = new SimpleSchema({
     type: String,
   },
   location:{    //onchain
-      type: addressSchema,
-    //   required: true,
+      type: locationSchema,
   },
   grid: {  //onchain //XXXXYYYY
       type: SimpleSchema.Integer,

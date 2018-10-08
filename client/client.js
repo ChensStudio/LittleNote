@@ -1,3 +1,6 @@
+import {Notes} from '../imports/api/notes/notes.js';
+import {insert} from '../imports/api/notes/methods.js';
+
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
@@ -7,9 +10,10 @@ Meteor.startup(function() {
 });
  
 // create marker collection
-var Markers = new Meteor.Collection('markers');
+// var Markers = new Meteor.Collection('markers');
+// Meteor.subscribe('markers');
 
-Meteor.subscribe('markers');
+Meteor.subscribe('notes');
 
 var currLatitude, currLongitude;
 var map;
@@ -23,6 +27,9 @@ Template.map.rendered = function() {
     }
   }
   L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
+
+  //Read from mongo
+  //console.log(Notes.find({}));
 
   map = L.map('map', {
     doubleClickZoom: false
@@ -42,7 +49,17 @@ Template.map.rendered = function() {
   navigator.geolocation.getCurrentPosition(setPosition);
 
   map.on('dblclick', function(event) {
-    Markers.insert({latlng: event.latlng});
+    // Markers.insert({latlng: event.latlng});
+    insert.call(
+      {
+        address: '0x12345567789000',
+        location: {longtitude:event.latlng.lng, latitude:event.latlng.lat},
+        grid: Math.floor((event.latlng.lng + 360) * 100) * 100000 + Math.floor((event.latlng.lat + 360) * 100),
+        noteText: 'static test',
+        forSell: false,
+      }, (err)=>{
+            alert(err.message);
+      });
   });
 
 

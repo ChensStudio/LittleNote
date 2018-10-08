@@ -4,23 +4,43 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { _ } from 'meteor/underscore';
 
-import { Notes } from './notes.js';
+import { Notes, addressSchema } from './notes.js';
 
 export const insert = new ValidatedMethod({
     name: 'notes.insert',
-    validate: Notes.simpleSchema().pick([address, location, grid, note]).validator({clean: true, filter: false}),
-    run({address, location, grid, noteText}) {
+    validate: new SimpleSchema({
+        address:{
+            type: String,
+        },
+        location:{
+            type: addressSchema,
+        },
+        'location.latitude': {type: Number, decimal: true},
+        'location.longtitude': {type: Number, decimal: true},
+        grid: {  //onchain //XXXXYYYY
+            type: SimpleSchema.Integer,
+        },
+        noteText: {   //onchain
+          type: String,
+        },
+        forSell:{
+          type: Boolean,
+        },
+    }).validator(),
+    run({address, location, grid, noteText, forSell}) {
         const note={
-            address,
-            location,
-            grid,
-            noteText,
-            forsell: false,
+            address: address,
+            location: location,
+            grid: grid,
+            note: noteText,
+            forSell: forSell,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
 
-        Notes.insert(note);
+        // console.log(note);
+
+        return Notes.insert(note, null);
     },
 });
 

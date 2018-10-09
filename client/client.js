@@ -9,14 +9,7 @@ Meteor.startup(function() {
   $(window).resize(); // trigger resize event 
 });
  
-<<<<<<< HEAD
 var Markers = Notes;
-=======
-// create marker collection
-var Markers = new Meteor.Collection('markers');
-Meteor.subscribe('markers');
-
->>>>>>> 0219c0ef5952141cad3a23f428ffde5fb5ee4644
 Meteor.subscribe('notes');
 
 var currLatitude, currLongitude;

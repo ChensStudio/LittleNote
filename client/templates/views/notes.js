@@ -47,8 +47,6 @@ var dateFormat = function(d) {
 }
 
 
-var PRICE = [0.05,'Feb.','Mar.','Apr.','May','June','July','Aug.','Sep.','Oct.','Nov.','Dec.'];
-
 var getPrice = function(grid10, selfFlag) {
     var count = Notes.find({grid10: grid10}).count();
     if (!selfFlag) {
@@ -57,7 +55,7 @@ var getPrice = function(grid10, selfFlag) {
     if (count == 0) {
         return 0;
     }
-    var price = Math.floor(0.05 * Math.pow(1.35, count) * 100 + 0.5)/100;
+    var price = Math.floor(0.05 * Math.pow(1.35, count-1) * 100 + 0.5)/100;
     return price;
 }
 
@@ -190,6 +188,13 @@ Template.note.events({
         Modal.show('qrModal');
     },
     'click .notecoordinates': function(e) {
+        var lat = parseFloat($(e.target).data('lat'));
+        var lng = parseFloat($(e.target).data('lng'));
+        var noteid = $(e.target).data('noteid');
+        console.log('click .notecoordinates', lat, lng);
+        Template.map.moveto(lat, lng, noteid);
+    },
+    'click .notetext': function(e) {
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
         var noteid = $(e.target).data('noteid');

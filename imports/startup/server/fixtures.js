@@ -43,7 +43,7 @@ Meteor.startup(() => {
           lat: 47.1299,
         },
         //grid: 0,
-        note: 'my note test4',
+        note: 'I am your President. I like to use Twitter. And, you are fired!',
         forSell: true,
       },
     ];
@@ -54,8 +54,8 @@ Meteor.startup(() => {
       Notes.insert({
         address: note.address,
         latlng: note.latlng,
-        grid: Math.floor((note.latlng.lng + 360) * 100) * 100000 + Math.floor((note.latlng.lat + 360) * 100),
-        grid10: '' + Math.floor((note.latlng.lng + 360) * 10) * 10000 + Math.floor((note.latlng.lat + 360) * 10),
+        grid: Math.floor((note.latlng.lat + 360) * 100) * 100000 + Math.floor((note.latlng.lng + 360) * 100),
+        grid10: '' + (Math.floor((note.latlng.lat + 360) * 10) * 10000 + Math.floor((note.latlng.lng + 360) * 10)),
         note: note.note,
         forSell: note.forSell,
         createdAt: new Date(timestamp),

@@ -2,6 +2,75 @@ import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
 
+Meteor.subscribe('notes');
+Meteor.subscribe('accounts');
+
+
+var ONE_MINUTE = 60 * 1000;
+var ONE_HOUR = 60 * ONE_MINUTE;
+var ONE_DAY = 24 * ONE_HOUR;
+var ONE_WEEK = 7 * ONE_DAY;
+var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTHS = ['Jan.','Feb.','Mar.','Apr.','May','June','July','Aug.','Sep.','Oct.','Nov.','Dec.'];
+
+var dateFormat = function(d) {
+    var then = new Date(d);
+    var now = Date.now();
+    var diff = now - d;
+    var display;
+    var seconds = Math.floor(diff/1000);
+    var minutes;
+    var hours;
+    var day;
+    var month;
+    var year;
+    var date;
+
+    if (diff < ONE_MINUTE) {
+        display = seconds + 's ago'
+    } else if (diff < ONE_HOUR) {
+        minutes = Math.floor(seconds/60);
+        seconds -= minutes * 60;
+        display = minutes + 'm' + seconds + 's ago';
+    } else if (diff < ONE_DAY) {
+        hours = Math.floor(seconds/3600);
+        minutes = Math.floor((seconds - hours * 3600) / 60);
+        seconds -= minutes * 60 + hours * 3600;
+        // display = hours + 'hours' + minutes + 'm' + seconds + 's ago';
+        display = hours + ' hours ago';
+    } else if (diff < ONE_WEEK) {
+        day = DAYS[ then.getDay() ];
+        display = day;
+    } else {
+        date = then.getDate();
+        month = MONTHS[ then.getMonth() ];
+        year = then.getYear();
+        display = month + ' ' + date + ', ' + year;
+    }
+    return display;
+}
+
+var getPrice = function(grid10, selfFlag, freeFlag) {
+    var count = Notes.find({"grid10": grid10}).count();
+    console.log("grid10", grid10, count, Notes.find({"grid10": grid10}).fetch());
+    if (!selfFlag) {
+        if (count == 0) {
+          if (freeFlag) {
+            return 'FREE';
+          } else {
+            return 0;
+          }
+        } else {
+          count++;
+        }
+    }
+
+    var price = Math.floor(0.05 * Math.pow(1.35, count-1) * 100 + 0.5)/100;
+    return price;
+}
+
+
+
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
@@ -11,8 +80,6 @@ Meteor.startup(function() {
 });
  
 var Markers = Notes;
-Meteor.subscribe('notes');
-Meteor.subscribe('accounts');
 
 var currLatitude, currLongitude;
 var map;
@@ -27,7 +94,12 @@ Template.map.rendered = function() {
   }
 
   var updateTooltip = function(evt) {
-    var content = 'Price: ' + getPrice(evt.latlng);
+    var grid10 = getGrid10(evt.latlng);
+    var price = getPrice(grid10, false, true);
+    if (price != 'FREE') {
+      price += 'MC';
+    }
+    var content = 'Price: ' + price;
     tooltip
       .setContent(content)
       .updatePosition(evt.layerPoint);
@@ -50,13 +122,10 @@ Template.map.rendered = function() {
     return latGrid + lngGrid;
   }
 
-  var getPrice = function(latlng) {
-    var grid = getGrid(latlng);
-    if (!notes[grid]) {
-      return 'FREE';
-    }
-
-    return notes[grid].length + ' MC';
+  var getGrid10 = function(latlng) {
+    var latGrid = Math.floor((latlng.lat + 360) * 10) + '';
+    var lngGrid = Math.floor((latlng.lng + 360) * 10) + '';
+    return latGrid + lngGrid;
   }
 
   var createButton = function(label, container) {
@@ -105,7 +174,8 @@ Template.map.rendered = function() {
   var container = L.DomUtil.create('div');
   map.on('click', function(event) {
     var coordinates = displayCoordinates(event.latlng);
-    var price = getPrice(event.latlng);
+    var grid10 = getGrid10(event.latlng);
+    var price = getPrice(grid10, false, true);
 
     container.innerHTML = coordinates + ' <br>Your permanent note for ' + price + '<br><br>';
     var postBtn = createButton('Post', container);
@@ -177,12 +247,30 @@ Template.map.rendered = function() {
 };
 
 Template.map.moveto = function(lat, lng, noteid) {
+  var n = Notes.find({_id: noteid}).fetch();
+  var note;
+  if (n.length > 0) {
+    note = n[0];
+    var accounts = Accounts.find({address: note.address}).fetch();
+    if (accounts.length > 0) {
+      note.name = accounts[0].name;
+    }
+    note.displayDate = dateFormat(note.updatedAt);
+  }
+  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><div class="popupnotetext">' + note.note + '</div><br><br><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
+  if (note.forSell) {
+
+    var price = getPrice(note.grid10, true);
+    console.log("popup price", price);
+    content += '<br><br><span class="popupforsell">Price: ' + price + 'MC</span>';
+  }
+  content +='</div></div>';
   map.setView([lat, lng], 10);
   if (noteid) {
     var popup = L.popup();
     popup
       .setLatLng({lat:lat, lng:lng})
-      .setContent("lat " + lat + ", lng " + lng + ", noteid " + noteid)
+      .setContent(content)
       .openOn(map);
   }
 }

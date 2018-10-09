@@ -9,7 +9,7 @@
                 <span class="notetime">{{displayDate}}</span>
             </div>
             <div class="noteaccount">{{address}}</div>
-            <div class="notetext">{{note}}</div>
+            <div class="notetext" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{note}}</div>
             <div>
                 <span class="notecoordinates" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{_ "app.Lat"}}{{latlng.lat}}   {{_ "app.Lng"}}{{latlng.lng}}</span>
                 {{#if forSell}}

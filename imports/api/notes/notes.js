@@ -87,6 +87,7 @@ Notes.publicFields = {
     address: 1,
     latlng: 1,
     grid: 1,
+    grid10: 1,
     note: 1,
     forSell: 1,
     createdAt: 1,

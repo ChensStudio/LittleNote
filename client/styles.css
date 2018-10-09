@@ -106,9 +106,33 @@ body {
   margin-bottom: 4px;
 }
 
+.popupnoteaccount {
+  margin-left: 14px;
+  font-size: 11px;
+  color: grey;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
 .notetext {
   margin-left: 14px;
   margin-bottom: 2px;
+  cursor: pointer;
+}
+
+.notetext:hover {
+  color: green;
+}
+
+.popupnotetext {
+  margin-left: 14px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.popupnotetext:hover {
+  color: green;
 }
 
 .forsell {
@@ -124,6 +148,23 @@ body {
 }
 
 .forsell:hover {
+  border: 1px green;
+  background-color: green;
+}
+
+.popupforsell {
+  margin-left: 14px;
+  border: 1px #1876ce;
+  font-size: 11px;
+  color: white;
+  background-color: #1876ce;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 5px;
+  cursor:pointer;
+}
+
+.popupforsell:hover {
   border: 1px green;
   background-color: green;
 }

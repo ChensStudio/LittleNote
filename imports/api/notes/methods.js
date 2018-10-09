@@ -30,11 +30,12 @@ export const insert = new ValidatedMethod({
           type: Boolean,
         },
     }).validator(),
-    run({address, latlng, grid, noteText, forSell}) {
+    run({address, latlng, grid, grid10, noteText, forSell}) {
         const note={
             address: address,
             latlng: latlng,
             grid: grid,
+            grid10: grid10,
             note: noteText,
             forSell: forSell,
             createdAt: new Date(),

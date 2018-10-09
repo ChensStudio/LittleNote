@@ -12,11 +12,11 @@ export const insert = new ValidatedMethod({
         address:{
             type: String,
         },
-        location:{
+        latlng:{
             type: addressSchema,
         },
-        'location.latitude': {type: Number, decimal: true},
-        'location.longtitude': {type: Number, decimal: true},
+        'latlng.lat': {type: Number, decimal: true},
+        'latlng.lng': {type: Number, decimal: true},
         grid: {  //onchain //XXXXYYYY
             type: SimpleSchema.Integer,
         },
@@ -27,10 +27,10 @@ export const insert = new ValidatedMethod({
           type: Boolean,
         },
     }).validator(),
-    run({address, location, grid, noteText, forSell}) {
+    run({address, latlng, grid, noteText, forSell}) {
         const note={
             address: address,
-            location: location,
+            latlng: latlng,
             grid: grid,
             note: noteText,
             forSell: forSell,

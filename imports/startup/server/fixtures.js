@@ -7,9 +7,9 @@ Meteor.startup(() => {
     const data = [
       {
         address: '0x57d83802a772adf506a89f5021c9',
-        location: {
-            longtitude: -111.357421875,
-            latitude: 41.4427263776721,
+        latlng: {
+            lng: -111.357421875,
+            lat: 41.4427263776721,
         },
         //grid: 2486440144,
         note: 'my note test1',
@@ -17,9 +17,9 @@ Meteor.startup(() => {
       },
       {
         address: '0xadf57d83802a772506a89f5034d6',
-        location: {
-            longtitude: -122.129173278809,
-            latitude: 47.3669666422258,
+        latlng: {
+            lng: -122.129173278809,
+            lat: 47.3669666422258,
         },
         //grid: 0,
         note: 'my note test2',
@@ -27,9 +27,9 @@ Meteor.startup(() => {
       },
       {
         address: '0x506a857d83802a7df9f5021c972a',
-        location: {
-            longtitude: -116.19140625,
-            latitude: 43.4529188935547,
+        latlng: {
+            lng: -116.19140625,
+            lat: 43.4529188935547,
         },
         //grid: 0,
         note: 'my note test3',
@@ -37,9 +37,9 @@ Meteor.startup(() => {
       },
       {
         address: '0xadf50657d83802a79f5021c972a8',
-        location: {
-            longtitude: -119.1357421875,
-            latitude: 47.1299507566631,
+        latlng: {
+            lng: -119.1357421875,
+            lat: 47.1299507566631,
         },
         //grid: 0,
         note: 'my note test4',
@@ -53,8 +53,8 @@ Meteor.startup(() => {
         Notes.insert(
             {
                 address: note.address,
-                location: note.location,
-                grid: Math.floor(note.location.longtitude + 360) * 100 * 100000 + Math.floor(note.location.latitude + 360) * 100,
+                latlng: note.latlng,
+                grid: Math.floor(note.latlng.lng + 360) * 100 * 100000 + Math.floor(note.latlng.lat + 360) * 100,
                 note: note.note,
                 forSell: note.forSell,
                 createdAt: new Date(timestamp),

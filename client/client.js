@@ -9,10 +9,7 @@ Meteor.startup(function() {
   $(window).resize(); // trigger resize event 
 });
  
-// create marker collection
-// var Markers = new Meteor.Collection('markers');
-// Meteor.subscribe('markers');
-
+var Markers = Notes;
 Meteor.subscribe('notes');
 
 var currLatitude, currLongitude;
@@ -53,7 +50,7 @@ Template.map.rendered = function() {
     insert.call(
       {
         address: '0x12345567789000',
-        location: {longtitude:event.latlng.lng, latitude:event.latlng.lat},
+        latlng: {lng:event.latlng.lng, lat:event.latlng.lat},
         grid: Math.floor((event.latlng.lng + 360) * 100) * 100000 + Math.floor((event.latlng.lat + 360) * 100),
         noteText: 'static test',
         forSell: false,

@@ -24,11 +24,11 @@ class NotesCollection extends Mongo.Collection {
 export const Notes = new NotesCollection('notes');
 
 const locationSchema = new SimpleSchema({
-    latitude: {
+    lat: {
         type: Number,
         // required: true,
     },
-    longtitude: {
+    lng: {
         type: Number,
         // required: true,
     },
@@ -49,7 +49,7 @@ Notes.schema = new SimpleSchema({
   address: {    //owner address onchain, index searchbyaddress, tagbyaddress
     type: String,
   },
-  location:{    //onchain
+  latlng:{    //onchain
       type: locationSchema,
   },
   grid: {  //onchain //XXXXYYYY
@@ -82,7 +82,7 @@ Notes.attachSchema(Notes.schema);
 // them here to keep them private to the server.
 Notes.publicFields = {
     address: 1,
-    location: 1,
+    latlng: 1,
     grid: 1,
     note: 1,
     forSell: 1,

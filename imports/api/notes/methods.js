@@ -17,8 +17,11 @@ export const insert = new ValidatedMethod({
         },
         'latlng.lat': {type: Number, decimal: true},
         'latlng.lng': {type: Number, decimal: true},
-        grid: {  //onchain //XXXXYYYY
+        grid: {  //onchain //XXXXXYYYYY
             type: SimpleSchema.Integer,
+        },
+        grid10: {  //onchain //XXXXYYYY
+            type: String,
         },
         noteText: {   //onchain
           type: String,

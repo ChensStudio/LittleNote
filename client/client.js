@@ -1,5 +1,6 @@
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
+import {Accounts} from '../imports/api/accounts/accounts.js';
 
 // on startup run resizing event
 Meteor.startup(function() {
@@ -11,6 +12,7 @@ Meteor.startup(function() {
  
 var Markers = Notes;
 Meteor.subscribe('notes');
+Meteor.subscribe('accounts');
 
 var currLatitude, currLongitude;
 var map;
@@ -73,9 +75,6 @@ Template.map.rendered = function() {
   map = L.map('map', {
     doubleClickZoom: false
   }).setView([49.25044, -123.137], 4);
-  // var map = L.map('map', {
-  //   doubleClickZoom: false
-  // }).setView([currLatitude, currLongitude], 13);
 
   // L.tileLayer.provider('Stamen.Terrain', {maxZoom: 16}).addTo(map);
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

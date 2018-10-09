@@ -1,7 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { Factory } from 'meteor/dburles:factory';
 import SimpleSchema from 'simpl-schema';
-// import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { TAPi18n } from 'meteor/tap:i18n';
 
 class NotesCollection extends Mongo.Collection {
@@ -52,8 +51,12 @@ Notes.schema = new SimpleSchema({
   latlng:{    //onchain
       type: locationSchema,
   },
-  grid: {  //onchain //XXXXYYYY
+  grid: {  //onchain //XXXXXYYYYY
       type: SimpleSchema.Integer,
+      optional: false,
+  },
+  grid10: {  //onchain //XXXXYYYY
+      type: String,
       optional: false,
   },
   note: {   //onchain

@@ -1,19 +1,19 @@
 <template name="note">
-    <div class="notecontainer" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>
-        <div class="notevalue"  data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>
+    <div class="notecontainer" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>
+        <div class="notevalue" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>
             <div>
                 <span class="notelink">
                     <a href={{notelink}}><i class="fas fa-link"></i></a>
                 </span> 
-                <span class="noteuser">{{noteuser}}</span>
-                <span class="notetime">{{notetime}}</span>
+                <span class="noteuser">{{name}}</span>
+                <span class="notetime">{{displayDate}}</span>
             </div>
-            <div class="noteaccount">{{noteaccount}}</div>
-            <div class="notetext">{{notetext}}</div>
+            <div class="noteaccount">{{address}}</div>
+            <div class="notetext">{{note}}</div>
             <div>
-                <span class="notecoordinates" data-lat={{notelat}} data-lng={{notelng}} data-noteid={{noteid}}>{{_ "app.Lat"}}{{notelat}}   {{_ "app.Lng"}}{{notelng}}</span>
-                {{#if isForSell}}
-                    <span class="forsell">{{noteforsellinfo}}</span>
+                <span class="notecoordinates" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{_ "app.Lat"}}{{latlng.lat}}   {{_ "app.Lng"}}{{latlng.lng}}</span>
+                {{#if forSell}}
+                    <span class="forsell">{{forSellInfo}}</span>
                 {{else}}
                     <div class="notforsell">{{notenotforsell}}</div>
                 {{/if}}

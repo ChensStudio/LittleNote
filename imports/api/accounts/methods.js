@@ -8,7 +8,14 @@ import { Accounts } from './accounts.js';
 
 export const insert = new ValidatedMethod({
     name: 'accounts.insert',
-    validate: Accounts.simpleSchema().pick([name, address]).validator({clean: true, filter: false}),
+    validate: new SimpleSchema({
+        address:{
+            type: String,
+        },
+        name:{
+            type: String,
+        },
+    }).validator(),
     run({name, address}) {
         const account={
             name,

@@ -1,9 +1,9 @@
 import { Mongo } from 'meteor/mongo';
 import { Factory } from 'meteor/dburles:factory';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import SimpleSchema from 'simpl-schema';
 import { TAPi18n } from 'meteor/tap:i18n';
 
-class AccountssCollection extends Mongo.Collection {
+class AccountsCollection extends Mongo.Collection {
   insert(account, callback, language = 'en') {
     const ourAccount = account;
     if (!ourAccount.name) {
@@ -11,7 +11,7 @@ class AccountssCollection extends Mongo.Collection {
       let nextLetter = 'A';
       ourAccount.name = `${defaultName} ${nextLetter}`;
     }
-    return super.insert(ourNote, callback);
+    return super.insert(ourAccount, callback);
   }
 
   update(selector, modifier) {
@@ -20,7 +20,7 @@ class AccountssCollection extends Mongo.Collection {
   }
 }
 
-export const Accounts = new AccountssCollection('accounts');
+export const Accounts = new AccountsCollection('accounts');
 
 // Deny all client-side updates since we will be using methods to manage this collection
 Accounts.deny({
@@ -39,11 +39,11 @@ Accounts.schema = new SimpleSchema({
   },
   address: {    //owner address onchain
     type: String,
-    denyUpdate: true,
+    // denyUpdate: true,
   },
   createdAt: {  //onchain
     type: Date,
-    denyUpdate: true,
+    // denyUpdate: true,
   }
 });
 

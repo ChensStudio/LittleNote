@@ -9,11 +9,21 @@ Meteor.startup(function() {
   $(window).resize(); // trigger resize event 
 });
  
+<<<<<<< HEAD
 var Markers = Notes;
+=======
+// create marker collection
+var Markers = new Meteor.Collection('markers');
+Meteor.subscribe('markers');
+
+>>>>>>> 0219c0ef5952141cad3a23f428ffde5fb5ee4644
 Meteor.subscribe('notes');
 
 var currLatitude, currLongitude;
 var map;
+
+var notes = {};
+
 
 Template.map.rendered = function() {
   var setPosition =  function(position) {
@@ -23,6 +33,49 @@ Template.map.rendered = function() {
       map.setView([currLatitude, currLongitude], 4);
     }
   }
+
+  var updateTooltip = function(evt) {
+    var content = 'Price: ' + getPrice(evt.latlng);
+    tooltip
+      .setContent(content)
+      .updatePosition(evt.layerPoint);
+  }
+
+  var displayCoordinates = function(latlng) {
+    console.log('latlng', latlng);
+
+    var latAbs = Math.abs(latlng.lat.toFixed(4));
+    var lngAbs = Math.abs(latlng.lng.toFixed(4));
+
+    var lat = latlng.lat > 0 ? latAbs + ' N' : latAbs + ' S';
+    var lng = latlng.lng > 0 ? lngAbs + ' E' : lngAbs + ' W';
+    return lat + ', ' + lng;
+  }
+
+  var getGrid = function(latlng) {
+    var latGrid = Math.floor((latlng.lat + 360) * 100) + '';
+    var lngGrid = Math.floor((latlng.lng + 360) * 100) + '';
+    return latGrid + lngGrid;
+  }
+
+  var getPrice = function(latlng) {
+    var grid = getGrid(latlng);
+    if (!notes[grid]) {
+      return 'FREE';
+    }
+
+    return notes[grid].length + ' MC';
+  }
+
+  var createButton = function(label, container) {
+    var btn = L.DomUtil
+      .create('button', 'postbtn', container);
+    btn.setAttribute('type', 'button');
+    btn.innerHTML = label;
+    return btn;
+  }
+
+
   L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
 
   //Read from mongo
@@ -61,17 +114,42 @@ Template.map.rendered = function() {
 
 
   var popup = L.popup();
+  var container = L.DomUtil.create('div');
   map.on('click', function(event) {
+    var coordinates = displayCoordinates(event.latlng);
+    var price = getPrice(event.latlng);
+
+    container.innerHTML = coordinates + ' <br>Your permanent note for ' + price + '<br><br>';
+    var postBtn = createButton('Post', container);
+
+    L.DomEvent.on(postBtn, 'click', () => {
+      alert("toto");
+    });
+
     popup
       .setLatLng(event.latlng)
-      .setContent("You clicked the map at " + event.latlng.toString())
+      .setContent(container)
       .openOn(map);
+
   });
+
+  var bounds = map.getBounds().pad(0.25); // slightly out of screen
+  var tooltip = L.tooltip({
+    position: 'bottom',
+    noWrap: true
+  })
+    .addTo(map)
+    .setContent('Start drawing to see tooltip change')
+    .setLatLng(new L.LatLng(bounds.getNorth(), bounds.getCenter().lng));
 
   var polygon;
   map.on('mousemove', function(event) {
     if (polygon) {
       map.removeLayer(polygon);
+    }
+
+    if (tooltip) {
+      updateTooltip(event);
     }
 
     var latFloor = Math.floor(event.latlng.lat * 10)/10;
@@ -81,6 +159,7 @@ Template.map.rendered = function() {
 
     var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
     polygon = L.polygon(latlngs, {color: 'green'}).addTo(map);
+
   });
 
   // add clustermarkers
@@ -121,3 +200,4 @@ Template.map.moveto = function(lat, lng, noteid) {
       .openOn(map);
   }
 }
+

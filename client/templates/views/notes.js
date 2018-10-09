@@ -11,7 +11,7 @@ Template.notesbody.helpers({
             ,notelat: "45.0703"
             ,notelng: "7.6869"
             ,isForSell: false
-            ,noteforsellinfo: "1.25 MOAC"
+            ,noteforsellinfo: "Price: 1.25MC"
             ,noteid: 111
         }
         ,{
@@ -23,7 +23,7 @@ Template.notesbody.helpers({
             ,notelat: "41.3851"
             ,notelng: "2.1734"
             ,isForSell: true
-            ,noteforsellinfo: "1.36 MOAC"
+            ,noteforsellinfo: "Price: 1.36MC"
             ,noteid: 12
         }
     ],
@@ -126,20 +126,13 @@ Template.note.events({
         // myContract = e.target.dataset.contract;
         Modal.show('qrModal');
     },
-    'click .notelat': function(e) {
+    'click .notecoordinates': function(e) {
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
         var noteid = $(e.target).data('noteid');
-        console.log('click .notelat', lat, lng);
-        Template.map.move(lat, lng, noteid);
-    },
-    'click .notelng': function(e) {
-        var lat = parseFloat($(e.target).data('lat'));
-        var lng = parseFloat($(e.target).data('lng'));
-        var noteid = $(e.target).data('noteid');
-        console.log('click .notelng', lat, lng);
+        console.log('click .notecoordinates', lat, lng);
         Template.map.moveto(lat, lng, noteid);
-    }
+    },
     // ,
     // 'click .notevalue': function(e) {
     //     var lat = parseFloat($(e.target).data('lat'));

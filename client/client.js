@@ -1,7 +1,7 @@
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
-import {dateFormat, getPrice} from './utils.js';
+import {dateFormat, getPrice, getGrid, getGrid10} from './utils.js';
 
 Meteor.subscribe('notes');
 Meteor.subscribe('accounts');
@@ -52,18 +52,6 @@ Template.map.rendered = function() {
     var lat = latlng.lat > 0 ? latAbs + ' N' : latAbs + ' S';
     var lng = latlng.lng > 0 ? lngAbs + ' E' : lngAbs + ' W';
     return lat + ', ' + lng;
-  }
-
-  var getGrid = function(latlng) {
-    var latGrid = Math.floor((latlng.lat + 360) * 100) + '';
-    var lngGrid = Math.floor((latlng.lng + 360) * 100) + '';
-    return latGrid + lngGrid;
-  }
-
-  var getGrid10 = function(latlng) {
-    var latGrid = Math.floor((latlng.lat + 360) * 10) + '';
-    var lngGrid = Math.floor((latlng.lng + 360) * 10) + '';
-    return latGrid + lngGrid;
   }
 
   var createButton = function(label, container) {
@@ -173,30 +161,42 @@ Template.map.rendered = function() {
   map.addLayer(markers);
 
   var query = Markers.find();
-  // query.observe({
-  //   added: function (document) {
-  //     var marker = L.marker(document.latlng)
-  //       .on('click', function(event) {
-  //         Markers.remove({_id: document._id});
-  //       });
-  //      markers.addLayer(marker);
-  //   },
-  //   removed: function (oldDocument) {
-  //     layers = map._layers;
-  //     var key, val;
-  //     for (key in layers) {
-  //       val = layers[key];
-  //       if (val._latlng) {
-  //         if (val._latlng.lat === oldDocument.latlng.lat && val._latlng.lng === oldDocument.latlng.lng) {
-  //           markers.removeLayer(val);
-  //         }
-  //       }
-  //     }
-  //   }
-  // });
+  query.observe({
+    added: function (document) {
+      var marker = L.marker(document.latlng)
+        .bindTooltip('test', 
+        {
+            permanent: true, 
+            direction: 'right'
+        })
+        .on('click', function(event) {
+          Template.map.moveto(document.latlng.lat, document.latlng.lng, document._id);
+          // Markers.remove({_id: document._id});
+        });
+       markers.addLayer(marker);
+       // marker.bindTooltip('test', 
+       //  {
+       //      permanent: true, 
+       //      direction: 'right'
+       //  })
+
+    },
+    removed: function (oldDocument) {
+      layers = map._layers;
+      var key, val;
+      for (key in layers) {
+        val = layers[key];
+        if (val._latlng) {
+          if (val._latlng.lat === oldDocument.latlng.lat && val._latlng.lng === oldDocument.latlng.lng) {
+            markers.removeLayer(val);
+          }
+        }
+      }
+    }
+  });
 };
 
-Template.map.moveto = function(lat, lng, noteid) {
+Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   var n = Notes.find({_id: noteid}).fetch();
   var note;
   if (n.length > 0) {
@@ -215,7 +215,11 @@ Template.map.moveto = function(lat, lng, noteid) {
     content += '<br><br><span class="popupforsell">Buy this Note for ' + price + ' MOAC</span>';
   }
   content +='</div></div>';
-  map.setView([lat, lng], 10);
+  if (zoomFlag) {
+    map.setView([lat, lng], 10);
+  } else {
+    map.setView([lat, lng]);
+  }
   if (noteid) {
     var popup = L.popup();
     popup

@@ -136,15 +136,17 @@ Template.note.events({
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
         var noteid = $(e.target).data('noteid');
-        console.log('click .notecoordinates', lat, lng);
-        Template.map.moveto(lat, lng, noteid);
+        // console.log('click .notecoordinates', lat, lng);
+        var zoomFlag = true;
+        Template.map.moveto(lat, lng, noteid, zoomFlag);
     },
     'click .notetext': function(e) {
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
         var noteid = $(e.target).data('noteid');
-        console.log('click .notecoordinates', lat, lng);
-        Template.map.moveto(lat, lng, noteid);
+        // console.log('click .notecoordinates', lat, lng);
+        var zoomFlag = true;
+        Template.map.moveto(lat, lng, noteid, zoomFlag);
     },
     // ,
     // 'click .notevalue': function(e) {

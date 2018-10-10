@@ -61,3 +61,39 @@ export const getPrice = function(grid10, selfFlag, freeFlag) {
     var price = Math.floor(0.05 * Math.pow(1.35, count-1) * 100 + 0.5)/100;
     return price;
 }
+
+var limitLat = function(lat) {
+    while (lat > 180) {
+        lat -= 360;
+    }
+    while (lat < -180) {
+        lat += 360;
+    }
+    return lat;
+}
+
+var limitLng = function(lng) {
+    while (lng > 90) {
+        lng -= 180;
+    }
+    while (lng < -90) {
+        lng += 180;
+    }
+    return lng;
+}
+
+export const getGrid = function(latlng) {
+    var lat = limitLat(latlng.lat);
+    var lng = limitLng(latlng.lng);
+    var latGrid = Math.floor((lat + 360) * 100) + '';
+    var lngGrid = Math.floor((lng + 360) * 100) + '';
+    return latGrid + lngGrid;
+}
+
+export const getGrid10 = function(latlng) {
+    var lat = limitLat(latlng.lat);
+    var lng = limitLng(latlng.lng);
+    var latGrid = Math.floor((lat + 360) * 10) + '';
+    var lngGrid = Math.floor((lng + 360) * 10) + '';
+    return latGrid + lngGrid;
+}

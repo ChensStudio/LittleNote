@@ -163,23 +163,16 @@ Template.map.rendered = function() {
   var query = Markers.find();
   query.observe({
     added: function (document) {
-      var marker = L.marker(document.latlng)
-        .bindTooltip('test', 
-        {
-            permanent: true, 
-            direction: 'right'
-        })
+      var marker = L.marker(document.latlng, {
+        icon: new L.DivIcon({
+            className: 'marker-tooltip',
+            html: '<div class="markertooltip"><div class="markertooltip-tip-container"><div class="markertooltip-tip"></div></div><div class="markertooltip-inner">' + document.note + '</div></div>'
+        })})
         .on('click', function(event) {
           Template.map.moveto(document.latlng.lat, document.latlng.lng, document._id);
           // Markers.remove({_id: document._id});
         });
-       markers.addLayer(marker);
-       // marker.bindTooltip('test', 
-       //  {
-       //      permanent: true, 
-       //      direction: 'right'
-       //  })
-
+      markers.addLayer(marker);
     },
     removed: function (oldDocument) {
       layers = map._layers;

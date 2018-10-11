@@ -186,6 +186,65 @@ body {
   background-color: green;
 }
 
+.markertooltip {
+  z-index: 1070;
+  display: block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 12px;
+  opacity: 1;
+  width: 200px;
+  margin-top: 9px;
+  margin-left: -1px;
+}
+
+.markertooltip-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #fff;
+  text-align: left;
+  background-color: rgba(18, 75, 117, 1);
+  border-radius: 4px;
+}
+
+.markertooltip-tip-container {
+  width: 40px;
+  height: 20px;
+  position: absolute;
+  left: 50%;
+  margin-left: -19px;
+  margin-top: -10px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.markertooltip-tip {
+  width: 10px;
+  height: 10px;
+  padding: 1px;
+  margin: 7px auto 4px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-color: rgba(18, 75, 117, 1);
+  opacity: 1;
+}
+
 @media all and (max-width: 480px) {
   /* styles for iPhone/Android landscape (and really narrow browser windows) */
   html, body {

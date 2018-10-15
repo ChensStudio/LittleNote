@@ -4,6 +4,12 @@ import {dateFormat, getPrice} from '../../utils.js';
 
 var myContract;
 
+var notesLoaded = false;
+var accountsLoaded = false;
+
+Meteor.subscribe('notes', function(){ notesLoaded = true; });
+Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
+
 Template.notesbody.helpers({
     // notes:[
     //     {
@@ -45,12 +51,13 @@ Template.notesbody.helpers({
             if (account.length > 0) {
                 n.name = account[0].name;
             }
+            console.log("getnotes from views");
             n.price = getPrice(n.grid10, true)
             if (n.forSell) {
-                n.forSellInfo = 'Price: ' + n.price + 'MC';
+                n.forSellInfo = 'Price: ' + n.price + ' MOAC';
             }
         });
-        console.log('getNotes', notes);
+        console.log('getNotes 1', notes);
         return notes;
     },
     'isMicroMessage': function () {
@@ -86,7 +93,7 @@ Template.notesbody.helpers({
     'getNotes': function() {
         var query = Notes.find({});
         var notes = query.fetch();
-        console.log('getNotes', notes);
+        console.log('getNotes 2', notes);
         return notes;
     }
 });

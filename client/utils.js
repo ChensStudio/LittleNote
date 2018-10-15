@@ -1,5 +1,8 @@
 import {Notes} from '../imports/api/notes/notes.js';
 
+Meteor.subscribe('notes');
+Meteor.subscribe('accounts');
+
 var ONE_MINUTE = 60 * 1000;
 var ONE_HOUR = 60 * ONE_MINUTE;
 var ONE_DAY = 24 * ONE_HOUR;
@@ -46,15 +49,21 @@ export const dateFormat = function(d) {
 
 export const getPrice = function(grid10, selfFlag, freeFlag) {
     var count = Notes.find({"grid10": grid10}).count();
-    if (!selfFlag) {
+    // console.log("getPrice count", count, "grid10", grid10);
+
+    if (selfFlag) {
         if (count == 0) {
-          if (freeFlag) {
-            return 'FREE';
-          } else {
-            return 0;
-          }
+            count++;
+        }
+    } else {
+        if (count == 0) {
+            if (freeFlag) {
+                return 'FREE';
+            } else {
+                return 0;
+            }
         } else {
-          count++;
+            count++;
         }
     }
 
@@ -62,24 +71,24 @@ export const getPrice = function(grid10, selfFlag, freeFlag) {
     return price;
 }
 
-var limitLat = function(lat) {
-    while (lat > 180) {
-        lat -= 360;
-    }
-    while (lat < -180) {
-        lat += 360;
-    }
-    return lat;
-}
-
 var limitLng = function(lng) {
-    while (lng > 90) {
-        lng -= 180;
+    while (lng > 180) {
+        lng -= 360;
     }
-    while (lng < -90) {
-        lng += 180;
+    while (lng < -180) {
+        lng += 360;
     }
     return lng;
+}
+
+var limitLat = function(lat) {
+    while (lat > 90) {
+        lat -= 180;
+    }
+    while (lat < -90) {
+        lat += 180;
+    }
+    return lat;
 }
 
 export const getGrid = function(latlng) {

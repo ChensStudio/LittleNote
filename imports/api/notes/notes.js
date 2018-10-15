@@ -4,18 +4,40 @@ import SimpleSchema from 'simpl-schema';
 import { TAPi18n } from 'meteor/tap:i18n';
 
 class NotesCollection extends Mongo.Collection {
-  insert(note, callback) {
-    const ourNote = note;
-    // if (!ourNote.note) {
-    //   const defaultName = TAPi18n.__('notes.insert.note', null, language);
-    //   let nextLetter = 'A';
-    //   ourNote.name = `${defaultName} ${nextLetter}`;
-    // }
-    return super.insert(ourNote, callback);
-  }
+    insert(note, callback) {
+        const ourNote = note;
+        return super.insert(ourNote, callback);
+    }
 
   update(selector, modifier) {
     const result = super.update(selector, modifier);
+    return result;
+  }
+
+  findByBoundary(topLeft, bottomRight){
+    var latMax = topLeft.latlng.lat;
+    var latMin = bottomRight.latlng.lat;
+    var lngMax = bottomRight.latlng.lng;
+    var lngMin = topLeft.latlng.lng;
+    var query;
+
+    if(lngMax < lngMin){
+        query = {
+            "latlng.lat": {$gte: latMin, $lte: latMax}
+            , $or: [
+                {"latlng.lng": {$gte: lngMin}}
+                ,{"latlng.lng": {$lte: lngMax}}
+            ]
+        };
+    }
+    else{
+        query = {
+            "latlng.lat": {$gte: latMin, $lte: latMax}
+            ,"latlng.lng": {$gte: lngMin, $lte: lngMax}
+        };
+    }
+
+    const result = super.find(query);
     return result;
   }
 }

@@ -32,6 +32,10 @@ Template.notesbody.helpers({
     //     }
     // ],
     'notes': function() {
+        // var topLeft = {latlng: {lng: -120, lat: 60}};
+        // var bottomRight = {latlng: {lng: -110, lat: 50}};
+        // var query = Notes.findByBoundary(topLeft, bottomRight);
+
         var query = Notes.find({});
         var notes = query.fetch();
         notes.forEach(function(n) {

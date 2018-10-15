@@ -46,6 +46,26 @@ Meteor.startup(() => {
         note: 'I am your President. I like to use Twitter. And, you are fired!',
         forSell: true,
       },
+      {
+        address: '0xadf50657d83802a79f5021c972a8',
+        latlng: {
+          lng: -178.1357,
+          lat: 28.1299,
+        },
+        //grid: 0,
+        note: 'I am in pacific',
+        forSell: true,
+      },
+      {
+        address: '0xadf50657d83802a79f5021c972a8',
+        latlng: {
+          lng: 178.1357,
+          lat: 26.1299,
+        },
+        //grid: 0,
+        note: 'I am still in pacific',
+        forSell: true,
+      },
     ];
 
     var timestamp = (new Date()).getTime();

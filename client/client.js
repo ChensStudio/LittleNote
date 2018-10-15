@@ -1,12 +1,26 @@
+import {dateFormat, getGrid, getGrid10, getPrice} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
-import {dateFormat, getPrice, getGrid, getGrid10} from './utils.js';
 
-Meteor.subscribe('notes');
-Meteor.subscribe('accounts');
+var Markers = Notes;
+
+var currLatitude, currLongitude;
+var map;
+var userAddress;
+var userName;
+
+var notesLoaded = false;
+var accountsLoaded = false;
+
+Meteor.subscribe('notes', function(){ notesLoaded = true; });
+Meteor.subscribe('accounts', function(){ 
+  accountsLoaded = true; 
+  popUserInfo();
+});
 
 var tooltip;
+var chain3js;
 
 // on startup run resizing event
 Meteor.startup(function() {
@@ -14,12 +28,76 @@ Meteor.startup(function() {
     $('#map').css('height', window.innerHeight - 82 - 45);
   });
   $(window).resize(); // trigger resize event 
+
+  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+  if (typeof web3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+    chain3js = new Chain3(web3.currentProvider);
+  } else if (typeof chain3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+    chain3js = new Chain3(chain3.currentProvider);
+  } else{
+    console.log('No chain3? You should consider trying MetaMask!')
+    // chain3js - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+    chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
+  }
+
 });
  
-var Markers = Notes;
+var getUserAddress = function(callback) {
+  chain3js.mc.getAccounts(function(e, c) {
+    userAddress = c[0];
+    if (callback) {
+      callback(e, c);
+    }
+  });
+}
 
-var currLatitude, currLongitude;
-var map;
+var loadUsername = function() {
+  var accounts = Accounts.find({address: userAddress}).fetch();
+  console.log(userAddress, "accounts", accounts);
+  if (accounts.length>0) {
+    userName = accounts[0].name;
+  }
+  console.log('userName', userName);
+}
+
+var popUserInfo = function(callback) {
+  getUserAddress(function(e, accounts) {
+    console.log('userAddress', userAddress);
+    if (userAddress) {
+      loadUsername();
+      if (callback) {
+        var userInfo = {
+          address: userAddress,
+          name: userName
+        };
+        callback(e, userInfo);
+      }
+    } else if (callback) {
+      callback(e, null);
+    }
+  });
+}
+
+var getLatLng4 = function(latlng) {
+  var lat4 = Math.floor(latlng.lat * 10000 + 0.5) / 10000;
+  var lng4 = Math.floor(latlng.lng * 10000 + 0.5) / 10000;
+
+  return {lat: lat4, lng: lng4};
+}
+
+var displayCoordinates = function(latlng) {
+  console.log('latlng', latlng);
+
+  var latAbs = Math.abs(latlng.lat.toFixed(4));
+  var lngAbs = Math.abs(latlng.lng.toFixed(4));
+
+  var lat = latlng.lat > 0 ? latAbs + ' N' : latAbs + ' S';
+  var lng = latlng.lng > 0 ? lngAbs + ' E' : lngAbs + ' W';
+  return lat + ', ' + lng;
+}
+
 
 Template.map.rendered = function() {
   var setPosition =  function(position) {
@@ -32,9 +110,10 @@ Template.map.rendered = function() {
 
   var updateTooltip = function(evt) {
     var grid10 = getGrid10(evt.latlng);
+    // console.log('updateTooltip');
     var price = getPrice(grid10, false, true);
     if (price != 'FREE') {
-      price += 'MC';
+      price += ' MOAC';
     }
     var content = 'Price: ' + price;
     tooltip
@@ -43,16 +122,6 @@ Template.map.rendered = function() {
     tooltip.show();
   }
 
-  var displayCoordinates = function(latlng) {
-    console.log('latlng', latlng);
-
-    var latAbs = Math.abs(latlng.lat.toFixed(4));
-    var lngAbs = Math.abs(latlng.lng.toFixed(4));
-
-    var lat = latlng.lat > 0 ? latAbs + ' N' : latAbs + ' S';
-    var lng = latlng.lng > 0 ? lngAbs + ' E' : lngAbs + ' W';
-    return lat + ', ' + lng;
-  }
 
   var createButton = function(label, container) {
     var btn = L.DomUtil
@@ -60,6 +129,64 @@ Template.map.rendered = function() {
     btn.setAttribute('type', 'button');
     btn.innerHTML = label;
     return btn;
+  }
+
+  var createNoteModal = function(popup, latlng, noteText) {
+    if (!userAddress) {
+      popUserInfo(function(e, userInfo) {
+        if (userInfo) {
+          var latlng4 = getLatLng4(latlng);
+          var grid = getGrid(latlng4);
+          var grid10 = getGrid10(latlng4);
+          var forSell = true;
+          var inserts = {
+            address: userAddress,
+            latlng: latlng4,
+            grid: grid,
+            grid10: grid10,
+            noteText: noteText,
+            forSell: true,
+          };
+          console.log('inserts', inserts);
+          insert.call(inserts
+          , (err)=>{
+                alert(err.message);
+          });
+          // Notes.insert(userAddress, coordinates, grid, grid10, noteText, forSell);
+        }
+      });
+    } else {
+      var latlng4 = getLatLng4(latlng);
+      var grid = getGrid(latlng4);
+      var grid10 = getGrid10(latlng4);
+      var forSell = true;
+      var inserts = {
+        address: userAddress,
+        latlng: latlng4,
+        grid: grid,
+        grid10: grid10,
+        noteText: noteText,
+        forSell: true,
+      };
+      console.log('inserts', inserts);
+      insert.call(inserts
+      , (err)=>{
+            alert(err.message);
+      });
+    }
+    // console.log('userAddress', userAddress);
+    // var container = L.DomUtil.create('div');
+    // var grid10 = getGrid10(coordinates);
+    // var price = getPrice(grid10, selfFlag, false);
+
+    // if (price == 0) {
+    //   container.innerHTML = coordinates + ' <br>Write down your first permanent note.<br><br><input type="text" maxlength="128" name="note"><br>';
+    // }
+
+    // var postBtn = createButton('Sign and Post', container);
+
+    // popup.setContent(container);
+
   }
 
   L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
@@ -99,24 +226,41 @@ Template.map.rendered = function() {
   var popup = L.popup();
   var container = L.DomUtil.create('div');
   map.on('click', function(event) {
-    var coordinates = displayCoordinates(event.latlng);
-    var grid10 = getGrid10(event.latlng);
-    var price = getPrice(grid10, false, true);
-    if (price != 'FREE') {
-      price += 'MC';
+    if (event.originalEvent && event.originalEvent.key == "Enter") {
+      return;
     }
 
-    container.innerHTML = coordinates + ' <br>Your permanent note for ' + price + '<br><br>';
+    var coordinates = displayCoordinates(event.latlng);
+    var grid10 = getGrid10(event.latlng);
+    console.log("map on click");
+    var price = getPrice(grid10, false, true);
+    if (price != 'FREE') {
+      price += ' MOAC';
+    }
+
+    var userNameDiv = '';
+    if (!userName) {
+      userNameDiv = '<label for="username">User name:</label><br><input class="username" type="text" name="username"/><br><br>';
+    } else {
+      userNameDiv = 'You will post as ' + userName + '<br><br>';
+    }
+
+    container.innerHTML = coordinates + ' <br>Your permanent note for ' + price + '<br><br><textarea class="notetobeposted" type="text" name="notetobeposted" maxlength="128" rows="4" cols="40"></textarea><br><br>' + userNameDiv;
     var postBtn = createButton('Post here.', container);
 
     L.DomEvent.on(postBtn, 'click', () => {
-      alert("toto");
+      // alert("toto");
+      var noteText = $('.notetobeposted').val();
+      // alert(noteText);
+      createNoteModal(popup, event.latlng, noteText);
     });
 
     popup
       .setLatLng(event.latlng)
       .setContent(container)
       .openOn(map);
+
+    $('.notetobeposted').focus();
 
     L.DomEvent.on(popup._container, 'mousemove', function(e) {
       // console.log("mousemove popup._container");
@@ -202,7 +346,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
   var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><div class="popupnotetext">' + note.note + '</div><br><br><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
   if (note.forSell) {
-
+    console.log("note forsell")
     var price = getPrice(note.grid10, true);
     // console.log("popup price", price);
     content += '<br><br><span class="popupforsell">Buy this Note for ' + price + ' MOAC</span>';

@@ -3,7 +3,8 @@ import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice, getGrid, getGrid10} from './utils.js';
 
-Meteor.subscribe('notes');
+Meteor.subscribe('notesWithAccountName');
+// Meteor.subscribe('notes');
 Meteor.subscribe('accounts');
 
 var tooltip;
@@ -63,8 +64,8 @@ Template.map.rendered = function() {
   }
 
   L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
-
-  //Read from mongo
+  
+    //Read from mongo
   //console.log(Notes.find({}));
 
   map = L.map('map', {

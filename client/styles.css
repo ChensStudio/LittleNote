@@ -218,6 +218,7 @@ body {
   text-align: left;
   background-color: rgba(18, 75, 117, 1);
   border-radius: 4px;
+  position: relative;
 }
 
 .markertooltip-tip-container {
@@ -232,6 +233,7 @@ body {
 }
 
 .markertooltip-tip {
+  position: relative;
   width: 10px;
   height: 10px;
   padding: 1px;

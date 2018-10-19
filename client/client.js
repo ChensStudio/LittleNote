@@ -2,6 +2,7 @@ import {dateFormat, getGrid, getGrid10, getPrice} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
+import lightwallet from 'eth-lightwallet';
 
 var Markers = Notes;
 
@@ -20,7 +21,7 @@ Meteor.subscribe('accounts', function(){
 });
 
 var tooltip;
-var chain3js;
+// var chain3js;
 
 // on startup run resizing event
 Meteor.startup(function() {
@@ -30,27 +31,30 @@ Meteor.startup(function() {
   $(window).resize(); // trigger resize event 
 
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  if (typeof web3 !== 'undefined') {
+  if (typeof chain3 !== 'undefined') {
+    console.log("chain3 is defined");
     // Use Mist/MetaMask's provider
-    chain3js = new Chain3(web3.currentProvider);
-  } else if (typeof chain3 !== 'undefined') {
+    global.chain3js = new Chain3(chain3.currentProvider);
+  } else if (typeof web3 !== 'undefined') {
+    console.log("web3 is defined");
     // Use Mist/MetaMask's provider
-    chain3js = new Chain3(chain3.currentProvider);
-  } else{
+    global.chain3js = new Chain3(web3.currentProvider);
+  } else {
     console.log('No chain3? You should consider trying MetaMask!')
     // chain3js - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
+    global.chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
   }
 
 });
  
-var getUserAddress = function(callback) {
-  chain3js.mc.getAccounts(function(e, c) {
-    userAddress = c[0];
-    if (callback) {
-      callback(e, c);
+var getUserAddress = function() {
+  userAddress = chain3js.mc.accounts[0];
+
+  var accountInterval = setInterval(function() {
+    if (chain3js.mc.accounts[0] !== userAddress) {
+      userAddress = chain3js.mc.accounts[0];
     }
-  });
+  }, 500);
 }
 
 var loadUsername = function() {
@@ -63,21 +67,19 @@ var loadUsername = function() {
 }
 
 var popUserInfo = function(callback) {
-  getUserAddress(function(e, accounts) {
-    console.log('userAddress', userAddress);
-    if (userAddress) {
-      loadUsername();
-      if (callback) {
-        var userInfo = {
-          address: userAddress,
-          name: userName
-        };
-        callback(e, userInfo);
-      }
-    } else if (callback) {
-      callback(e, null);
+  getUserAddress();
+  if (userAddress) {
+    loadUsername();
+    if (callback) {
+      var userInfo = {
+        address: userAddress,
+        name: userName
+      };
+      callback(e, userInfo);
     }
-  });
+  } else if (callback) {
+    callback(e, null);
+  }
 }
 
 var getLatLng4 = function(latlng) {
@@ -98,6 +100,79 @@ var displayCoordinates = function(latlng) {
   return lat + ', ' + lng;
 }
 
+var createNewAddress = function(userName) {
+  var address = createNewAddressOnMOAC();
+  // createNewUserNameOnMOAC(address, userName);
+}
+
+var createNewAddressOnMOAC = function() {
+  // generate a new BIP32 12-word seed
+  var secretSeed = lightwallet.keystore.generateRandomSeed();
+  console.log('secretSeed', secretSeed);
+
+  // the seed is stored encrypted by a user-defined password
+  // var password = prompt('Enter password for encryption', 'password');
+  var password = '';
+  lightwallet.keystore.deriveKeyFromPasswordAndSalt(password, '', function (err, pwDerivedKey) {
+    if (err) {
+      console.log('err', err);
+    }
+    
+    var ks = new lightwallet.keystore(secretSeed, pwDerivedKey);
+
+    // generate five new address/private key pairs
+    // the corresponding private keys are also encrypted
+    ks.generateNewAddress(pwDerivedKey, 5);
+    var addr = ks.getAddresses();
+    console.log('ks', addr, pwDerivedKey);
+    // Create a custom passwordProvider to prompt the user to enter their
+    // password whenever the hooked web3 provider issues a sendTransaction
+    // call.
+    ks.passwordProvider = function (callback) {
+      var pw = prompt("Please enter password", "Password");
+      callback(null, pw);
+    };
+
+  // Now set ks as transaction_signer in the hooked web3 provider
+  // and you can start using web3 using the keys/addresses in ks!
+  });
+
+  // lightwallet.keystore.createVault({
+  //   // password: '',
+  //   // seedPhrase: seedPhrase, // Optionally provide a 12-word seed phrase
+  //   // salt: fixture.salt,     // Optionally provide a salt.
+  //                              // A unique salt will be generated otherwise.
+  //   hdPathString: hdPath    // Optional custom HD Path String
+  // }, function (err, ks) {
+  //     if (err) {
+  //       console.log('err0', err);
+  //     }
+  //   // Some methods will require providing the `pwDerivedKey`,
+  //   // Allowing you to only decrypt private keys on an as-needed basis.
+  //   // You can generate that value with this convenient method:
+  //   ks.keyFromPassword('', function (err, pwDerivedKey) {
+  //     if (err) {
+  //       console.log('err', err);
+  //     }
+
+  //     // generate five new address/private key pairs
+  //     // the corresponding private keys are also encrypted
+  //     ks.generateNewAddress(pwDerivedKey, 5);
+  //     var addr = ks.getAddresses();
+  //     console.log('ks', addr, pwDerivedKey);
+
+  //     ks.passwordProvider = function (callback) {
+  //       var pw = prompt("Please enter password", "Password");
+  //       callback(null, pw);
+  //     };
+
+  //     // Now set ks as transaction_signer in the hooked web3 provider
+  //     // and you can start using web3 using the keys/addresses in ks!
+  //   });
+  // });
+  // var account = chain3js.personal.newAccount();
+  // console.log('createNewAddressOnMOAC', account);
+}
 
 Template.map.rendered = function() {
   var setPosition =  function(position) {
@@ -122,7 +197,6 @@ Template.map.rendered = function() {
     tooltip.show();
   }
 
-
   var createButton = function(label, container) {
     var btn = L.DomUtil
       .create('button', 'postbtn', container);
@@ -132,48 +206,38 @@ Template.map.rendered = function() {
   }
 
   var createNoteModal = function(popup, latlng, noteText) {
-    if (!userAddress) {
-      popUserInfo(function(e, userInfo) {
-        if (userInfo) {
-          var latlng4 = getLatLng4(latlng);
-          var grid = getGrid(latlng4);
-          var grid10 = getGrid10(latlng4);
-          var forSell = true;
-          var inserts = {
-            address: userAddress,
-            latlng: latlng4,
-            grid: grid,
-            grid10: grid10,
-            noteText: noteText,
-            forSell: true,
-          };
-          console.log('inserts', inserts);
-          insert.call(inserts
-          , (err)=>{
-                alert(err.message);
-          });
-          // Notes.insert(userAddress, coordinates, grid, grid10, noteText, forSell);
+    popUserInfo(function(e, userInfo) {
+      console.log('createNoteModal userInfo', userInfo);
+      createNewAddress();
+      if (userInfo) {
+        var latlng4 = getLatLng4(latlng);
+        var grid = getGrid(latlng4);
+        var grid10 = getGrid10(latlng4);
+        var forSell = true;
+        var inserts = {
+          address: userAddress,
+          latlng: latlng4,
+          grid: grid,
+          grid10: grid10,
+          noteText: noteText,
+          forSell: true,
+        };
+        // console.log('inserts', inserts);
+        insert.call(inserts
+        , (err)=>{
+              alert(err.message);
+        });
+        // Notes.insert(userAddress, coordinates, grid, grid10, noteText, forSell);
+      } else {
+        if (!userAddress) {
+          createNewAddress();
+        } else if (!userName) {
+          createNewUser(function(e) {
+
+          })
         }
-      });
-    } else {
-      var latlng4 = getLatLng4(latlng);
-      var grid = getGrid(latlng4);
-      var grid10 = getGrid10(latlng4);
-      var forSell = true;
-      var inserts = {
-        address: userAddress,
-        latlng: latlng4,
-        grid: grid,
-        grid10: grid10,
-        noteText: noteText,
-        forSell: true,
-      };
-      console.log('inserts', inserts);
-      insert.call(inserts
-      , (err)=>{
-            alert(err.message);
-      });
-    }
+      }
+    });
     // console.log('userAddress', userAddress);
     // var container = L.DomUtil.create('div');
     // var grid10 = getGrid10(coordinates);
@@ -195,7 +259,8 @@ Template.map.rendered = function() {
   //console.log(Notes.find({}));
 
   map = L.map('map', {
-    doubleClickZoom: false
+    doubleClickZoom: false,
+    worldCopyJump: true
   }).setView([49.25044, -123.137], 4);
 
   // L.tileLayer.provider('Stamen.Terrain', {maxZoom: 16}).addTo(map);

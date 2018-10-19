@@ -1,13 +1,36 @@
 import { Mongo } from 'meteor/mongo';
 import { Factory } from 'meteor/dburles:factory';
 import SimpleSchema from 'simpl-schema';
-import { TAPi18n } from 'meteor/tap:i18n';
+import { Accounts } from '../accounts/accounts.js';
+//import { TAPi18n } from 'meteor/tap:i18n';
 
 class NotesCollection extends Mongo.Collection {
-    insert(note, callback) {
-        const ourNote = note;
-        return super.insert(ourNote, callback);
-    }
+  insert(note, callback) {
+      const ourNote = note;
+      return super.insert(ourNote, function(err, records){
+        if(!err){
+            var count = Notes.find({"address":note.address}).count();
+            Accounts.update(
+                {
+                    "address" : ourNote.address
+                },
+                {$set:
+                    {
+                        "noteCounts": parseInt(count)
+                    }
+                },
+                {
+                    "multi" : false,
+                    "upsert" : false
+                }
+            );
+        }
+        else
+        {
+            return err;
+        }
+    });
+  }
 
   update(selector, modifier) {
     const result = super.update(selector, modifier);

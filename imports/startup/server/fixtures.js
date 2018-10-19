@@ -4,6 +4,46 @@ import { Accounts } from '../../api/accounts/accounts.js';
 
 // if the database is empty on server start, create some sample data.
 Meteor.startup(() => {
+  if (Accounts.find().count() === 0) {
+    var timestamp = (new Date()).getTime();
+
+    const accountsData = [
+      {
+        address: '0x57d83802a772adf506a89f5021c9',
+        name: 'C Ronaldo',
+        noteCounts: 0
+      },
+      {
+        address: '0xadf57d83802a772506a89f5034d6',
+        name: 'L Messi',
+        noteCounts: 0
+      },
+      {
+        address: '0x506a857d83802a7df9f5021c972a',
+        name: 'Z Zidane',
+        noteCounts: 0
+      },
+      {
+        address: '0xadf50657d83802a79f5021c972a8',
+        name: 'RealDonaldTrump',
+        noteCounts: 0
+      },
+    ];
+
+    accountsData.forEach((data) => {
+      Accounts.insert(
+        {
+          address: data.address,
+          name: data.name,
+          noteCounts: data.noteCounts,
+          createdAt: new Date(timestamp),
+        }
+      );
+      timestamp += 10000; // ensure unique timestamp.
+    });
+  }
+
+
   if (Notes.find().count() === 0) {
     const data = [
       {
@@ -84,40 +124,4 @@ Meteor.startup(() => {
       timestamp += 10000; // ensure unique timestamp.
     });
   }
-
-
-  if (Accounts.find().count() === 0) {
-    var timestamp = (new Date()).getTime();
-
-    const accountsData = [
-      {
-        address: '0x57d83802a772adf506a89f5021c9',
-        name: 'C Ronaldo'
-      },
-      {
-        address: '0xadf57d83802a772506a89f5034d6',
-        name: 'L Messi'
-      },
-      {
-        address: '0x506a857d83802a7df9f5021c972a',
-        name: 'Z Zidane'
-      },
-      {
-        address: '0xadf50657d83802a79f5021c972a8',
-        name: 'RealDonaldTrump'
-      },
-    ];
-
-    accountsData.forEach((data) => {
-      Accounts.insert(
-        {
-          address: data.address,
-          name: data.name,
-          createdAt: new Date(timestamp),
-        }
-      );
-      timestamp += 10000; // ensure unique timestamp.
-    });
-  }
-
 });

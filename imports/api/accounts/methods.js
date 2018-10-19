@@ -20,6 +20,7 @@ export const insert = new ValidatedMethod({
         const account={
             name,
             address,
+            noteCounts: 0,
             createdAt: new Date(),
         };
 

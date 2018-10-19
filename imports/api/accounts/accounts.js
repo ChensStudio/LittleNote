@@ -41,6 +41,10 @@ Accounts.schema = new SimpleSchema({
     type: String,
     // denyUpdate: true,
   },
+  noteCounts: {  //onchain //XXXXXYYYYY
+    type: SimpleSchema.Integer,
+    optional: false,
+  },
   createdAt: {  //onchain
     type: Date,
     // denyUpdate: true,

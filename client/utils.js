@@ -106,3 +106,10 @@ export const getGrid10 = function(latlng) {
     var lngGrid = Math.floor((lng + 360) * 10) + '';
     return latGrid + lngGrid;
 }
+
+export const getLatLng4 = function(latlng) {
+  var lat4 = Math.floor(latlng.lat * 10000 + 0.5) / 10000;
+  var lng4 = Math.floor(latlng.lng * 10000 + 0.5) / 10000;
+
+  return {lat: lat4, lng: lng4};
+}

@@ -14,6 +14,7 @@ App.accessRule('*.openstreetmap.org/*');
 App.accessRule('api.tiles.mapbox.com/*');
 // allow font awesome fonts
 App.accessRule('use.fontawesome.com/*');
+App.accessRule('*.tile.osm.org/*');
 
 // App.accessRule('stamen-tiles-a.a.ssl.fastly.net/*');
 // App.accessRule('stamen-tiles-b.a.ssl.fastly.net/*');

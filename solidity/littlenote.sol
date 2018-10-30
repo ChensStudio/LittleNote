@@ -1,4 +1,4 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.24;
 //Xinle Yang
 //The full contract handling betting and rewarding.
 
@@ -29,7 +29,7 @@ contract LittleNote {
     //1) both are turned into positive numbers by adding 360 to each.
     //2) both will be multiplied by 10**16
     struct Note {
-        string _id;
+        bytes _id;
         address userAddress;
         string note;
         uint256 lat;
@@ -44,21 +44,26 @@ contract LittleNote {
 
     struct Account {
         address userAddress;
-        string userName;
+        bytes userName;
         uint256 noteNumber;
     }
 
-    mapping (address => Account) public accounts;
-    mapping (string => uint256) public accountsByUserName;
+    mapping (address => Account) private accounts;
+    mapping (bytes => uint256) private accountsByUserName;
     address[] public accountsArray;
 
-    mapping (string => Note) public notes;
-    string[] public notesArray;
-    mapping (uint256 => uint256) public notesCountByGrid10;
-    mapping (uint256 => string[]) public notesIdByGrid10;
-    string[] public potNotesId;
+    mapping (bytes => Note) private notes;
+    bytes[] public notesArray;
+    mapping (uint256 => uint256) private notesCountByGrid10;
+    mapping (uint256 => bytes[]) private notesIdByGrid10;
+    bytes[] public potNotesId;
 
-    mapping (uint256 => uint256) public hourlyPotReserves;
+    mapping (uint256 => uint256) private hourlyPotReserves;
+    uint256[] public hourlyPotReservesArray;
+
+    mapping (address => uint256) private investors;
+    address[] public investorsArray; 
+    uint256 totalInvestment = 0;
 
     constructor() public {
         founder = msg.sender;
@@ -77,14 +82,14 @@ contract LittleNote {
         return true;
     }
 
-    function AddAccount(string userName, address userAddress) public returns (bool) {
-        if (bytes(userName).length > MaxUserNameLength) {
+    function AddAccount(bytes userName, address userAddress) public returns (bool) {
+        if (userName.length > MaxUserNameLength) {
             revert();
         }
-        if (msg.sender != userAddress && (msg.sender != newFounder && !anybodyAddOtherUser) {
+        if (msg.sender != userAddress && (msg.sender != founder && !anybodyAddOtherUser)) {
             revert();
         }
-        if (accounts[userAddress] == 0 && accountsByUserName[userName] == 0) {
+        if (accounts[userAddress].userAddress == 0 && accountsByUserName[userName] == 0) {
             accounts[userAddress].userAddress = userAddress;
             accounts[userAddress].userName = userName;
             accounts[userAddress].noteNumber = 0;
@@ -96,8 +101,17 @@ contract LittleNote {
         }
     }
 
-    function AddNote(string noteText, uint256 lat, uint256 lng, address _id, bool forSell, address referral) public payable {
-        if (accounts[msg.sender] == 0 || bytes(noteText).length > MaxNoteLength) {
+    function Invest() public payable {
+        address investor = msg.sender;
+        if (investors[investor] == 0) {
+            investorsArray.push(investor);
+        }
+        investors[investor] += msg.value;
+        totalInvestment += msg.value;
+    }
+
+    function AddNote(string noteText, uint256 lat, uint256 lng, bytes _id, bool forSell, address referral) public payable {
+        if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength) {
             revert();
         }
         uint256 grid10 = getGrid10(lat, lng);
@@ -106,14 +120,14 @@ contract LittleNote {
             freeFlag = false;
         }
         bool newFlag = true;
-        uint256 price = getPrice(freeFlag, grid10, newFlag);
+        uint256 price = getPrice(freeFlag, newFlag, grid10);
         if (!freeFlag && msg.value < price) {
             revert();
         } else {
             distributePayment(referral, grid10, 0, 0);
         }
-        if (notes[_id] == 0) {
-            string grid = getGrid(lat, lng);
+        if (notes[_id].createdAt == 0) {
+            uint256 grid = getGrid(lat, lng);
             notesArray.push(_id);
             notes[_id]._id = _id;
             notes[_id].userAddress = msg.sender;
@@ -127,15 +141,15 @@ contract LittleNote {
             notes[_id].createdAt = now;
             lastPurchaseTime = now;
             notesCountByGrid10[grid10]++;
-            string[] notesId = notesIdByGrid10[grid10];
+            bytes[] notesId = notesIdByGrid10[grid10];
             notesId.push(_id);
             notesIdByGrid10[grid10] = notesId;
             potNotesId.push(_id);
         }
     }
 
-    function BuyNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral) public payable {
-        if (notes[_id] == 0 || !notes[_id].forSell || accounts[msg.sender] == 0 || bytes(noteText).length > MaxNoteLength) {
+    function BuyNote(string noteText, uint256 lat, uint256 lng, bytes _id, bool forSell, address referral) public payable {
+        if (notes[_id].createdAt == 0 || !notes[_id].forSell || accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength) {
             revert();
         }
         uint256 grid10 = getGrid10(lat, lng);
@@ -144,7 +158,7 @@ contract LittleNote {
             freeFlag = false;
         }
         bool newFlag = false;
-        uint256 price = getPrice(freeFlag, grid10, newFlag);
+        uint256 price = getPrice(freeFlag, newFlag, grid10);
         if (!freeFlag && msg.value < price) {
             revert();
         } else {
@@ -165,19 +179,19 @@ contract LittleNote {
         potNotesId.push(_id);
     }
 
-    function ToggleSell(string _id, bool forSell) public {
-        if (notes[_id] == 0) {
+    function ToggleSell(bytes _id, bool forSell) public {
+        if (notes[_id].createdAt == 0) {
             revert();
         }
         Note note = notes[_id];
-        if (note.userAddress != userAddress || note.userAddress != founder) {
+        if (note.userAddress != msg.sender || note.userAddress != founder) {
             revert();
         }
         note.forSell = forSell;
     }
 
-    function EditNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell) public {
-        if (msg.sender != founder || notes[_id] == 0) {
+    function EditNote(string noteText, uint256 lat, uint256 lng, bytes _id, bool forSell) public {
+        if (msg.sender != founder || notes[_id].createdAt == 0) {
             revert();
         }
         notes[_id].note = noteText;
@@ -263,94 +277,179 @@ contract LittleNote {
         return output;
     }
 
-    function distributePayment(address referral, uint256 grid10, address seller, uint256 sellerCost) public payable {
-        uint256 totalPayment = msg.value;
-
+    function sellerDistribution(uint256 totalMoney, uint256 availableMoney, uint256 sellerCost, address seller) public returns (uint256) {
         //0) Seller will retain the purchasing cost and receive 75% of the profit
-        if (sellerCost > 0) {
-            uint256 sellerTake;
-            if (totalPayment > sellerCost) {
-                sellerTake = sellerCost + (totalPayment - sellerCost) * 75 / 100;
-                seller.send(sellerTake);
-                totalPayment -= totalPayment - sellerTake;
-            } else {
-                sellerTake = totalPayment;
-                seller.send(totalPayment);
-                return;
-            }
+        uint256 sellerTake;
+        if (totalMoney > sellerCost) {
+            sellerTake = sellerCost + (totalMoney - sellerCost) * 75 / 100;
+        } else {
+            sellerTake = totalMoney;
         }
-        
-        //1) 55% patron bonus
+        if (availableMoney < sellerTake) {
+            sellerTake = availableMoney;
+        }
+        availableMoney -= sellerTake;
+        seller.send(sellerTake);
+        return availableMoney;
+    }
+
+    function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public returns (uint256) {
+        //1) 50% patron bonus
         // 1.1) 20% to patrons in this grid10
-        uint256 grid10TotalPatronBonus = totalPayment * 20 / 100;
-        string[] notesId = notesIdByGrid10[grid10];
-        uint256 grid10Len=0;
-        if (notesId !=0 ) {
-            grid10Len = notesId.length;
+        if (notesIdByGrid10[grid10].length != 0 ) {
+            uint256 grid10TotalPatronBonus = totalMoney * 20 / 100;
+            uint256 grid10Len = notesIdByGrid10[grid10].length;
             uint256 grid10Bonus = grid10TotalPatronBonus / grid10Len;
             for (uint256 i=0; i<grid10Len; i++) {
-                string _id = notesId[i];
-                Note note = notes[_id];
-                note.userAddress.send(grid10Bonus);
+                bytes _id = notesIdByGrid10[grid10][i];
+
+                if (availableMoney < grid10Bonus) {
+                    grid10Bonus = availableMoney;
+                }
+                availableMoney -= grid10Bonus;
+                if (notes[_id].userAddress != 0) {
+                    notes[_id].userAddress.send(grid10Bonus);
+                }
             }
         }
 
-        // 1.2) 35% to all patrons
-        uint256 allPatronBonus = totalPayment * 35 / 100;
-        if (notesArray != 0) {
+        return availableMoney;
+    }
+
+    function allPatronDistribution(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+        // 1.2) 30% to all patrons
+        if (notesArray.length != 0) {
+            uint256 allPatronBonus = totalMoney * 30 / 100;
             uint256 arrayLen = notesArray.length;
             uint256 patronBonus = allPatronBonus / arrayLen;
             for (uint256 i=0; i<arrayLen; i++) {
-                Note note = notesArray[i];
-                note.userAddress.send(patronBonus);
+                // noteId = notesArray[i];
+                if (availableMoney < patronBonus) {
+                    patronBonus = availableMoney;
+                }
+                availableMoney -= patronBonus;
+                notes[notesArray[i]].userAddress.send(patronBonus);
             }
         }
 
+        return availableMoney;
+    }
+
+    function updateHourlyPotReserves(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
         // 2) 10% last note pot
         // If during the last 24 hours (accurate to an hour), the pot reserve did not grow by 0.15%, the pot reserve will be distributed to purchasers of the last 24 hours.
         // And, the pot will be reset.
-        potReserve += totalPayment * 10 / 100;
-        updateHourlyPotReserves();
-
-        // 3） 8% referral reward
-        if (referral != 0) {
-            uint256 referralReward = totalPayment * 8 / 100;
-            referral.send(referralReward);
-        }
-
-        // 4） 20% developer team
-        uint256 developerShare = totalPayment * 20 / 100;
-        developerAmount += developerShare;
-
-        //.5） 7% other fees and charity
- 
-
-    }
-
-    function updateHourlyPotReserves() public {
+        uint256 addition= totalMoney * 10 / 100;
+        potReserve += addition;
         uint256 NoOf10Days = now / (10 days);
         uint256 TheHour = (now - now * NoOf10Days) / ( 1 hours);
         hourlyPotReserves[TheHour] = potReserve;
+        hourlyPotReservesArray.push(TheHour);
+        if (availableMoney > addition) {
+            addition = availableMoney;
+        }
+        availableMoney -= addition;
+        return availableMoney;
+    }
+
+    function distributeReferral(uint256 totalMoney, uint256 availableMoney, address referral) public returns (uint256) {
+        // 3） 8% referral reward
+        uint256 referralReward = totalMoney * 8 / 100;
+        if (availableMoney < referralReward) {
+            referralReward = availableMoney;
+        }
+        availableMoney -= referralReward;
+        referral.send(referralReward);
+        return availableMoney;
+    }
+
+    function devTeamDistribution(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+        // 4） 15% developer team
+        uint256 developerShare = totalMoney * 15 / 100;
+        if (availableMoney < developerShare) {
+            developerShare = availableMoney;
+        }
+        availableMoney -= developerShare;
+        developerAmount += developerShare;
+        return availableMoney;
+    }
+
+    function investorDistribution(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+        // 5） 10% investors
+        uint256 investorShare = totalMoney * 10 / 100;
+
+        uint256 uintShare = investorShare / totalInvestment;
+        uint256 len = investorsArray.length; 
+        for (uint256 i=0; i<len; i++) {
+            address investor = investorsArray[i];
+            uint256 amount = investors[investor] * uintShare;
+            investor.send(amount);
+            if (availableMoney < amount) {
+                amount = availableMoney;
+            }
+            availableMoney -= amount;
+        }
+
+        return availableMoney;
+    }
+
+    function distributePayment(address referral, uint256 grid10, address seller, uint256 sellerCost) public payable {
+        uint256 totalMoney = msg.value;
+        uint256 availableMoney = totalMoney;
+
+        //0) Seller will retain the purchasing cost and receive 75% of the profit
+        availableMoney = sellerDistribution(totalMoney, availableMoney, sellerCost, seller);
+
+        //1) 50% patron bonus
+        // 1.1) 20% to patrons in this grid10
+        availableMoney = gridPatronDistribution(totalMoney, availableMoney, grid10);
+
+        // 1.2) 30% to all patrons
+        availableMoney = allPatronDistribution(totalMoney, availableMoney);
+
+        // 2) 10% last note pot
+        availableMoney = updateHourlyPotReserves(totalMoney, availableMoney);
+
+        // 3） 8% referral reward
+        availableMoney = distributeReferral(totalMoney, availableMoney, referral);
+
+        // 4） 15% developer team
+        availableMoney = devTeamDistribution(totalMoney, availableMoney);
+
+        // 5） 10% investors
+        availableMoney = investorDistribution(totalMoney, availableMoney);
+
+        // 6） 7% other fees and charity
+
     }
 
     function distributePotReserve() public {
         uint256 potReserveDelta = getPotReserveDelta();
         if (potReserveDelta >= threshold && lastPurchaseTime - now > 1 days) {
             if (potReserveDelta + potReserve <= potReserve * 10015 / 10000) {
-                if (potNotesId != 0) {
+                if (potNotesId.length != 0) {
                     uint256 potLen = potNotesId.length;
                     uint256 perAddressReward = potReserve / potLen;
                     for (uint256 i=0; i<potLen; i++) {
-                        string _id = potNotesId[i];
+                        bytes _id = potNotesId[i];
                         Note note = notes[_id];
                         address noteAddress = note.userAddress;
                         noteAddress.send(perAddressReward);
                     }
                     delete potNotesId;
-                    delete hourlyPotReserves;
+                    deleteHourlyPotReserves();
                 }
             }
         }
+    }
+
+    function deleteHourlyPotReserves() private {
+        uint256 len = hourlyPotReservesArray.length;
+        for (uint256 i=0; i<len; i++) {
+            delete hourlyPotReserves[hourlyPotReservesArray[i]];
+        }
+
+        delete hourlyPotReservesArray;
     }
 
     function getPotReserveDelta() public returns (uint256) {

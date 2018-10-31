@@ -41,23 +41,47 @@ Meteor.startup(function() {
     console.log("web3 is defined");
     // Use Mist/MetaMask's provider
     global.chain3js = new Chain3(web3.currentProvider);
+    console.log("accounts", chain3js.mc.accounts);
+    // chain3js.mc.sendTransaction({
+    //   from: chain3js.mc.accounts[0], 
+    //   to: '0x3e14313E492cC8AF3abda318d5715D90a37Be587', 
+    //   value: 100,
+    //   data: '',
+    //   gasPrice: 100000000000
+    // },
+    // console.log);
   } else {
     console.log('No chain3? You should consider trying MoacMask!')
     // chain3js - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    global.chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
+    try {
+      global.chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
+    } catch (err) {
+      console.log('Error', err);
+      //if pc user
+      alert('Please install MOACMask wallet.\n\nFor crypto geeks who will run local nodes, you can run a local MOAC node at port 8545');
+      //if mobile user
+
+    }
   }
 });
+
  
 var getUserAddress = function() {
-  gUserAddress = chain3js.mc.accounts[0];
-
-  var accountInterval = setInterval(function() {
-    if (chain3js.mc.accounts[0] !== gUserAddress) {
-      gUserAddress = chain3js.mc.accounts[0];
-      console.log('gUserAddress is updated to [' + gUserAddress + ']');
-      loadUserName();
-    }
-  }, 500);
+  try {
+    gUserAddress = chain3js.mc.accounts[0];
+    var accountInterval = setInterval(function() {
+      if (chain3js.mc.accounts[0] !== gUserAddress) {
+        gUserAddress = chain3js.mc.accounts[0];
+        console.log('gUserAddress is updated to [' + gUserAddress + ']');
+        loadUserName();
+      }
+    }, 500);
+  } catch (err) {
+    console.log('Error', err);
+    //if pc user
+    alert('Please install MOACMask wallet.\n\nFor crypto geeks who will run local nodes, you can run a local MOAC node at port 8545');
+    //if mobile user
+  }
 }
 
 var loadUserName = function() {

@@ -42,3 +42,4 @@ panter:qrcode
 ddp-rate-limiter@1.0.7
 reywood:publish-composite
 moaclib:chain3
+tap:i18n-ui

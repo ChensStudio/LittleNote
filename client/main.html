@@ -2,7 +2,6 @@
   <title>MOAC Little Note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
 
 <body>
@@ -11,13 +10,16 @@
 
 <template name="map">
     <div id="container">
-      <h1 class="title">MOAC Little Note</h1>
+      <div style="display:flex; position: relative;">
+        <span style="width: 100%"><h1 class="title">MOAC Little Note</h1></span>
+        <span class="i18ndropdown" style="width:80px; float:right">{{> i18n_dropdown}}</span>
+      </div>
       <div class="smallcontainer">
         <div class="mapcontainer">
           <div id="map" class="map"></div>
         </div>
         <div id="notes" class="notes">
-          {{> notesbody}}
+          <div>{{> notesbody}}</div>
         </div>
       </div>
       <div class="notice">

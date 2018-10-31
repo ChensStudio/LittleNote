@@ -3,5 +3,9 @@
 		"NewNotes": "Recent Notes",
 		"Lat": "lat: ",
 		"Lng": "lng: "
+	},
+
+	"notice":{
+		
 	}
 }

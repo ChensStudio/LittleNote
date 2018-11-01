@@ -348,7 +348,12 @@ Template.map.rendered = function() {
   //     accessToken: 'sk.eyJ1IjoiYmlhamVlIiwiYSI6ImNqbXN2eWtpazI5emszcGs0MDdnc2JheGUifQ.bBoM1hQuhMOtL8bl87EtBg'
   // }).addTo(map);
 
-  navigator.geolocation.getCurrentPosition(setPosition);
+  map.addControl(L.control.locate({
+    locateOptions: {
+            enableHighAccuracy: true
+  }}));
+
+  // navigator.geolocation.getCurrentPosition(setPosition);
 
   map.on('dblclick', function(event) {
     // Markers.insert({latlng: event.latlng});

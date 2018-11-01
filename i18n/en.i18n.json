@@ -5,7 +5,8 @@
 		"Lng": "lng: ",
 		"Price": "Price: ",
 		"Unit": "MC",
-		"Free": "Free"
+		"Free": "Free",
+		"Title": "MOAC LittleNote"
 	},
 	"notice":{
 		"main_l1": "Post your note permanently on MOAC Blockchain.",

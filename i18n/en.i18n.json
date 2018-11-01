@@ -2,10 +2,13 @@
 	"app":{
 		"NewNotes": "Recent Notes",
 		"Lat": "lat: ",
-		"Lng": "lng: "
+		"Lng": "lng: ",
+		"Price": "Price: ",
+		"Unit": "MC",
+		"Free": "Free"
 	},
-
 	"notice":{
-		
+		"main_l1": "Post your note permanently on MOAC Blockchain.",
+		"main_l2": "Or, make money by selling your note space."
 	}
 }

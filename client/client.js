@@ -290,9 +290,13 @@ Template.map.rendered = function() {
     // console.log('updateTooltip');
     var price = getPrice(grid10, false, true);
     if (price != 'FREE') {
-      price += ' MOAC';
+      price += ' ' + TAPi18n.__("app.Unit");
     }
-    var content = 'Price: ' + price;
+    else{
+      price = TAPi18n.__("app.Free");
+    }
+
+    var content = TAPi18n.__("app.Price") + price;
     tooltip
       .setContent(content)
       .updatePosition(evt.layerPoint);

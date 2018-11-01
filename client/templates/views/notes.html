@@ -13,7 +13,7 @@
             <div>
                 <span class="notecoordinates" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{_ "app.Lat"}}{{latlng.lat}}   {{_ "app.Lng"}}{{latlng.lng}}</span>
                 {{#if forSell}}
-                    <span class="forsell">{{forSellInfo}}</span>
+                    <span class="forsell">{{_ "app.Price"}}{{forSellInfo}} {{_ "app.Unit"}}</span>
                 {{else}}
                     <div class="notforsell">{{notenotforsell}}</div>
                 {{/if}}

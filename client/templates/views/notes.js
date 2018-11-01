@@ -54,7 +54,7 @@ Template.notesbody.helpers({
             console.log("getnotes from views");
             n.price = getPrice(n.grid10, true)
             if (n.forSell) {
-                n.forSellInfo = 'Price: ' + n.price + ' MOAC';
+                n.forSellInfo = n.price;
             }
         });
         console.log('getNotes 1', notes);

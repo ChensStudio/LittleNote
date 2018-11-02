@@ -41,7 +41,7 @@ export const dateFormat = function(d) {
     } else {
         date = then.getDate();
         month = MONTHS[ then.getMonth() ];
-        year = then.getYear();
+        year = 1900 + then.getYear();
         display = month + ' ' + date + ', ' + year;
     }
     return display;
@@ -113,3 +113,16 @@ export const getLatLng4 = function(latlng) {
 
   return {lat: lat4, lng: lng4};
 }
+
+
+export const displayCoordinates = function(latlng) {
+  console.log('latlng', latlng);
+
+  var latAbs = Math.abs(latlng.lat.toFixed(4));
+  var lngAbs = Math.abs(latlng.lng.toFixed(4));
+
+  var lat = latlng.lat > 0 ? latAbs + ' N' : latAbs + ' S';
+  var lng = latlng.lng > 0 ? lngAbs + ' E' : lngAbs + ' W';
+  return lat + ', ' + lng;
+}
+

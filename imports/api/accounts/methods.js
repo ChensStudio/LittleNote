@@ -6,7 +6,7 @@ import { _ } from 'meteor/underscore';
 
 import { Accounts } from './accounts.js';
 
-export const insert = new ValidatedMethod({
+export const accountinsert = new ValidatedMethod({
     name: 'accounts.insert',
     validate: new SimpleSchema({
         address:{
@@ -30,7 +30,7 @@ export const insert = new ValidatedMethod({
 
 // Get list of all method names on Notes
 const ACCOUNTS_METHODS = _.pluck([
-  insert,
+  accountinsert,
 ], 'name');
 
 if (Meteor.isServer) {

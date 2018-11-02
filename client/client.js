@@ -1,16 +1,19 @@
-import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4} from './utils.js';
+import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
+import {accountinsert} from '../imports/api/accounts/methods.js';
 import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
+import MoacConnect from './moacconnect.js';
+// import {encode, decode} from 'rlp';
 
 var Markers = Notes;
 
 var currLatitude, currLongitude;
 var map;
 var gUserAddress;
-var gUserName;
+var gUserName; 
 
 var notesLoaded = false;
 var accountsLoaded = false;
@@ -42,10 +45,13 @@ Meteor.startup(function() {
     // Use Mist/MetaMask's provider
     global.chain3js = new Chain3(web3.currentProvider);
     console.log("accounts", chain3js.mc.accounts);
+
+    MoacConnect.GetInstance();
+    // moacSetupContract();
     // chain3js.mc.sendTransaction({
     //   from: chain3js.mc.accounts[0], 
     //   to: '0x3e14313E492cC8AF3abda318d5715D90a37Be587', 
-    //   value: 100,
+    //   value: 1000000000000000000,
     //   data: '',
     //   gasPrice: 100000000000
     // },
@@ -55,6 +61,7 @@ Meteor.startup(function() {
     // chain3js - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     try {
       global.chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
+      moacSetupContract();
     } catch (err) {
       console.log('Error', err);
       //if pc user
@@ -65,8 +72,8 @@ Meteor.startup(function() {
   }
 });
 
- 
 var getUserAddress = function() {
+  console.log('getUserAddress');
   try {
     gUserAddress = chain3js.mc.accounts[0];
     var accountInterval = setInterval(function() {
@@ -86,7 +93,7 @@ var getUserAddress = function() {
 
 var loadUserName = function() {
   var accounts = Accounts.find({address: gUserAddress}).fetch();
-  console.log(gUserAddress, "accounts", accounts);
+  console.log('loadUserName', gUserAddress, "accounts", accounts);
   if (accounts.length>0) {
     gUserName = accounts[0].name;
   }
@@ -94,6 +101,7 @@ var loadUserName = function() {
 }
 
 var popUserInfo = function(callback) {
+  console.log('popUserInfo');
   getUserAddress();
   if (gUserAddress) {
     loadUserName();
@@ -109,31 +117,24 @@ var popUserInfo = function(callback) {
   }
 }
 
-var displayCoordinates = function(latlng) {
-  console.log('latlng', latlng);
-
-  var latAbs = Math.abs(latlng.lat.toFixed(4));
-  var lngAbs = Math.abs(latlng.lng.toFixed(4));
-
-  var lat = latlng.lat > 0 ? latAbs + ' N' : latAbs + ' S';
-  var lng = latlng.lng > 0 ? lngAbs + ' E' : lngAbs + ' W';
-  return lat + ', ' + lng;
-}
-
 var createNewAddress = function() {
+  console.log('createNewAddress');
   var address = createNewAddressOnMOAC();
   return address;
 }
 
-var createNewUserNameOnMOAC = function(address, userName) {
-  //TODO: create new username on MOAC
-}
-
 var createNewUserName = function(address, userName) {
-  var result = createNewUserNameOnMOAC(address, userName);
-  Accounts.insert({
-    name: userName,
-    address: address
+  console.log('createNewUserName', address, userName);
+  var result = MoacConnect.AddUser(userName, address, function(e, c){
+    console.log('MoacConnect.AddUser callback', e, c);
+    accountinsert.call({
+      name: userName,
+      address: address
+    }, (err)=>{
+      if (err) {
+        alert(err.message);
+      }
+    });
   });
 }
 
@@ -178,7 +179,9 @@ var createNewAddressOnMOAC = function() {
   chain3js.mc.sendTransaction({
       from: chain3js.mc.accounts[0],
       to: chain3js.mc.accounts[0],
-      value: 1
+      value: 0,
+      gas: 5000000,
+      gasPrice: 20000000000
   }, function (error, result) {
       if (error) {
           document.getElementById('output').innerHTML = "Something went wrong!"
@@ -243,6 +246,7 @@ var getCreateNoteData = function(byMyselfFlag, inserts) {
 }
 
 var createNote = function(byMyselfFlag, inserts) {
+  console.log('createNote', byMyselfFlag, inserts);
   var data = getCreateNoteData(byMyselfFlag, inserts);
   //1) try to sign the 
   if (!byMyselfFlag) {
@@ -254,7 +258,9 @@ var createNote = function(byMyselfFlag, inserts) {
       from: gUserAddress,
       to: gContractAddress,
       value: 1,
-      data: data
+      data: data,
+      gasPrice: 20000000000,
+      gas: 5000000
     }, function (error, result) {
       if (error) {
         console.log("error", error);
@@ -270,8 +276,12 @@ var createNote = function(byMyselfFlag, inserts) {
 var createNoteInDatabase = function(inserts) {
   // console.log('inserts', inserts);
   insert.call(inserts
-  , (err)=>{
-        alert(err.message);
+  , (err, result)=>{
+    if (err) {
+      console.log('createNoteInDatabase error', inserts, err);
+    } else {
+      console.log('createNoteInDatabase succeeded', inserts, result);
+    }
   });
   // Notes.insert(userAddress, coordinates, grid, grid10, noteText, forSell);
 }
@@ -319,10 +329,10 @@ Template.map.rendered = function() {
         if (!gUserAddress) {
           gUserAddress = createNewAddress();
         } 
+      }
 
-        if (!gUserName) {
-          createNewUserName(gUserAddress, userName)
-        }
+      if (!gUserName) {
+        createNewUserName(gUserAddress, userName)
       }
 
       toCreateNote(latlng, noteText);

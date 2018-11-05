@@ -11,22 +11,22 @@ Meteor.startup(() => {
       {
         address: '0x57d83802a772adf506a89f5021c9',
         name: 'C Ronaldo',
-        noteCounts: 0
+        noteCounts: 0,
       },
       {
         address: '0xadf57d83802a772506a89f5034d6',
         name: 'L Messi',
-        noteCounts: 0
+        noteCounts: 0,
       },
       {
         address: '0x506a857d83802a7df9f5021c972a',
         name: 'Z Zidane',
-        noteCounts: 0
+        noteCounts: 0,
       },
       {
         address: '0xadf50657d83802a79f5021c972a8',
         name: 'RealDonaldTrump',
-        noteCounts: 0
+        noteCounts: 0,
       },
     ];
 
@@ -36,6 +36,7 @@ Meteor.startup(() => {
           address: data.address,
           name: data.name,
           noteCounts: data.noteCounts,
+          onChainFlag: false,
           createdAt: new Date(timestamp),
         }
       );
@@ -118,6 +119,7 @@ Meteor.startup(() => {
         grid10: '' + (Math.floor((note.latlng.lat + 360) * 10) * 10000 + Math.floor((note.latlng.lng + 360) * 10)),
         note: note.note,
         forSell: note.forSell,
+        onChainFlag: false,
         createdAt: new Date(timestamp),
         updatedAt: new Date(timestamp),
       });

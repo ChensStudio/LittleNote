@@ -15,7 +15,7 @@ contract LittleNote {
     bool public anybodyAddOtherUser;
     uint256 public MaxUserNameLength = 20;
     uint256 public MaxNoteLength = 128;
-    uint256 public MaxFreeNoteCount = 3;
+    uint256 public MaxFreeNoteCount = 1;
 
     uint256 public MinPrice = 25 * 10 ** 18;
     uint256 public MaxPrice = 4 * 10 ** 29;

@@ -24,7 +24,7 @@ export const Accounts = new AccountsCollection('accounts');
 
 // Deny all client-side updates since we will be using methods to manage this collection
 Accounts.deny({
-  // insert() { return true; },
+  insert() { return true; },
   update() { return true; },
   remove() { return true; },
 });

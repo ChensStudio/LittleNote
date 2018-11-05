@@ -90,7 +90,7 @@ var createNewAddress = function() {
   return address;
 }
 
-var createNewUserName = function(address, userName) {
+var createNewUserName = function(address, userName, callback) {
   console.log('createNewUserName', address, userName);
   accountinsert.call({
     name: userName,
@@ -99,12 +99,14 @@ var createNewUserName = function(address, userName) {
     console.log('createNewUserName in database', err, _id);
     if (err) {
       alert(err.message);
+      callback(err);
       return;
     }
 
     gUserName = userName;
     MoacConnect.AddUser(userName, address, function(e, c){
       console.log('MoacConnect.AddUser callback', e, c);
+      callback(e, c);
       //TODO: update database of onChainFlag
     });
   });
@@ -207,7 +209,7 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
     latlng: latlng4,
     grid: grid,
     grid10: grid10,
-    note: noteText,
+    noteText: noteText,
     forSell: forSell
   }
 
@@ -252,6 +254,7 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
       })
     } else {
       MoacConnect.AddNote(moacInserts, function(err, result) {
+        console.log('MoacConnect.AddNote', moacInserts, err, result);
         if (err) {
           console.log("error", err);
           return;
@@ -405,7 +408,12 @@ Template.map.rendered = function() {
         // alert("toto");
         var userName = $('.username').val();
         // alert(noteText);
-        createNewUserName(gUserAddress, userName);
+        createNewUserName(gUserAddress, userName, function(e, c) {
+          if (!e) {
+            userNameBtn.setAttribute('disabled', true);
+            postBtn.removeAttribute('disabled');
+          }
+        });
         // createNoteModal(popup, event.latlng, noteText, userName);
       });
       postBtn.setAttribute('disabled', true);

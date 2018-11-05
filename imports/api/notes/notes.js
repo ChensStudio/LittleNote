@@ -113,6 +113,9 @@ Notes.schema = new SimpleSchema({
     type: Boolean,
     // default: false,
   },
+  onChainFlag:{
+      type: Boolean,
+  },
   createdAt: {  //onchain
     type: Date,
     // denyUpdate: true,
@@ -135,6 +138,7 @@ Notes.publicFields = {
     grid10: 1,
     note: 1,
     forSell: 1,
+    onChainFlag: 1,
     createdAt: 1,
     updatedAt: 1,
 };

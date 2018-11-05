@@ -39,6 +39,7 @@ export const insert = new ValidatedMethod({
             grid10: grid10,
             note: noteText,
             forSell: forSell,
+            onChainFlag: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
@@ -121,11 +122,38 @@ export const setForSell = new ValidatedMethod({
   },
 });
 
+export const setOnChainFlag = new ValidatedMethod({
+    name: 'notes.onChainFlag',
+    validate: new SimpleSchema({
+        noteId: Notes.simpleSchema().schema('_id'),
+        onChainFlag: Notes.simpleSchema().schema('onChainFlag'),
+    }).validator({ clean: true, filter: false }),
+    run({ noteId, onChainFlag }) {
+        const note = Notes.findOne(noteId);
+
+        if (!note.editableBy(this.address)) {
+            throw new Meteor.Error('notes.updateForSell.accessDenied',
+                'You don\'t have permission to edit this note.');
+        }
+
+        // XXX the security check above is not atomic, so in theory a race condition could
+        // result in exposing private data
+
+    Notes.update(noteId, {
+        $set: { 
+            onChainFlag: onChainFlag,
+            updatedAt: new Date(),
+        },
+    });
+  },
+});
+
 // Get list of all method names on Notes
 const NOTES_METHODS = _.pluck([
   insert,
   updateAddress,
   setForSell,
+  setOnChainFlag,
 ], 'name');
 
 if (Meteor.isServer) {

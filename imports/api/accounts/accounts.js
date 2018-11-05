@@ -45,6 +45,9 @@ Accounts.schema = new SimpleSchema({
     type: SimpleSchema.Integer,
     optional: false,
   },
+  onChainFlag: {
+    type: Boolean,
+  },
   createdAt: {  //onchain
     type: Date,
     // denyUpdate: true,
@@ -60,6 +63,7 @@ Accounts.publicFields = {
     name: 1,
     address: 1,
     noteCounts: 1,
+    onChainFlag: 1,
     createdAt: 1,
 };
 

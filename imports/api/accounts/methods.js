@@ -21,6 +21,7 @@ export const accountinsert = new ValidatedMethod({
             name,
             address,
             noteCounts: 0,
+            onChainFlag: false,
             createdAt: new Date(),
         };
 
@@ -28,9 +29,25 @@ export const accountinsert = new ValidatedMethod({
     },
 });
 
+export const setOnChainFlag = new ValidatedMethod({
+    name: 'accounts.onChainFlag',
+    validate: new SimpleSchema({
+        accountId: Accounts.simpleSchema().schema('_id'),
+        onChainFlag: Accounts.simpleSchema().schema('onChainFlag'),
+    }).validator({ clean: true, filter: false }),
+    run({ accountId, onChainFlag }) {
+        Notes.update(accountId, {
+            $set: { 
+                onChainFlag: onChainFlag,
+            },
+    });
+  },
+});
+
 // Get list of all method names on Notes
 const ACCOUNTS_METHODS = _.pluck([
   accountinsert,
+  setOnChainFlag,
 ], 'name');
 
 if (Meteor.isServer) {

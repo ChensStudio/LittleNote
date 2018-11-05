@@ -181,7 +181,12 @@ body {
   cursor:pointer;
 }
 
-.postbtn:hover {
+.postbtn:disabled {
+  background-color: #dddddd;
+  color: #aaaaaa;
+}
+
+.postbtn:hover:enabled {
   border: 1px green;
   background-color: green;
 }

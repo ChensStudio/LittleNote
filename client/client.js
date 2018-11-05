@@ -35,41 +35,8 @@ Meteor.startup(function() {
   });
   $(window).resize(); // trigger resize event 
 
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  if (typeof chain3 !== 'undefined') {
-    console.log("chain3 is defined");
-    // Use Mist/MetaMask's provider
-    global.chain3js = new Chain3(chain3.currentProvider);
-  } else if (typeof web3 !== 'undefined') {
-    console.log("web3 is defined");
-    // Use Mist/MetaMask's provider
-    global.chain3js = new Chain3(web3.currentProvider);
-    console.log("accounts", chain3js.mc.accounts);
+  MoacConnect.InitChain3();
 
-    MoacConnect.GetInstance();
-    // moacSetupContract();
-    // chain3js.mc.sendTransaction({
-    //   from: chain3js.mc.accounts[0], 
-    //   to: '0x3e14313E492cC8AF3abda318d5715D90a37Be587', 
-    //   value: 1000000000000000000,
-    //   data: '',
-    //   gasPrice: 100000000000
-    // },
-    // console.log);
-  } else {
-    console.log('No chain3? You should consider trying MoacMask!')
-    // chain3js - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    try {
-      global.chain3js = new Chain3(new Chain3.providers.HttpProvider("http://localhost:8545"));
-      moacSetupContract();
-    } catch (err) {
-      console.log('Error', err);
-      //if pc user
-      alert('Please install MOACMask wallet.\n\nFor crypto geeks who will run local nodes, you can run a local MOAC node at port 8545');
-      //if mobile user
-
-    }
-  }
 });
 
 var getUserAddress = function() {
@@ -125,17 +92,23 @@ var createNewAddress = function() {
 
 var createNewUserName = function(address, userName) {
   console.log('createNewUserName', address, userName);
-  var result = MoacConnect.AddUser(userName, address, function(e, c){
-    console.log('MoacConnect.AddUser callback', e, c);
-    accountinsert.call({
-      name: userName,
-      address: address
-    }, (err)=>{
-      if (err) {
-        alert(err.message);
-      }
+  accountinsert.call({
+    name: userName,
+    address: address
+  }, (err, _id)=>{
+    console.log('createNewUserName in database', err, _id);
+    if (err) {
+      alert(err.message);
+      return;
+    }
+
+    gUserName = userName;
+    MoacConnect.AddUser(userName, address, function(e, c){
+      console.log('MoacConnect.AddUser callback', e, c);
+      //TODO: update database of onChainFlag
     });
   });
+
 }
 
 var global_keystore;
@@ -213,14 +186,30 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
   var grid = getGrid(latlng4);
   var grid10 = getGrid10(latlng4);
   var forSell = true;
-  var inserts = {
+  var moacInserts = {
+    address: gUserAddress,
+    latlng: latlng4,
+    lat: latlng4.lat,
+    lng: latlng4.lng,
+    grid: grid,
+    grid10: grid10,
+    noteText: noteText,
+    forSell: forSell,
+    value: priceLimit,
+    purchasePrice: priceLimit,
+    mediaFlag: false,
+    _id: 'test',
+    referral: 0
+  };
+
+  var mongoInserts = {
     address: gUserAddress,
     latlng: latlng4,
     grid: grid,
     grid10: grid10,
-    noteText: noteText,
+    note: noteText,
     forSell: forSell
-  };
+  }
 
   var byMyselfFlag = true;
   if (freeFlag) {
@@ -228,61 +217,55 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
       if (balance < gThresholdBalance) {
         //offer create notes without fee.
         byMyselfFlag = false;
-        creatNote(byMyselfFlag, inserts);
+        createNote(byMyselfFlag, moacInserts, mongoInserts);
       } else {
-        createNote(byMyselfFlag, inserts);
+        createNote(byMyselfFlag, moacInserts, mongoInserts);
       }
     });
   } else {
-    createNote(byMyselfFlag, inserts);
+    createNote(byMyselfFlag, moacInserts, mongoInserts);
   }
 
 
 }
 
-var getCreateNoteData = function(byMyselfFlag, inserts) {
-  var data = '';
-  return data;
-}
+var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
+  console.log('createNote', byMyselfFlag, moacInserts, mongoInserts);
 
-var createNote = function(byMyselfFlag, inserts) {
-  console.log('createNote', byMyselfFlag, inserts);
-  var data = getCreateNoteData(byMyselfFlag, inserts);
-  //1) try to sign the 
-  if (!byMyselfFlag) {
-    //2) do transaction for the user
-    createNoteInDatabase(inserts);
-  } else {
-    //3) do the transaction by myself
-    chain3js.mc.sendTransaction({
-      from: gUserAddress,
-      to: gContractAddress,
-      value: 1,
-      data: data,
-      gasPrice: 20000000000,
-      gas: 5000000
-    }, function (error, result) {
-      if (error) {
-        console.log("error", error);
-        //do not try to push into database
-      } else {
-        //push into database
-        createNoteInDatabase(inserts);
-      }
-    });
-  }
-}
-
-var createNoteInDatabase = function(inserts) {
-  // console.log('inserts', inserts);
-  insert.call(inserts
-  , (err, result)=>{
+  createNoteInDatabase(mongoInserts, function(err, _id) {
+    console.log('createNoteInDatabase called', mongoInserts, err, _id);
     if (err) {
-      console.log('createNoteInDatabase error', inserts, err);
+      console.log('createNoteInDatabase err', err);
+      return;
+    }
+
+    moacInserts._id = _id;
+
+    if (!byMyselfFlag) {
+      MoacConnect.HelpAddNote(moacInserts, function(err, result){
+        if (err) {
+          console.log("error", err);
+          return;
+        }
+
+        //TODO: update onChainFlag
+      })
     } else {
-      console.log('createNoteInDatabase succeeded', inserts, result);
+      MoacConnect.AddNote(moacInserts, function(err, result) {
+        if (err) {
+          console.log("error", err);
+          return;
+        }
+
+        //TODO: update onChainFlag
+      });
     }
   });
+}
+
+var createNoteInDatabase = function(mongoInserts, callback) {
+  console.log('createNoteInDatabase', mongoInserts);
+  insert.call(mongoInserts, callback);
   // Notes.insert(userAddress, coordinates, grid, grid10, noteText, forSell);
 }
 
@@ -327,15 +310,25 @@ Template.map.rendered = function() {
 
       if (!userInfo) {
         if (!gUserAddress) {
+
+          //TODO: ask about whether to sign in on moacmask or create a new address.
           gUserAddress = createNewAddress();
         } 
       }
 
       if (!gUserName) {
-        createNewUserName(gUserAddress, userName)
-      }
+        //TODO handle failure.
+        createNewUserName(gUserAddress, userName, function(err, result) {
+          if (err) {
+            console.log('createNewUserName err', err);
+            return;
+          }
 
-      toCreateNote(latlng, noteText);
+          toCreateNote(latlng, noteText);
+        })
+      } else {
+        toCreateNote(latlng, noteText);
+      }
 
     });
   }
@@ -397,13 +390,27 @@ Template.map.rendered = function() {
 
     var userNameDiv = '';
     if (!gUserName) {
-      userNameDiv = '<label for="username">User name:</label><br><input class="username" type="text" name="username"/><br><br>';
+      userNameDiv = '<label for="username">User name:</label><br><input class="username" type="text" name="username"/><br><div class="usernamebtn"></div><br><br>';
     } else {
       userNameDiv = 'You will post as ' + gUserName + '<br><br>';
     }
 
     container.innerHTML = coordinates + ' <br>Your permanent note for ' + price + '<br><br><textarea class="notetobeposted" type="text" name="notetobeposted" maxlength="128" rows="4" cols="40"></textarea><br><br>' + userNameDiv;
     var postBtn = createButton('Post here.', container);
+    if (!gUserName) {
+      var userNameContainer = container.childNodes[12];
+      var userNameBtn = createButton('Create User', userNameContainer);
+
+      L.DomEvent.on(userNameBtn, 'click', () => {
+        // alert("toto");
+        var userName = $('.username').val();
+        // alert(noteText);
+        createNewUserName(gUserAddress, userName);
+        // createNoteModal(popup, event.latlng, noteText, userName);
+      });
+      postBtn.setAttribute('disabled', true);
+    }
+
 
     L.DomEvent.on(postBtn, 'click', () => {
       // alert("toto");

@@ -24,7 +24,7 @@ export const accountinsert = new ValidatedMethod({
             createdAt: new Date(),
         };
 
-        Accounts.insert(account);
+        return Accounts.insert(account);
     },
 });
 

@@ -23,14 +23,18 @@
 </template>
 
 <template name="notesbody">
-    <div class="subtitle">{{_ "app.NewNotes"}}</div>
-    <div class="rTable">
-        <div class="rTableBody">
-            {{#each notes}}
-                {{> note}}
-            {{/each}}
+    {{#tabs id="notesbody-tabs" settings=tabSettings}}
+        <div>
+            <div class="subtitle">{{_ "app.NewNotes"}}</div>
+            <div class="rTable">
+                <div class="rTableBody">
+                    {{#each notes}}
+                        {{> note}}
+                    {{/each}}
+                </div>
+            </div>
         </div>
-    </div>
+    {{/tabs}}
 </template>
 
 <template name="qrModal">

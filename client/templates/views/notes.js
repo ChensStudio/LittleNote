@@ -95,7 +95,7 @@ Template.notesbody.helpers({
         var notes = query.fetch();
         console.log('getNotes 2', notes);
         return notes;
-    }
+    },
 });
 
 Template.note.helpers({

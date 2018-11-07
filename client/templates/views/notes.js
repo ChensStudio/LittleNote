@@ -47,7 +47,7 @@ Template.notesbody.helpers({
         
         var myNotesSort = TemplateVar.get(template, 'myNotesSort');
         var sortOption = {};
-        if (typeof(myNotesSort) === undefined || myNotesSort === 'updatedAt')
+        if (typeof(myNotesSort) === 'undefined' || myNotesSort === 'updatedAt')
         {
             sortOption = {"sort": ['updatedAt', 'Desc']};
         }
@@ -68,7 +68,7 @@ Template.notesbody.helpers({
             }
         });
 
-        if (typeof(myNotesSort) !== undefined && myNotesSort === 'price')
+        if (typeof(myNotesSort) !== 'undefined' && myNotesSort === 'price')
         {
             notes = notes.sort(function(a, b){
                 return a.price-b.price;

@@ -1,6 +1,8 @@
+import {Template} from 'meteor/templating';
 import {Notes} from '../../../imports/api/notes/notes.js';
 import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
+import { type } from 'os';
 
 var myContract;
 
@@ -41,8 +43,16 @@ Template.notesbody.helpers({
         // var topLeft = {latlng: {lng: -120, lat: 60}};
         // var bottomRight = {latlng: {lng: -110, lat: 50}};
         // var query = Notes.findByBoundary(topLeft, bottomRight);
+        template = Template.instance();
+        
+        var myNotesSort = TemplateVar.get(template, 'myNotesSort');
+        var sortOption = {};
+        if (typeof(myNotesSort) === undefined || myNotesSort === 'updatedAt')
+        {
+            sortOption = {"sort": ['updatedAt', 'Desc']};
+        }
 
-        var query = Notes.find({});
+        var query = Notes.find({}, sortOption);
         var notes = query.fetch();
         notes.forEach(function(n) {
             var q = {address: n.address};
@@ -57,6 +67,14 @@ Template.notesbody.helpers({
                 n.forSellInfo = n.price;
             }
         });
+
+        if (typeof(myNotesSort) !== undefined && myNotesSort === 'price')
+        {
+            notes = notes.sort(function(a, b){
+                return a.price-b.price;
+            });
+        }
+
         console.log('getNotes 1', notes);
         return notes;
     },
@@ -95,7 +113,29 @@ Template.notesbody.helpers({
         var notes = query.fetch();
         console.log('getNotes 2', notes);
         return notes;
-    }
+    },
+});
+
+Template.notesbody.onCreated(function(){
+    var template = Template.instance();
+    TemplateVar.set(template, 'latestViewClick', true);
+    TemplateVar.set(template, 'hottestViewClick', false);
+});
+
+Template.notesbody.events({
+    'click .latestView': function(e){
+        var template = Template.instance();
+        TemplateVar.set(template, 'myNotesSort', 'updatedAt');
+        TemplateVar.set(template, 'latestViewClick', true);
+        TemplateVar.set(template, 'hottestViewClick', false);
+    },
+    'click .hottestView': function(e){
+        var template = Template.instance();
+
+        TemplateVar.set(template, 'myNotesSort', 'price');
+        TemplateVar.set(template, 'latestViewClick', false);
+        TemplateVar.set(template, 'hottestViewClick', true);
+    },
 });
 
 Template.note.helpers({

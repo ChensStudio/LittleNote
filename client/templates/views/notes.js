@@ -49,7 +49,7 @@ Template.notesbody.helpers({
         var sortOption = {};
         if (typeof(myNotesSort) === 'undefined' || myNotesSort === 'updatedAt')
         {
-            sortOption = {"sort": ['updatedAt', 'Desc']};
+            sortOption = {sort: {updatedAt: -1}};
         }
 
         var query = Notes.find({}, sortOption);
@@ -71,7 +71,7 @@ Template.notesbody.helpers({
         if (typeof(myNotesSort) !== 'undefined' && myNotesSort === 'price')
         {
             notes = notes.sort(function(a, b){
-                return a.price-b.price;
+                return b.price-a.price;
             });
         }
 

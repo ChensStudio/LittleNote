@@ -13,15 +13,17 @@ var Markers = Notes;
 var currLatitude, currLongitude;
 var map;
 var gUserAddress;
-var gUserName; 
+var gUserName;
+var gNoteCount;
 
 var notesLoaded = false;
 var accountsLoaded = false;
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
+  console.log('meteor subscribe accounts');
   accountsLoaded = true; 
-  popUserInfo();
+  monitorUserAddress();
 });
 
 
@@ -39,15 +41,38 @@ Meteor.startup(function() {
 
 });
 
-var getUserAddress = function() {
-  console.log('getUserAddress');
+var monitorUserAddress = function() {
+  console.log('monitorUserAddress');
   try {
     gUserAddress = chain3js.mc.accounts[0];
+    var dbAccount = loadUserName();
+    if (gUserAddress) {
+      MoacConnect.GetAccount(gUserAddress, function(err, result) {
+        console.log('MoacConnect.GetAccount userInfo', result);
+        if (gUserAddress) {
+          if (dbAccount && result[1] !== '' && result[1] !== dbAccount.name) {
+
+          }
+        }
+      });
+      MoacConnect.GetJackpot(function(e,c) {
+        console.log('potReserve', e, c.toString());
+      })
+    }
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
         gUserAddress = chain3js.mc.accounts[0];
         console.log('gUserAddress is updated to [' + gUserAddress + ']');
-        loadUserName();
+        dbAccount = loadUserName();
+        if (gUserAddress) {
+          MoacConnect.GetAccount(gUserAddress, function(err, result) {
+            console.log('MoacConnect.GetAccount userInfo', result);
+          });
+        }
+        MoacConnect.GetJackpot(function(e,c) {
+          console.log('potReserve', e, c.toString());
+        })
+
       }
     }, 500);
   } catch (err) {
@@ -58,18 +83,34 @@ var getUserAddress = function() {
   }
 }
 
+var updateDbAccount = function(userName, noteCount) {
+  //accountupdates.call({
+  //     address: gUserAddress
+  //   }, 
+  //   {
+  //     name: userName,
+  //     noteCounts: noteCount,
+  //     onChainFlag: true
+  //   },
+  //   function(err, result) {
+
+  //   }
+  // );
+}
+
 var loadUserName = function() {
   var accounts = Accounts.find({address: gUserAddress}).fetch();
   console.log('loadUserName', gUserAddress, "accounts", accounts);
   if (accounts.length>0) {
     gUserName = accounts[0].name;
   }
-  console.log('gUserName', gUserName);
+  console.log('gUserName', gUserName, accounts[0]);
+  return accounts[0];
 }
 
 var popUserInfo = function(callback) {
   console.log('popUserInfo');
-  getUserAddress();
+  gUserAddress = chain3js.mc.accounts[0];
   if (gUserAddress) {
     loadUserName();
     if (callback) {
@@ -107,7 +148,31 @@ var createNewUserName = function(address, userName, callback) {
     MoacConnect.AddUser(userName, address, function(e, c){
       console.log('MoacConnect.AddUser callback', e, c);
       callback(e, c);
-      //TODO: update database of onChainFlag
+
+      var totalTry = 600;
+      var tryCount = 0;
+      var addUserInterval = setInterval(function() {
+        tryCount++;
+        if (tryCount >= totalTry) {
+          clearInterval(addUserInterval);
+        }
+        MoacConnect.GetAccount(address, function(e, c) {
+          if (e) {
+            console.log('MoacConnect.GetAccount error', e);
+            return;
+          }
+
+          if (c[1] !== '' && c[1] === gUserName) {
+            setOnChainFlag({
+              accountId: _id,
+              onChainFlag: true
+            });
+            clearInterval(addUserInterval);
+          } else {
+            console.log('Inconsistent userName', c[1], gUserName);
+          }
+        });
+      }, 1000);
     });
   });
 

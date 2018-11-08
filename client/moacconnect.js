@@ -126,6 +126,18 @@ export var HelpAddNote = function(inserts, callback) {
   )
 }
 
+export var GetAccount = function(userAddress, callback) {
+  return gContractInstance.getAccount(userAddress, callback);
+}
+
+export var GetNote = function(_id, callback) {
+  return gContractInstance.getNote(_id, callback);
+}
+
+export var GetJackpot = function(callback) {
+  return gContractInstance.potReserve(callback);
+}
+
 var sendtx = function(src, tgtaddr, amount, strData, callback) {
 
   chain3js.mc.sendTransaction(

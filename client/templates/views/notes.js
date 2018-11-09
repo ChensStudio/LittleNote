@@ -2,6 +2,7 @@ import {Template} from 'meteor/templating';
 import {Notes} from '../../../imports/api/notes/notes.js';
 import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
+import MoacConnect from '../../moacconnect.js';
 import { type } from 'os';
 
 var myContract;
@@ -11,6 +12,10 @@ var accountsLoaded = false;
 
 Meteor.subscribe('notes', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
+
+Meteor.startup(function() {
+    MoacConnect.InitChain3();
+});
 
 Template.notesbody.helpers({
     // notes:[
@@ -222,3 +227,39 @@ Template.qrModal.helpers({
     }
 });
 
+Template.map.onRendered(function (){
+    $('.marquee').marquee({
+        //speed in milliseconds of the marquee
+        duration: 15000,
+        //gap in pixels between the tickers
+        gap: 50,
+        //time in milliseconds before the marquee will start animating
+        delayBeforeStart: 0,
+        //'left' or 'right'
+        direction: 'left',
+        //true or false - should the marquee be duplicated to show an effect of continues flow
+        duplicated: true
+      });
+});
+
+Template.map.helpers({
+    'headline': function(){
+        try
+        {
+            MoacConnect.GetJackpot(function(e,c) {
+                if(!e)
+                {
+                    return c.toString();
+                }
+                else
+                {
+                    return TAPi18n.__("app.NoJackpotInfo");
+                }
+            })
+        }
+        catch(e)
+        {
+            return TAPi18n.__("app.NoJackpotInfo");
+        }
+    },
+});

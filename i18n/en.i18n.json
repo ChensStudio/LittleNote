@@ -7,7 +7,9 @@
 		"Unit": "MC",
 		"Free": "Free",
 		"Title": "MOAC LittleNote",
-		"NoJackpotInfo": "Jackpot information is not avalable now. Please wait. Thanks!"
+		"NoJackpotInfo": "Jackpot information is not avalable now. Please wait. Thanks!",
+		"BtnLatest": "Latest",
+		"BtnHottest": "Hottest"
 	},
 	"notice":{
 		"main_l1": "Post your note permanently on MOAC Blockchain.",

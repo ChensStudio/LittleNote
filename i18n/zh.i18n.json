@@ -5,7 +5,9 @@
 		"Lng": "经度: ",
 		"Price": "价格: ",
 		"Free": "免费",
-		"NoJackpotInfo": "头奖信息目前不可用，请稍后，谢谢。"
+		"NoJackpotInfo": "头奖信息目前不可用，请稍后，谢谢。",
+		"BtnLatest": "最新",
+		"BtnHottest": "最热"
 	},
 	"notice":{
 		"main_l1": "永久保存您的笔录到墨客区块链上.",

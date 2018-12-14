@@ -462,9 +462,24 @@ Template.map.rendered = function() {
     } else {
       userNameDiv = 'You will post as ' + gUserName + '<br><br>';
     }
+     
+    
+    container.innerHTML = '</div>' + coordinates + ' <br>Your permanent note for ' + price + '<br><br><textarea class="notetobeposted" type="text" name="notetobeposted" maxlength="128" rows="4" cols="40"></textarea><br><br>' + userNameDiv;
+    // var canvas = $('#cvs')[0];
+    
+    var postBtn = createButton('Post here.', container);   
+    var getQR = createButton('getQR', container);
 
-    container.innerHTML = coordinates + ' <br>Your permanent note for ' + price + '<br><br><textarea class="notetobeposted" type="text" name="notetobeposted" maxlength="128" rows="4" cols="40"></textarea><br><br>' + userNameDiv;
-    var postBtn = createButton('Post here.', container);
+     L.DomEvent.on(getQR,'click',()=>{
+      var data = $('.notetobeposted').val();
+      var TX = `moac:${global.gContractAddress}?data=${data}&amount=<amount>&token=MOAC`;
+      Modal.show('qrModal',{data:TX});
+       // QRCode.toCanvas(canvas, TX, function (error,suc) {
+       //  if (error) console.error(error)
+       //  console.log('success!');
+       //  })
+     })
+
     if (!gUserName) {
       var userNameContainer = container.childNodes[12];
       var userNameBtn = createButton('Create User', userNameContainer);
@@ -491,6 +506,7 @@ Template.map.rendered = function() {
       var userName = $('.username').val();
       // alert(noteText);
       createNoteModal(popup, event.latlng, noteText, userName);
+      map.closePopup();
     });
 
     popup
@@ -538,6 +554,7 @@ Template.map.rendered = function() {
     polygon = L.polygon(latlngs, {color: 'green'}).addTo(map);
   });
 
+   
   // add clustermarkers
   var markers = L.markerClusterGroup();
   map.addLayer(markers);

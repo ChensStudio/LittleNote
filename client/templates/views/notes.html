@@ -24,15 +24,15 @@
 
 <template name="notesbody">
     {{#if TemplateVar.get "latestViewClick"}}
-        <button class="btn btn-default latestView" style="background-color: rgb(55, 197, 197);">{{_ "app.BtnLatest"}}</button> 
+        <button class="btn btn-default latestView" style="background-color: rgb(55, 197, 197);">Latest</button> 
     {{else}}
-        <button class="btn btn-default latestView">{{_ "app.BtnLatest"}}</button>
+        <button class="btn btn-default latestView">Latest</button>
     {{/if}}
     
     {{#if TemplateVar.get "hottestViewClick"}}
-        <button class="btn btn-default hottestView" style="background-color:  rgb(55, 197, 197);">{{_ "app.BtnHottest"}}</button>
+        <button class="btn btn-default hottestView" style="background-color:  rgb(55, 197, 197);">Hottest</button>
     {{else}}
-        <button class="btn btn-default hottestView">{{_ "app.BtnHottest"}}</button>
+        <button class="btn btn-default hottestView">Hottest</button>
         {{/if}}
 
     <div class="subtitle">{{_ "app.NewNotes"}}</div>
@@ -46,16 +46,26 @@
 </template>
 
 <template name="qrModal">
-    <div class="modal fade qrbox" style="color:black">
-        {{>qrcode text=tx size=256}}
-        <br><br>
-        <input id="foo" style="width:500px" type="text" value={{contract}} readonly>
-        <button class="btn" data-clipboard-action="copy" data-clipboard-target="#foo">{{_ "app.Copy"}}</button>
-        {{clipboard}}
-        <br><br>
-        <div class="pre">{{_ "app.QRDesc"}}</div>
-        {{_ "app.GasSetting"}}
-        <br>
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
+    <div class="modal fade qrbox" style="color:black;margin-top:100px" align="center" >
+         <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Scan QRcode to deploy your note</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p> {{>qrcode text=data size=256}}
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
+                </div>
+            </div>
+        </div>
     </div>
+       
+        
+    
 </template>

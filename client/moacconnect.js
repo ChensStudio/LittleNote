@@ -28,7 +28,7 @@ export var InitChain3 = function() {
     console.log('No chain3? You should consider trying MoacMask!')
     // chain3js - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     try {
-      global.chain3js = new Chain3(new Chain3.providers.HttpProvider("https://gateway.moac.io/testnet"));
+      global.chain3js = new Chain3(new Chain3.providers.HttpProvider("http://gateway.moac.io/testnet"));
       moacSetupContract();
     } catch (err) {
       console.log('Error', err);

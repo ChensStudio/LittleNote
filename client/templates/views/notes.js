@@ -227,6 +227,7 @@ Template.qrModal.helpers({
     }
 });
 
+
 Template.map.onRendered(function (){
     $('.marquee').marquee({
         //speed in milliseconds of the marquee
@@ -240,6 +241,8 @@ Template.map.onRendered(function (){
         //true or false - should the marquee be duplicated to show an effect of continues flow
         duplicated: true
       });
+      // Session.set("flexHeight",$(".mapcontainer").height());
+
 });
 
 Template.map.helpers({
@@ -262,4 +265,6 @@ Template.map.helpers({
             return TAPi18n.__("app.NoJackpotInfo");
         }
     },
+
+    
 });

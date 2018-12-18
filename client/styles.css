@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-  font-family: Arial;
+  font-family: "Gill Sans", sans-serif;
 }
 
 #container {
@@ -23,8 +23,9 @@ body {
 
 .mapcontainer {
   border: solid 1px black;
-  width: 80%;
+  width: 78%;
   display: block;
+  margin: 0 auto;
 }
 
 .map {
@@ -34,9 +35,24 @@ body {
 */}
 
 .notes {
-  border: solid 1px black;
+  
   width: 20%;
   display: block;
+  overflow: auto; 
+  height: 800px;  
+  background: #D8D8D8;
+  border-radius: 5px;
+  padding: 0px 7px 7px 7px;
+  margin: auto;
+  
+}
+
+.notes::-webkit-scrollbar {
+  width: 1px;
+}
+
+.notes::-webkit-scrollbar-thumb {
+  background-color:#d9d9d9;
 }
 
 .title {
@@ -51,21 +67,46 @@ body {
   text-align: center;
 }
 
+.notehead {
+  position: absolute;
+  width: 353px;
+  height:95px; 
+  background: #D8D8D8;
+  text-align: center; 
+}
+
 /* for notes */
 .subtitle {
-  border-style: solid;
-  border-color: grey;
-  border-width: 0px 0px 1px 0px;
-  margin-right: 2px;
-  margin-left: 2px;
+  margin-top: 20px;
+  font-weight: bold;
 }
 .notecontainer {
-  border-style: solid;
-  border-color: lightgrey;
-  border-width: 0px 0px 1px 0px;
-  margin-right: 3px;
-  margin-left: 3px;
+  background: white;
+  border-radius: 5px;
   padding: 2px 1px 2px 1px;
+  margin-top:8px;
+  box-shadow: 0px 2px #888888
+}
+
+.notecontainer:hover {
+  background: #F2F2F2;
+}
+
+.btn-grey {
+color: #494949;
+text-transform: uppercase;
+background: #ffffff;
+padding: 10px;
+border: 1px solid #494949 ;
+border-radius: 6px;
+font-weight: bold;
+}
+
+.btn-grey:hover {
+color: #ffffff;
+background: #f6b93b;
+background-color: rgb(55, 197, 197);
+transition: all 0.4s ease 0s;
 }
 
 .notelink {

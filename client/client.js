@@ -471,6 +471,7 @@ Template.map.rendered = function() {
     var getQR = createButton('getQR', container);
 
      L.DomEvent.on(getQR,'click',()=>{
+      console.log($(".notetobeposted"))
       var data = $('.notetobeposted').val();
       var TX = `moac:${global.gContractAddress}?data=${data}&amount=<amount>&token=MOAC`;
       Modal.show('qrModal',{data:TX});

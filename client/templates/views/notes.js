@@ -9,13 +9,32 @@ var myContract;
 
 var notesLoaded = false;
 var accountsLoaded = false;
-
+var hide = false;
 Meteor.subscribe('notes', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
 
 Meteor.startup(function() {
     MoacConnect.InitChain3();
 });
+
+Template.body.events({
+'click button#hideNote'(){
+   $('#notes').toggle(1000);
+
+   hide = !hide;
+   if(hide){
+    $('.mapcontainer').css('width','90%');
+   }
+   else{
+    $('.mapcontainer').css('width','78%');
+   }
+   
+
+   
+}
+})
+
+    
 
 Template.notesbody.helpers({
     // notes:[

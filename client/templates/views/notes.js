@@ -227,6 +227,29 @@ Template.qrModal.helpers({
     }
 });
 
+Template.map.onCreated(function(){
+    var template = this;
+    TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"))
+    Meteor.setInterval(()=>{
+        try
+        {
+            MoacConnect.GetJackpot(function(e,c) {
+                if(!e && c.toString != '')
+                {
+                    TemplateVar.set(template, 'headline', c.toString());
+                }
+                else
+                {
+                    TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"));
+                }
+            });
+        }
+        catch(e)
+        {
+            TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"));
+        }}, 10);
+});
+
 Template.map.onRendered(function (){
     $('.marquee').marquee({
         //speed in milliseconds of the marquee
@@ -240,26 +263,4 @@ Template.map.onRendered(function (){
         //true or false - should the marquee be duplicated to show an effect of continues flow
         duplicated: true
       });
-});
-
-Template.map.helpers({
-    'headline': function(){
-        try
-        {
-            MoacConnect.GetJackpot(function(e,c) {
-                if(!e)
-                {
-                    return c.toString();
-                }
-                else
-                {
-                    return TAPi18n.__("app.NoJackpotInfo");
-                }
-            })
-        }
-        catch(e)
-        {
-            return TAPi18n.__("app.NoJackpotInfo");
-        }
-    },
 });

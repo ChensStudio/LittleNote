@@ -24,15 +24,15 @@
 
 <template name="notesbody">
     {{#if TemplateVar.get "latestViewClick"}}
-        <button class="btn btn-default latestView" style="background-color: rgb(55, 197, 197);">Latest</button> 
+        <button class="btn btn-default latestView" style="background-color: rgb(55, 197, 197);">{{_ "app.BtnLatest"}}</button> 
     {{else}}
-        <button class="btn btn-default latestView">Latest</button>
+        <button class="btn btn-default latestView">{{_ "app.BtnLatest"}}</button>
     {{/if}}
     
     {{#if TemplateVar.get "hottestViewClick"}}
-        <button class="btn btn-default hottestView" style="background-color:  rgb(55, 197, 197);">Hottest</button>
+        <button class="btn btn-default hottestView" style="background-color:  rgb(55, 197, 197);">{{_ "app.BtnHottest"}}</button>
     {{else}}
-        <button class="btn btn-default hottestView">Hottest</button>
+        <button class="btn btn-default hottestView">{{_ "app.BtnHottest"}}</button>
         {{/if}}
 
     <div class="subtitle">{{_ "app.NewNotes"}}</div>

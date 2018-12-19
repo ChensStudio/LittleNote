@@ -38,7 +38,6 @@ Meteor.startup(function() {
   $(window).resize(); // trigger resize event 
 
   MoacConnect.InitChain3();
-
 });
 
 var monitorUserAddress = function() {

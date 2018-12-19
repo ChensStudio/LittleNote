@@ -4,7 +4,7 @@ import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
 import MoacConnect from '../../moacconnect.js';
 import { type } from 'os';
-import '../../client.js';
+// import '../../client.js';
 
 var myContract;
 
@@ -250,6 +250,7 @@ Template.note.events({
 // });
 
 Template.header.onCreated(function(){
+
     var template = this;
     TemplateVar.set(template, 'headline', 'Retrieving Jackpot........');
 
@@ -258,8 +259,9 @@ Template.header.onCreated(function(){
         {
             MoacConnect.GetJackpot(function(e,c) {
                 if(!e && c.toString != '')
-                {
-                    TemplateVar.set(template, 'headline', c.toString() + ' MOAC');
+                {   
+                    var jcpt = c.toNumber()/1e18;
+                    TemplateVar.set(template, 'headline', jcpt.toString() + ' MOAC');
                 }
                 else
                 {   
@@ -282,7 +284,7 @@ Template.map.onRendered(function (){
      }
      else{
         $('.header').css('height','60px');
-        $('.header').children().show(100);
+        $('.header').children().show(300);
      }
     },400);
     // $('.marquee').marquee({
@@ -334,5 +336,18 @@ Template.header.helpers({
     //         return TAPi18n.__("app.NoJackpotInfo");
     //     }
     // },
+    'balance'(){
+        var template = Template.instance();
+        chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
+            if(e){
+                console.log(e);
+            }
+            else{
+                var balance = r.toNumber()/1e18;
+                TemplateVar.set(template,'balance',balance.toFixed(3));
+            }
+        });
+        return TemplateVar.get('balance');
+    }
     
 });

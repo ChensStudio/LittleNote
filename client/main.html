@@ -46,6 +46,9 @@
       <div class='app'>LittleNote</div>
     </div>
      <marquee class='marquee' behavior="scroll" scrollamount="5" direction="left" width="350"  onmouseover=this.stop() onmouseout=this.start()>{{TemplateVar.get "headline"}} </marquee>
-     <span style="width:100px;margin: auto">{{> i18n_dropdown}}</span>
+     <div style="display: flex;margin:auto">
+     <span class='badge-balance'><p style="margin: auto">{{balance}} MC</p></span>
+     <span style="width:100px;margin: auto 10px">{{> i18n_dropdown}}</span>
+    </div>
   </div>
 </template>

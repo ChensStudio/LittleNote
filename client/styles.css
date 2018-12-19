@@ -20,7 +20,7 @@ body {
   height: 800px;
   display: flex;
   position: relative;
-  margin-top: 80px;
+  margin-top: 100px;
 }
 
 .mapcontainer {
@@ -75,15 +75,40 @@ body {
 }
 
 .app {
-  margin-left: 10px;
+  margin-left: 11px;
   bottom:1px;
   margin-top:14px;
+  font-family: Comic Sans MS;
+  font-size: 13px;
 }
 
 .map {
   z-index: 1;
   /*width: 100%;*/
- 
+}
+
+
+.close_ico {
+  background: url(close_ico.png);
+  margin:auto 0px;  
+  background-repeat: no-repeat;
+  height: 30px;
+  width: 30px;
+  background-size: contain;
+  opacity: 0;
+  -webkit-transition:all 0.5s linear;
+}
+
+
+.draw_icon {
+  background: url(drawer_icon.png); 
+  background-repeat: no-repeat;
+  margin:auto 0px;
+  height: 30px;
+  width: 30px;
+  background-size: contain;
+  opacity: 1;
+  -webkit-transition:all 0.5s linear;
 }
 
 .notes {
@@ -95,7 +120,7 @@ body {
   border: 1px solid rgba(0,0,0,.0975);
   border-radius: 5px;
   padding: 0px 7px 50px 7px;
-  margin: auto;
+  margin-right: 0px;
   box-shadow: 0px 2px #888888;
 
 }
@@ -160,11 +185,12 @@ body {
 
 .notecontainer {
   background: white;
-  border-radius: 5px;
-  padding: 2px 1px 2px 1px;
+  /*border-radius: 5px;*/
+  padding: 2px 1px 8px 1px;
   margin-top: 2px;
   margin-bottom:8px;
-  box-shadow: 0px 2px #888888
+  /*box-shadow: 0px 2px #888888*/
+  border-bottom: 1.2px solid rgb(55, 197, 197)
 }
 
 .notecontainer:hover {
@@ -429,11 +455,13 @@ transition: all 0.4s ease 0s;
 }
 
 .marquee {
-  width: 1000px; /* the plugin works for responsive layouts so width is not necessary */
+  width: 500px; /* the plugin works for responsive layouts so width is not necessary */
   overflow: hidden;
-  height:30%;
+  height:40%;
   margin:auto;
   font-size: 14px;
+  padding: 2px 0px;
+  cursor: pointer;
   /*background:white;*/
   -webkit-mask-image:-webkit-linear-gradient(right,rgba(0, 0, 0, 0) 0%,
             rgba(255, 255, 255, 1) 10%,

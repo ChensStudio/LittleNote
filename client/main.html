@@ -13,10 +13,10 @@
 <template name="map">
     <div id="container">
       <div class="smallcontainer">
-
         <div class="mapcontainer" id='mapcontainer'>
           <div id="map" class="map"></div>       
         </div>
+          <div id='drawer' class='close_ico'></div> 
          <div id="notes" class="notes">
         {{> notesbody}}
         </div>
@@ -45,7 +45,7 @@
       <div class='bar'></div>
       <div class='app'>LittleNote</div>
     </div>
-     <div class='marquee'>{{TemplateVar.get "headline"}}</div> 
-     <span style="width:90px;margin: auto">{{> i18n_dropdown}}</span>
+     <marquee class='marquee' behavior="scroll" scrollamount="5" direction="left" width="350"  onmouseover=this.stop() onmouseout=this.start()>{{TemplateVar.get "headline"}} </marquee>
+     <span style="width:100px;margin: auto">{{> i18n_dropdown}}</span>
   </div>
 </template>

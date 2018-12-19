@@ -19,23 +19,25 @@ Meteor.startup(function() {
 });
 
 Template.body.events({
-'click button#hideNote'(){
+'click #drawer'(){
    $('#notes').toggle(700);
 
    hide = !hide;
    if(hide){
     $('.mapcontainer').css('width','90%');
+    // $('.close_ico').css('background','url(drawer_icon.png)');
+    $('#drawer').removeClass('close_ico');
+    $('#drawer').addClass('draw_icon');
    }
    else{
     $('.mapcontainer').css('width','75%');
+    // $('.close_ico').css('background','url(close_ico.png)');
+    $('#drawer').removeClass('draw_icon');
+    $('#drawer').addClass('close_ico');
    }
-   
 
-   
 }
 })
-
-    
 
 Template.notesbody.helpers({
     // notes:[
@@ -249,7 +251,7 @@ Template.note.events({
 
 Template.header.onCreated(function(){
     var template = this;
-    TemplateVar.set(template, 'headline', 'Current Jackpot');
+    TemplateVar.set(template, 'headline', 'Retrieving Jackpot........');
 
     Meteor.setInterval(()=>{
         try
@@ -280,24 +282,37 @@ Template.map.onRendered(function (){
      }
      else{
         $('.header').css('height','60px');
-        $('.header').children().show();
+        $('.header').children().show(100);
      }
-    },500);
-    $('.marquee').marquee({
-        //speed in milliseconds of the marquee
-        duration: 15000,
-        //gap in pixels between the tickers
-        gap: 1000,
-        //time in milliseconds before the marquee will start animating
-        delayBeforeStart: 1000,
-        //'left' or 'right'
-        direction: 'left',
-        //true or false - should the marquee be duplicated to show an effect of continues flow
-        duplicated: true
-      });
+    },400);
+    // $('.marquee').marquee({
+    //     //speed in milliseconds of the marquee
+    //     duration: 15000,
+    //     //gap in pixels between the tickers
+    //     gap: 1000,
+    //     //time in milliseconds before the marquee will start animating
+    //     delayBeforeStart: 1000,
+    //     //'left' or 'right'
+    //     direction: 'left',
+    //     //true or false - should the marquee be duplicated to show an effect of continues flow
+    //     duplicated: true
+    //   });
       // Session.set("flexHeight",$(".mapcontainer").height());
 
 });
+
+Template.map.events({
+    'mouseover .notes'(){
+        $('.close_ico').css('opacity','1');
+    },
+    'mouseover .close_ico'(){
+        $('.close_ico').css('opacity','1');
+    },
+    'mouseleave .notes'(){
+        $('.close_ico').css('opacity','0');
+    }
+
+})
 
 Template.header.helpers({
     // 'headline': function(){
@@ -319,9 +334,5 @@ Template.header.helpers({
     //         return TAPi18n.__("app.NoJackpotInfo");
     //     }
     // },
-    'shrink'(){
-        console.log('scroll',$(document).scrollTop());
-    }
-
     
 });

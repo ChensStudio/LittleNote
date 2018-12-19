@@ -23,9 +23,10 @@ body {
 
 .mapcontainer {
   border: solid 1px black;
-  width: 78%;
+  width: 79%;
   display: block;
   margin: 0 auto;
+  transition: all 0.8s ease 0s;
 }
 
 .map {

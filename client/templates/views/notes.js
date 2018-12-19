@@ -19,14 +19,14 @@ Meteor.startup(function() {
 
 Template.body.events({
 'click button#hideNote'(){
-   $('#notes').toggle(1000);
+   $('#notes').toggle(700);
 
    hide = !hide;
    if(hide){
     $('.mapcontainer').css('width','90%');
    }
    else{
-    $('.mapcontainer').css('width','78%');
+    $('.mapcontainer').css('width','79%');
    }
    
 

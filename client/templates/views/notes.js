@@ -248,14 +248,15 @@ Template.qrModal.helpers({
 
 Template.map.onCreated(function(){
     var template = this;
-    TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"))
+    TemplateVar.set(template, 'headline', 'Current Jackpot');
+
     Meteor.setInterval(()=>{
         try
         {
             MoacConnect.GetJackpot(function(e,c) {
                 if(!e && c.toString != '')
                 {
-                    TemplateVar.set(template, 'headline', c.toString());
+                    TemplateVar.set(template, 'headline', c.toString() + ' MOAC');
                 }
                 else
                 {
@@ -266,7 +267,7 @@ Template.map.onCreated(function(){
         catch(e)
         {
             TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"));
-        }}, 10);
+        }}, 5000);
 });
 
 Template.map.onRendered(function (){
@@ -274,9 +275,9 @@ Template.map.onRendered(function (){
         //speed in milliseconds of the marquee
         duration: 15000,
         //gap in pixels between the tickers
-        gap: 50,
+        gap: 1000,
         //time in milliseconds before the marquee will start animating
-        delayBeforeStart: 0,
+        delayBeforeStart: 1000,
         //'left' or 'right'
         direction: 'left',
         //true or false - should the marquee be duplicated to show an effect of continues flow

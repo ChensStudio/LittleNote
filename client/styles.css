@@ -364,8 +364,8 @@ transition: all 0.4s ease 0s;
 }
 
 .marquee {
-  width: 400px; /* the plugin works for responsive layouts so width is not necessary */
+  width: 1000px; /* the plugin works for responsive layouts so width is not necessary */
   overflow: hidden;
-  border:1px solid #ccc;
-  margin-left:37%;
+  border:0px solid #ccc;
+  margin-left:2%;
 }

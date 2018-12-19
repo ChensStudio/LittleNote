@@ -6,6 +6,7 @@ html, body {
 
 body {
   font-family: "Gill Sans", sans-serif;
+  background-color: #fafafa;
 }
 
 #container {
@@ -16,56 +17,117 @@ body {
 
 .smallcontainer {
   width: 100%;
-  height: 100%;
+  height: 800px;
   display: flex;
   position: relative;
+  margin-top: 80px;
 }
 
 .mapcontainer {
-  border: solid 1px black;
-  width: 79%;
+  /*border: solid 1px black;*/
+  border: 1px solid rgba(0,0,0,.5);
+  width: 75%;
   display: block;
   margin: 0 auto;
   transition: all 0.8s ease 0s;
 }
 
-.map {
-  
+.header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.0975);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    transition: all .2s ease-in-out;
+    height: 60px;
+    z-index: 99;
+    display: flex;
+
+}
+
+.logo {
+  margin-top:15px;
+  margin-left:100px;
+  display: flex;
+}
+
+#icon {
+  width:100px;
+  height:50px;
+  margin:auto 5px;
+}
+
+.icon {
+  background: url(moac_ico.png);
+  background-repeat: no-repeat;
+  height: 100%;
   width: 100%;
+  background-size: contain;
+  cursor: pointer;
+
+}
+
+.bar {
+  border-right: 1px solid rgba(0,0,0,.3);
+  height:30px;
+  margin-left: 7px;
+}
+
+.app {
+  margin-left: 10px;
+  bottom:1px;
+  margin-top:14px;
+}
+
+.map {
+  z-index: 1;
+  /*width: 100%;*/
  
 }
 
 .notes {
-  width: 20%;
+  width: 19%;
   display: block;
-  overflow: auto; 
   height: 800px;  
-  background: #D8D8D8;
+  /*background: #D8D8D8;*/
+  background: white;
+  border: 1px solid rgba(0,0,0,.0975);
   border-radius: 5px;
   padding: 0px 7px 50px 7px;
   margin: auto;
-  box-shadow: 0px 2px #888888
-  
+  box-shadow: 0px 2px #888888;
+
 }
 
-.notes::-webkit-scrollbar {
-  width: 10px;
+.rTable {
+  overflow: auto; 
+  height: 680px;  
+  margin-top:100px;
+}
+
+.notes:hover {
+   box-shadow: 0px 1px 3px 1px #4B4B4B
+}
+
+.rTable::-webkit-scrollbar {
+  width: 5px;
   background-color: #F5F5F5;
 }
 
-.notes::-webkit-scrollbar-track {
+.rTable::-webkit-scrollbar-track {
   border-radius: 10px;
   background: white);
   border: 1px solid #ccc;
 }
 
-.notes::-webkit-scrollbar-thumb {
+.rTable::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: linear-gradient(left, #fff, #e4e4e4);
   border: 1px solid #aaa;
 }
 
-.notes::-webkit-scrollbar-thumb:hover {
+.rTable::-webkit-scrollbar-thumb:hover {
   background: #fff;
 }
 
@@ -83,9 +145,9 @@ body {
 
 .notehead {
   position: absolute;
-  width: 19%;
+  width: 18%;
   height:95px; 
-  background: #D8D8D8;
+  /*background: #D8D8D8;*/
   text-align: center; 
 }
 
@@ -93,12 +155,15 @@ body {
 .subtitle {
   margin-top: 20px;
   font-weight: bold;
+  border-bottom: 1px solid rgba(0,0,0,.0975);
 }
+
 .notecontainer {
   background: white;
   border-radius: 5px;
   padding: 2px 1px 2px 1px;
-  margin-top:8px;
+  margin-top: 2px;
+  margin-bottom:8px;
   box-shadow: 0px 2px #888888
 }
 
@@ -366,6 +431,22 @@ transition: all 0.4s ease 0s;
 .marquee {
   width: 400px; /* the plugin works for responsive layouts so width is not necessary */
   overflow: hidden;
-  border:1px solid #ccc;
-  margin-left:37%;
+  height:30%;
+  margin:auto;
+  font-size: 14px;
+  /*background:white;*/
+  -webkit-mask-image:-webkit-linear-gradient(right,rgba(0, 0, 0, 0) 0%,
+            rgba(255, 255, 255, 1) 10%,
+            rgba(255, 255, 255, 1) 20%,
+            rgba(255, 255, 255, 1) 30%,
+            rgba(255, 255, 255, 1) 40%,
+            rgba(255, 255, 255, 1) 50%,
+            rgba(255, 255, 255, 1) 60%,
+            rgba(255, 255, 255, 1) 70%,
+            rgba(255, 255, 255, 1) 80%,
+            rgba(255, 255, 255, 1) 90%,
+            rgba(0, 0, 0, 0) 100%);
+  /*-webkit-mask-image: -webkit-gradient(linear, left, right, 
+    from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));*/
+
 }

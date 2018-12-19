@@ -26,15 +26,15 @@
     <div class='notehead'>
     <div style="margin-top:10px">    
     {{#if TemplateVar.get "latestViewClick"}}
-        <button class="btn btn-default latestView" style="background-color: rgb(55, 197, 197);">{{_ "app.BtnLatest"}}</button> 
+        <button class="btn-grey latestView" style="background-color: rgb(55, 197, 197);">Latest</button> 
     {{else}}
-        <button class="btn btn-default latestView">{{_ "app.BtnLatest"}}</button>
+        <button class="btn-grey latestView">Latest</button>
     {{/if}}
     
     {{#if TemplateVar.get "hottestViewClick"}}
-        <button class="btn btn-default hottestView" style="background-color:  rgb(55, 197, 197);">{{_ "app.BtnHottest"}}</button>
+        <button class="btn-grey hottestView" style="background-color:  rgb(55, 197, 197);">Hottest</button>
     {{else}}
-        <button class="btn btn-default hottestView">{{_ "app.BtnHottest"}}</button>
+        <button class="btn-grey hottestView">Hottest</button>
         {{/if}}
     </div>
 
@@ -42,7 +42,7 @@
     </div>
    
     <div class="rTable" >
-        <div class="rTableBody" style="margin-top:110px">
+        <div class="rTableBody">
             {{#each notes}}
                {{> note}}
             {{/each}}

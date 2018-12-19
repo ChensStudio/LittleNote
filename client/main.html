@@ -5,19 +5,15 @@
 </head>
 
 <body>
-    <button id='hideNote'>HIDE</button>
+    {{>header}}
     {{> map}}
+    {{> footer}}
 </body>
 
 <template name="map">
     <div id="container">
-
-      <div style="display:flex; position: relative;">
-        <span style="width: 100%"><h1 class="title">{{_ "app.Title"}}</h1></span>
-        <span class="i18ndropdown" style="width:90px; float:right; margin-right: 2px">{{> i18n_dropdown}}</span>
-      </div>
-      <div class='marquee'>{{TemplateVar.get "headline"}}</div>
       <div class="smallcontainer">
+
         <div class="mapcontainer" id='mapcontainer'>
           <div id="map" class="map"></div>       
         </div>
@@ -25,10 +21,31 @@
         {{> notesbody}}
         </div>
       </div>
-      <div class="notice">
+   </div>
+      
+</template>
+
+<template name='footer'>
+  <hr>
+  <div class="notice">
           {{_ "notice.main_l1"}}
           <br>
           {{_ "notice.main_l2"}}
+  </div>
+    
+</template>
+
+<template name='header'>
+  <div class='header'> 
+    <!-- <button id='hideNote'>HIDE</button> -->
+    <div class='logo'>
+      <div id='icon'> 
+        <a href="https://www.moac.io/"><div class='icon'></div></a>
       </div>
+      <div class='bar'></div>
+      <div class='app'>LittleNote</div>
     </div>
+     <div class='marquee'>{{TemplateVar.get "headline"}}</div> 
+     <span style="width:90px;margin: auto">{{> i18n_dropdown}}</span>
+  </div>
 </template>

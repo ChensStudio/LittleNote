@@ -4,6 +4,7 @@ import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
 import MoacConnect from '../../moacconnect.js';
 import { type } from 'os';
+import '../../client.js';
 
 var myContract;
 
@@ -26,7 +27,7 @@ Template.body.events({
     $('.mapcontainer').css('width','90%');
    }
    else{
-    $('.mapcontainer').css('width','79%');
+    $('.mapcontainer').css('width','75%');
    }
    
 
@@ -234,19 +235,19 @@ Template.note.events({
 
  });
 
-Template.qrModal.helpers({
-    contract: function(){
-        return myContract;
-    },
-    tx: function(){
-        return "moac:"+myContract+"?amount=1.000000&token=MOAC";
-    },
-    clipboard: function(){
-        var clipboard = new Clipboard('.btn');
-    }
-});
+// Template.qrModal.helpers({
+//     contract: function(){
+//         return myContract;
+//     },
+//     tx: function(){
+//         return "moac:"+myContract+"?amount=1.000000&token=MOAC";
+//     },
+//     clipboard: function(){
+//         var clipboard = new Clipboard('.btn');
+//     }
+// });
 
-Template.map.onCreated(function(){
+Template.header.onCreated(function(){
     var template = this;
     TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"))
     Meteor.setInterval(()=>{
@@ -258,8 +259,9 @@ Template.map.onCreated(function(){
                     TemplateVar.set(template, 'headline', c.toString());
                 }
                 else
-                {
+                {   
                     TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"));
+                    
                 }
             });
         }
@@ -270,6 +272,16 @@ Template.map.onCreated(function(){
 });
 
 Template.map.onRendered(function (){
+     Meteor.setInterval(()=>{
+     if($(document).scrollTop() > 20){
+       $('.header').css('height','10px');
+       $('.header').children().hide();
+     }
+     else{
+        $('.header').css('height','60px');
+        $('.header').children().show();
+     }
+    },500);
     $('.marquee').marquee({
         //speed in milliseconds of the marquee
         duration: 15000,
@@ -286,26 +298,29 @@ Template.map.onRendered(function (){
 
 });
 
-Template.map.helpers({
-    'headline': function(){
-        try
-        {
-            MoacConnect.GetJackpot(function(e,c) {
-                if(!e)
-                {
-                    return c.toString();
-                }
-                else
-                {
-                    return TAPi18n.__("app.NoJackpotInfo");
-                }
-            })
-        }
-        catch(e)
-        {
-            return TAPi18n.__("app.NoJackpotInfo");
-        }
-    },
+Template.header.helpers({
+    // 'headline': function(){
+    //     try
+    //     {
+    //         MoacConnect.GetJackpot(function(e,c) {
+    //             if(!e)
+    //             {
+    //                 return c.toString();
+    //             }
+    //             else
+    //             {
+    //                 return TAPi18n.__("app.NoJackpotInfo");
+    //             }
+    //         })
+    //     }
+    //     catch(e)
+    //     {
+    //         return TAPi18n.__("app.NoJackpotInfo");
+    //     }
+    // },
+    'shrink'(){
+        console.log('scroll',$(document).scrollTop());
+    }
 
     
 });

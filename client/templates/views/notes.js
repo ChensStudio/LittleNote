@@ -9,13 +9,32 @@ var myContract;
 
 var notesLoaded = false;
 var accountsLoaded = false;
-
+var hide = false;
 Meteor.subscribe('notes', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
 
 Meteor.startup(function() {
     MoacConnect.InitChain3();
 });
+
+Template.body.events({
+'click button#hideNote'(){
+   $('#notes').toggle(700);
+
+   hide = !hide;
+   if(hide){
+    $('.mapcontainer').css('width','90%');
+   }
+   else{
+    $('.mapcontainer').css('width','79%');
+   }
+   
+
+   
+}
+})
+
+    
 
 Template.notesbody.helpers({
     // notes:[
@@ -263,4 +282,30 @@ Template.map.onRendered(function (){
         //true or false - should the marquee be duplicated to show an effect of continues flow
         duplicated: true
       });
+      // Session.set("flexHeight",$(".mapcontainer").height());
+
+});
+
+Template.map.helpers({
+    'headline': function(){
+        try
+        {
+            MoacConnect.GetJackpot(function(e,c) {
+                if(!e)
+                {
+                    return c.toString();
+                }
+                else
+                {
+                    return TAPi18n.__("app.NoJackpotInfo");
+                }
+            })
+        }
+        catch(e)
+        {
+            return TAPi18n.__("app.NoJackpotInfo");
+        }
+    },
+
+    
 });

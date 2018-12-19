@@ -5,22 +5,24 @@
 </head>
 
 <body>
+    <button id='hideNote'>HIDE</button>
     {{> map}}
 </body>
 
 <template name="map">
     <div id="container">
+
       <div style="display:flex; position: relative;">
         <span style="width: 100%"><h1 class="title">{{_ "app.Title"}}</h1></span>
         <span class="i18ndropdown" style="width:90px; float:right; margin-right: 2px">{{> i18n_dropdown}}</span>
       </div>
       <div class='marquee'>{{TemplateVar.get "headline"}}</div>
       <div class="smallcontainer">
-        <div class="mapcontainer">
-          <div id="map" class="map"></div>
+        <div class="mapcontainer" id='mapcontainer'>
+          <div id="map" class="map"></div>       
         </div>
-        <div id="notes" class="notes">
-          <div style="overflow: scroll; width: 400px; height:800px">{{> notesbody}}</div>
+         <div id="notes" class="notes">
+        {{> notesbody}}
         </div>
       </div>
       <div class="notice">

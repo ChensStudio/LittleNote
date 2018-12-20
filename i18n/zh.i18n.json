@@ -1,16 +1,23 @@
 {
 	"app":{
-		"NewNotes": "最新笔记",
+		"NewNotes": "最新贴士",
 		"Lat": "纬度: ",
 		"Lng": "经度: ",
 		"Price": "价格: ",
 		"Free": "免费",
 		"NoJackpotInfo": "头奖信息目前不可用，请稍后，谢谢。",
 		"BtnLatest": "最新",
-		"BtnHottest": "最热"
+		"BtnHottest": "最热",
+		"BuyNoteMessage": "购买此贴士位置的价格"
 	},
 	"notice":{
 		"main_l1": "永久保存您的笔录到墨客区块链上.",
 		"main_l2": "另外，还可以交易笔录的空间."
+	},
+	"time": {
+		"hour": "小时",
+		"min": "分钟",
+		"sec": "秒",
+		"ago": "之前"
 	}
 }

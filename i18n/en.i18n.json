@@ -9,10 +9,17 @@
 		"Title": "MOAC LittleNote",
 		"NoJackpotInfo": "Jackpot information is not avalable now. Please wait. Thanks!",
 		"BtnLatest": "Latest",
-		"BtnHottest": "Hottest"
+		"BtnHottest": "Hottest",
+		"BuyNoteMessage": "Buy this Note for"
 	},
 	"notice":{
 		"main_l1": "Post your note permanently on MOAC Blockchain.",
 		"main_l2": "Or, make money by selling your note space."
+	},
+	"time": {
+		"hour": "h",
+		"min": "m",
+		"sec": "s",
+		"ago": "ago"
 	}
 }

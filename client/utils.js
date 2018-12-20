@@ -24,17 +24,17 @@ export const dateFormat = function(d) {
     var date;
 
     if (diff < ONE_MINUTE) {
-        display = seconds + 's ago'
+        display = seconds + TAPi18n.__("time.sec") + ' ' + TAPi18n.__("time.ago");
     } else if (diff < ONE_HOUR) {
         minutes = Math.floor(seconds/60);
         seconds -= minutes * 60;
-        display = minutes + 'm' + seconds + 's ago';
+        display = minutes + TAPi18n.__("time.min") + ' ' + seconds + TAPi18n.__("time.sec") + ' ' + TAPi18n.__("time.ago");
     } else if (diff < ONE_DAY) {
         hours = Math.floor(seconds/3600);
         minutes = Math.floor((seconds - hours * 3600) / 60);
         seconds -= minutes * 60 + hours * 3600;
         // display = hours + 'hours' + minutes + 'm' + seconds + 's ago';
-        display = hours + ' hours ago';
+        display = hours + ' ' + TAPi18n.__("time.hour") + ' ' + TAPi18n.__("time.ago");
     } else if (diff < ONE_WEEK) {
         day = DAYS[ then.getDay() ];
         display = day;

@@ -310,6 +310,9 @@ Template.map.events({
     'mouseover .close_ico'(){
         $('.close_ico').css('opacity','1');
     },
+    'mouseleave .close_ico'(){
+        $('.close_ico').css('opacity','0');
+    },
     'mouseleave .notes'(){
         $('.close_ico').css('opacity','0');
     }

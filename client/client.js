@@ -1,3 +1,4 @@
+
 import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
@@ -33,7 +34,7 @@ var tooltip;
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
-    $('#map').css('height', window.innerHeight - 82 - 45);
+    $('#map').css('height', '550px');
   });
   $(window).resize(); // trigger resize event 
 

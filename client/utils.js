@@ -34,7 +34,7 @@ export const dateFormat = function(d) {
         minutes = Math.floor((seconds - hours * 3600) / 60);
         seconds -= minutes * 60 + hours * 3600;
         // display = hours + 'hours' + minutes + 'm' + seconds + 's ago';
-        display = hours + ' ' + TAPi18n.__("time.hour") + ' ' + TAPi18n.__("time.ago");
+        display = hours + TAPi18n.__("time.hour") + ' ' + TAPi18n.__("time.ago");
     } else if (diff < ONE_WEEK) {
         day = DAYS[ then.getDay() ];
         display = day;

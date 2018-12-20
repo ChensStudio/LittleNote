@@ -82,6 +82,20 @@ body {
   font-size: 13px;
 }
 
+.badge-balance {
+  display: inline-flex;
+  background: white;
+  width:100px;
+  height:38px;
+  margin:10px auto;
+  color:rgba(0,0,0,.6);
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,.2);
+  font-size: 12px;
+  font-family: Impact;
+
+}
+
 .map {
   z-index: 1;
   /*width: 100%;*/
@@ -98,7 +112,6 @@ body {
   opacity: 0;
   -webkit-transition:all 0.5s linear;
 }
-
 
 .draw_icon {
   background: url(drawer_icon.png); 
@@ -186,11 +199,18 @@ body {
 .notecontainer {
   background: white;
   /*border-radius: 5px;*/
-  padding: 2px 1px 8px 1px;
+  padding: 2px 1px 0px 4px;
   margin-top: 2px;
   margin-bottom:8px;
   /*box-shadow: 0px 2px #888888*/
-  border-bottom: 1.2px solid rgb(55, 197, 197)
+  /*border-bottom: 1.2px solid rgb(55, 197, 197)*/
+}
+
+hr.divider {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(55, 197, 197,0.75), rgba(0, 0, 0, 0));
+  margin-top:14px;
 }
 
 .notecontainer:hover {

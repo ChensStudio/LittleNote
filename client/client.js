@@ -342,7 +342,7 @@ Template.map.rendered = function() {
     currLongitude = position.coords.longitude;
     currLatitude = position.coords.latitude;
     if (map) {
-      map.setView([currLatitude, currLongitude], 4);
+      map.setView([currLatitude, currLongitude], 15);
     }
   }
 
@@ -404,42 +404,20 @@ Template.map.rendered = function() {
   L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
 
   map = L.map('map', {
-    doubleClickZoom: false,
+    doubleClickZoom: true,
     worldCopyJump: true
-  }).setView([49.25044, -123.137], 4);
+  }).setView([49.25044, -123.137], 15);
 
-  // L.tileLayer.provider('Stamen.Terrain', {maxZoom: 16}).addTo(map);
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors.'
   }).addTo(map);
-  // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-  //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-  //     maxZoom: 18,
-  //     id: 'mapbox.streets',
-  //     accessToken: 'sk.eyJ1IjoiYmlhamVlIiwiYSI6ImNqbXN2eWtpazI5emszcGs0MDdnc2JheGUifQ.bBoM1hQuhMOtL8bl87EtBg'
-  // }).addTo(map);
 
   map.addControl(L.control.locate({
     locateOptions: {
             enableHighAccuracy: true
   }}));
 
-  // navigator.geolocation.getCurrentPosition(setPosition);
-
-  map.on('dblclick', function(event) {
-    // Markers.insert({latlng: event.latlng});
-    insert.call(
-      {
-        address: '0x12345567789000',
-        latlng: {lng:event.latlng.lng, lat:event.latlng.lat},
-        grid: Math.floor((event.latlng.lng + 360) * 100) * 100000 + Math.floor((event.latlng.lat + 360) * 100),
-        noteText: 'static test',
-        forSell: false,
-      }, (err)=>{
-            alert(err.message);
-      });
-  });
-
+  navigator.geolocation.getCurrentPosition(setPosition);
 
   var popup = L.popup();
   var container = L.DomUtil.create('div');

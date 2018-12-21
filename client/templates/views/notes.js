@@ -24,13 +24,13 @@ Template.body.events({
 
    hide = !hide;
    if(hide){
-    $('.mapcontainer').css('width','90%');
+    $('.mapcontainer').css('width','95%');
     // $('.close_ico').css('background','url(drawer_icon.png)');
     $('#drawer').removeClass('close_ico');
     $('#drawer').addClass('draw_icon');
    }
    else{
-    $('.mapcontainer').css('width','75%');
+    $('.mapcontainer').css('width','78%');
     // $('.close_ico').css('background','url(close_ico.png)');
     $('#drawer').removeClass('draw_icon');
     $('#drawer').addClass('close_ico');
@@ -237,17 +237,6 @@ Template.note.events({
 
  });
 
-// Template.qrModal.helpers({
-//     contract: function(){
-//         return myContract;
-//     },
-//     tx: function(){
-//         return "moac:"+myContract+"?amount=1.000000&token=MOAC";
-//     },
-//     clipboard: function(){
-//         var clipboard = new Clipboard('.btn');
-//     }
-// });
 
 Template.header.onCreated(function(){
 
@@ -287,19 +276,6 @@ Template.map.onRendered(function (){
         $('.header').children().show(300);
      }
     },400);
-    // $('.marquee').marquee({
-    //     //speed in milliseconds of the marquee
-    //     duration: 15000,
-    //     //gap in pixels between the tickers
-    //     gap: 1000,
-    //     //time in milliseconds before the marquee will start animating
-    //     delayBeforeStart: 1000,
-    //     //'left' or 'right'
-    //     direction: 'left',
-    //     //true or false - should the marquee be duplicated to show an effect of continues flow
-    //     duplicated: true
-    //   });
-      // Session.set("flexHeight",$(".mapcontainer").height());
 
 });
 
@@ -320,25 +296,6 @@ Template.map.events({
 })
 
 Template.header.helpers({
-    // 'headline': function(){
-    //     try
-    //     {
-    //         MoacConnect.GetJackpot(function(e,c) {
-    //             if(!e)
-    //             {
-    //                 return c.toString();
-    //             }
-    //             else
-    //             {
-    //                 return TAPi18n.__("app.NoJackpotInfo");
-    //             }
-    //         })
-    //     }
-    //     catch(e)
-    //     {
-    //         return TAPi18n.__("app.NoJackpotInfo");
-    //     }
-    // },
     'balance'(){
         var template = Template.instance();
         chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){

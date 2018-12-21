@@ -1,4 +1,3 @@
-
 import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
@@ -34,6 +33,7 @@ var tooltip;
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
+    // console.log('map height',window.innerHeight);
     $('#map').css('height', '550px');
   });
   $(window).resize(); // trigger resize event 
@@ -364,14 +364,6 @@ Template.map.rendered = function() {
     tooltip.show();
   }
 
-  var createButton = function(label, container) {
-    var btn = L.DomUtil
-      .create('button', 'postbtn', container);
-    btn.setAttribute('type', 'button');
-    btn.innerHTML = label;
-    return btn;
-  }
-
   var createNoteModal = function(popup, latlng, noteText, userName) {
     popUserInfo(function(e, userInfo) {
       console.log('createNoteModal userInfo', userInfo);
@@ -442,7 +434,7 @@ Template.map.rendered = function() {
 
 
   var popup = L.popup();
-  var container = L.DomUtil.create('div');
+  var container = L.DomUtil.create('div','popup_container');
   map.on('click', function(event) {
     if (event.originalEvent && event.originalEvent.key == "Enter") {
       return;
@@ -456,66 +448,69 @@ Template.map.rendered = function() {
       price += ' MOAC';
     }
 
+
     var userNameDiv = '';
+    var createUserDiv = '';
     if (!gUserName) {
-      userNameDiv = '<label for="username">User name:</label><br><input class="username" type="text" name="username"/><br><div class="usernamebtn"></div><br><br>';
+      createUserDiv = '<div class="creatediv"><label>User name:</label><br><div style="display:flex"><input class="username" type="text" name="username"/><br><div class="usernamebtn"></div><button id="createuser" class="btn btn-primary">Create</button></div></div></div>';
     } else {
-      userNameDiv = 'You will post as ' + gUserName + '<br><br>';
+      userNameDiv = '—' + gUserName;
     }
+
+    var header = '<div style="text-align:center;transition: all 0.8s ease 0s;"><p style="font-weight:bolder;margin:0 auto">' + coordinates + 
+    '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px"></div>';
+    var body = '<div style="margin-top:1px">' + createUserDiv + 
+    '<textarea class="notetobeposted" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="type your note here....."></textarea><span id="signature">' + userNameDiv + '</span></div>';
+    var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="post" >post</button><button id="getqr" value="QR">QR</button></span></div>';
      
-    
-    container.innerHTML = '</div>' + coordinates + ' <br>Your permanent note for ' + price + '<br><br><textarea class="notetobeposted" type="text" name="notetobeposted" maxlength="128" rows="4" cols="40"></textarea><br><br>' + userNameDiv;
+    container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
-    
-    var postBtn = createButton('Post here.', container);   
-    var getQR = createButton('getQR', container);
-
-     L.DomEvent.on(getQR,'click',()=>{
-      console.log($(".notetobeposted"))
-      var data = $('.notetobeposted').val();
-      var TX = `moac:${global.gContractAddress}?data=${data}&amount=<amount>&token=MOAC`;
-      Modal.show('qrModal',{data:TX});
-       // QRCode.toCanvas(canvas, TX, function (error,suc) {
-       //  if (error) console.error(error)
-       //  console.log('success!');
-       //  })
-     })
-
-    if (!gUserName) {
-      var userNameContainer = container.childNodes[12];
-      var userNameBtn = createButton('Create User', userNameContainer);
-
-      L.DomEvent.on(userNameBtn, 'click', () => {
-        // alert("toto");
-        var userName = $('.username').val();
-        // alert(noteText);
-        createNewUserName(gUserAddress, userName, function(e, c) {
-          if (!e) {
-            userNameBtn.setAttribute('disabled', true);
-            postBtn.removeAttribute('disabled');
-          }
-        });
-        // createNoteModal(popup, event.latlng, noteText, userName);
-      });
-      postBtn.setAttribute('disabled', true);
-    }
-
-
-    L.DomEvent.on(postBtn, 'click', () => {
-      // alert("toto");
-      var noteText = $('.notetobeposted').val();
-      var userName = $('.username').val();
-      // alert(noteText);
-      createNoteModal(popup, event.latlng, noteText, userName);
-      map.closePopup();
-    });
 
     popup
       .setLatLng(event.latlng)
       .setContent(container)
       .openOn(map);
 
+      if (!gUserName) {
+        $('#post').css('display','none');
+      }
+
     $('.notetobeposted').focus();
+    // get qr btn
+    $('#getqr').click(function(){
+     var data = $('.notetobeposted').val();
+      var TX = `moac:${global.gContractAddress}?data=${data}&amount=<amount>&token=MOAC`;
+      Modal.show('qrModal',{data:TX});
+    });
+    
+    //post note
+    $('#post').click(function(){
+     var noteText = $('.notetobeposted').val();
+      var userName = $('.username').val();
+      // alert(noteText);
+      createNoteModal(popup, event.latlng, noteText, userName);
+      map.closePopup();
+    });
+
+    //create user
+    $('#createuser').click(function(){
+       var userName = $('.username').val();
+        console.log('username',userName);
+        // alert(noteText);
+        createNewUserName(gUserAddress, userName, function(e, c) {
+          if (!e) {
+            $('.creatediv').fadeOut(500);
+            $('#post').fadeIn(500);
+          }
+        });
+        $('.creatediv').fadeOut(500);
+        $('.creatediv').children().fadeOut(500);
+        $('#post').fadeIn(500);
+        // createNoteModal(popup, event.latlng, noteText, userName);
+      // $('#post').css('visibility', 'hidden');
+    });
+
+   
 
     L.DomEvent.on(popup._container, 'mousemove', function(e) {
       // console.log("mousemove popup._container");

@@ -20,14 +20,15 @@ body {
   height: 550px;
   display: flex;
   position: relative;
-  margin-top: 100px;
+  margin-top: 120px;
+  margin-bottom: 30px;
 
 }
 
 .mapcontainer {
   /*border: solid 1px black;*/
   border: 1px solid rgba(0,0,0,.5);
-  width: 75%;
+  width: 78%;
   display: block;
   margin: 0 auto;
   transition: all 0.8s ease 0s;
@@ -211,7 +212,6 @@ hr.divider {
   border: 0;
   height: 1px;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(55, 197, 197,0.75), rgba(0, 0, 0, 0));
-  margin-top:14px;
 }
 
 .notecontainer:hover {
@@ -233,6 +233,53 @@ color: #ffffff;
 background: #f6b93b;
 background-color: rgb(55, 197, 197);
 transition: all 0.4s ease 0s;
+}
+
+.popup_container {
+  width: 250px;
+}
+
+#post{
+color: #494949;
+background: #ffffff;
+padding: 5px;
+width:35px;
+height:35px;
+border: 1px solid #494949 ;
+border-radius: 50%;
+margin:0 5px;
+}
+
+#post:hover {
+color: #ffffff;
+background: #f6b93b;
+background-color: rgb(55, 197, 197);
+transition: all 0.4s ease 0s;
+}
+
+
+#getqr{
+color: #494949;
+background: #ffffff;
+padding: 5px;
+width:35px;
+height:35px;
+border: 1px solid #494949 ;
+border-radius: 50%;
+margin:0 5px;
+}
+
+#getqr:hover {
+color: #ffffff;
+background: #f6b93b;
+background-color: rgb(55, 197, 197);
+transition: all 0.4s ease 0s;
+}
+
+#signature {
+  margin-left:75%;
+  font-family:cursive;
+  font-size:15px;
 }
 
 .notelink {
@@ -349,7 +396,7 @@ transition: all 0.4s ease 0s;
 }
 
 .notetobeposted{
-  
+
 }
 
 .postbtn:disabled {
@@ -361,6 +408,18 @@ transition: all 0.4s ease 0s;
   border: 1px green;
   background-color: green;
 }
+
+textarea {
+  outline: none;
+  width: 90%;
+  padding:10px;
+  /*border-radius: 10px;*/
+  /*border-color: rgba(55, 197, 197,0.5);*/
+  border-style:none;
+ /* background: rgba(0,0,0,0.05);*/
+  resize:none;
+}
+
 
 .markertooltip {
   z-index: 1070;

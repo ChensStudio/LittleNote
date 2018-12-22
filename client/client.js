@@ -430,7 +430,7 @@ Template.map.rendered = function() {
     var userNameDiv = '';
     var createUserDiv = '';
     if (!gUserName) {
-      createUserDiv = '<div class="creatediv"><label>User name:</label><br><div style="display:flex"><input class="username" type="text" name="username"/><br><div class="usernamebtn"></div><button id="createuser" class="btn btn-primary">Create</button></div></div></div>';
+      createUserDiv = '<div class="creatediv"><div style="display:flex;padding-left:20px"><input class="username" type="text" placeholder="Username"/><div class="usernamebtn"></div><button id="createuser">create</button></div></div></div>';
     } else {
       userNameDiv = '—' + gUserName;
     }

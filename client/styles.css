@@ -250,7 +250,7 @@ transition: all 0.4s ease 0s;
   width: 250px;
 }
 
-#post{
+#post, #getqr{
 color: #494949;
 background: #ffffff;
 padding: 5px;
@@ -261,36 +261,44 @@ border-radius: 50%;
 margin:0 5px;
 }
 
-#post:hover {
-color: #ffffff;
-background: #f6b93b;
-background-color: rgb(55, 197, 197);
-transition: all 0.4s ease 0s;
-}
-
-
-#getqr{
+#createuser {
 color: #494949;
 background: #ffffff;
-padding: 5px;
-width:35px;
-height:35px;
-border: 1px solid #494949 ;
-border-radius: 50%;
+width:60px;
+height:30px;
+border: 1px solid rgba(0,0,0,.2) ;
+border-radius: 5px;
 margin:0 5px;
+text-align: center;
 }
 
-#getqr:hover {
+#post:hover, #getqr:hover ,#createuser:hover{
 color: #ffffff;
 background: #f6b93b;
 background-color: rgb(55, 197, 197);
 transition: all 0.4s ease 0s;
 }
+
+
 
 #signature {
   margin-left:75%;
   font-family:cursive;
   font-size:15px;
+}
+
+.username {
+  border:0;
+  outline: none;
+  border-bottom: 1px solid rgba(0,0,0,0.0975);
+  padding:5px 5px 5px 5px;
+  letter-spacing:2px;
+  
+}
+
+.leaflet-popup-content-wrapper {
+  border:1px solid rgba(0,0,0,0.0975);
+  background: rgba(255,255,255,0.99);
 }
 
 .notelink {

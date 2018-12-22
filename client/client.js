@@ -436,7 +436,7 @@ Template.map.rendered = function() {
     }
 
     var header = '<div style="text-align:center;transition: all 0.8s ease 0s;"><p style="font-weight:bolder;margin:0 auto">' + coordinates + 
-    '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px"></div>';
+    '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px;transition: all 0.8s ease 0s;"></div>';
     var body = '<div style="margin-top:1px">' + createUserDiv + 
     '<textarea class="notetobeposted" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="type your note here....."></textarea><span id="signature">' + userNameDiv + '</span></div>';
     var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="post" >post</button><button id="getqr" value="QR">QR</button></span></div>';
@@ -477,13 +477,11 @@ Template.map.rendered = function() {
         // alert(noteText);
         createNewUserName(gUserAddress, userName, function(e, c) {
           if (!e) {
-            $('.creatediv').fadeOut(500);
-            $('#post').fadeIn(500);
+          $('.creatediv').fadeOut(500);
+          $('.creatediv').children().fadeOut(500);
+          $('#post').fadeIn(500);
           }
         });
-        $('.creatediv').fadeOut(500);
-        $('.creatediv').children().fadeOut(500);
-        $('#post').fadeIn(500);
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');
     });

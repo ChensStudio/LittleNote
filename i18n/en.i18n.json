@@ -21,5 +21,8 @@
 		"min": "m",
 		"sec": "s",
 		"ago": "ago"
+	},
+	"accounts": {
+		"insert": "ln"
 	}
 }

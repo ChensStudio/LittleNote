@@ -15,9 +15,11 @@ var map;
 var gUserAddress;
 var gUserName;
 var gNoteCount;
-
+var dist = 101;
 var notesLoaded = false;
 var accountsLoaded = false;
+var circles =[];
+console.log(Markers.find());
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
@@ -259,7 +261,7 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
     lat: latlng4.lat,
     lng: latlng4.lng,
     grid: grid,
-    grid10: grid10,
+                                                                            grid10,
     noteText: noteText,
     forSell: forSell,
     value: priceLimit,
@@ -393,7 +395,7 @@ Template.map.rendered = function() {
     });
   }
 
-  L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
+  // L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
 
   map = L.map('map', {
     doubleClickZoom: true,
@@ -426,7 +428,6 @@ Template.map.rendered = function() {
       price += ' MOAC';
     }
 
-
     var userNameDiv = '';
     var createUserDiv = '';
     if (!gUserName) {
@@ -438,22 +439,26 @@ Template.map.rendered = function() {
     var header = '<div style="text-align:center;transition: all 0.8s ease 0s;"><p style="font-weight:bolder;margin:0 auto">' + coordinates + 
     '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px;transition: all 0.8s ease 0s;"></div>';
     var body = '<div style="margin-top:1px">' + createUserDiv + 
-    '<textarea class="notetobeposted" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="type your note here....."></textarea><span id="signature">' + userNameDiv + '</span></div>';
+    '<textarea class="notetobeposted" type="text" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="type your note here....."></textarea><span id="signature">' + userNameDiv + '</span></div>';
     var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="post" >post</button><button id="getqr" value="QR">QR</button></span></div>';
      
     container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
-
+    if (dist > 100){
     popup
       .setLatLng(event.latlng)
       .setContent(container)
       .openOn(map);
+    }
+    else{
+      alert('too close to neighbor');
+    }
 
       if (!gUserName) {
         $('#post').css('display','none');
       }
-
     $('.notetobeposted').focus();
+
     // get qr btn
     $('#getqr').click(function(){
      var data = $('.notetobeposted').val();
@@ -464,9 +469,17 @@ Template.map.rendered = function() {
     //post note
     $('#post').click(function(){
      var noteText = $('.notetobeposted').val();
-      var userName = $('.username').val();
+     var userName = $('.username').val();
+     console.log(noteText);
       // alert(noteText);
       createNoteModal(popup, event.latlng, noteText, userName);
+      circle_drop = L.circle([event.latlng.lat,event.latlng.lng],
+           {color:'#13EDDB',
+            fillColor:'#13EDDB',
+            fillOpacity:0.5,
+            weight:0.1,
+            radius:100}).addTo(map);
+            circles.push([event.latlng.lat,event.latlng.lng]);
       map.closePopup();
     });
 
@@ -480,8 +493,17 @@ Template.map.rendered = function() {
           $('.creatediv').fadeOut(500);
           $('.creatediv').children().fadeOut(500);
           $('#post').fadeIn(500);
+<<<<<<< HEAD
+=======
+          
+>>>>>>> 0d36b14f048b2361738bf66db8a33907c0d199f1
           }
+          
         });
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 0d36b14f048b2361738bf66db8a33907c0d199f1
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');
     });
@@ -507,24 +529,47 @@ Template.map.rendered = function() {
     .setContent('Start drawing to see tooltip change')
     .setLatLng(new L.LatLng(bounds.getNorth(), bounds.getCenter().lng));
 
+
   var polygon;
+  var circle_move;
+  var circle_drop;
+  
   map.on('mousemove', function(event) {
-    if (polygon) {
+     if (polygon) {
       map.removeLayer(polygon);
     }
-
-    if (tooltip) {
+     if (circle_move){
+      map.removeLayer(circle_move);
+     }
+     if (tooltip) {
       updateTooltip(event);
     }
-
+    
     var latFloor = Math.floor(event.latlng.lat * 10)/10;
     var latCeil = Math.ceil(event.latlng.lat * 10)/10;
     var lngFloor = Math.floor(event.latlng.lng * 10)/10;
     var lngCeil = Math.ceil(event.latlng.lng * 10)/10;
 
     var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
-    polygon = L.polygon(latlngs, {color: 'green'}).addTo(map);
+    polygon = L.polygon(latlngs, {color: '#0AE0CE',weight: 0.5}).addTo(map);
+
+    circle_move = L.circle([event.latlng.lat,event.latlng.lng],
+      {color:'#929292',
+      fillColor:'#929292',
+      fillOpacity:0.5,
+      weight:0.1,
+      radius:100}).addTo(map);
+
+    for(var i in circles){
+      dist = map.distance([event.latlng.lat,event.latlng.lng],circles[i]);
+      if(dist <= 100){
+        circle_move.setStyle({color:'red',fillColor:'red'});
+        break;
+      }
+    }
+
   });
+
 
    
   // add clustermarkers
@@ -534,6 +579,15 @@ Template.map.rendered = function() {
   var query = Markers.find();
   query.observe({
     added: function (document) {
+
+      circle_drop = L.circle(document.latlng,
+           {color:'#13EDDB',
+            fillColor:'#13EDDB',
+            fillOpacity:0.5,
+            weight:0.1,
+            radius:100}).addTo(map);
+            circles.push(document.latlng);
+
       var marker = L.marker(document.latlng, {
         icon: new L.DivIcon({
             className: 'marker-tooltip',
@@ -571,7 +625,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
     }
     note.displayDate = dateFormat(note.updatedAt);
   }
-  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><div class="popupnotetext">' + note.note + '</div><br><br><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
+  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
   if (note.forSell) {
     console.log("note forsell")
     var price = getPrice(note.grid10, true);

@@ -468,9 +468,9 @@ textarea {
 .markertooltip-inner {
   max-width: 200px;
   padding: 3px 8px;
-  color: #fff;
+  color: #000;
   text-align: left;
-  background-color: rgba(18, 75, 117, 1);
+  background-color: rgba(255, 255, 255, 0.8 );
   border-radius: 4px;
   position: relative;
 }
@@ -497,7 +497,7 @@ textarea {
   -ms-transform: rotate(45deg);
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
-  background-color: rgba(18, 75, 117, 1);
+  background-color: rgba(255, 255, 255, 0.8 );
   opacity: 1;
 }
 

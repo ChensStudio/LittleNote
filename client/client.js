@@ -294,8 +294,6 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
   } else {
     createNote(byMyselfFlag, moacInserts, mongoInserts);
   }
-
-
 }
 
 var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
@@ -396,7 +394,6 @@ Template.map.rendered = function() {
   }
 
   // L.Icon.Default.imagePath = '/packages/bevanhunt_leaflet/images/';
-
   map = L.map('map', {
     doubleClickZoom: true,
     worldCopyJump: true
@@ -415,6 +412,17 @@ Template.map.rendered = function() {
 
   var popup = L.popup();
   var container = L.DomUtil.create('div','popup_container');
+
+  map.on('preclick',function(event){
+    for(var i in circles){
+      dist = map.distance([event.latlng.lat,event.latlng.lng],circles[i]);
+      if(dist <= 100){
+        circle_move.setStyle({color:'red',fillColor:'red'});
+        break;
+      }
+    }
+  })
+
   map.on('click', function(event) {
     if (event.originalEvent && event.originalEvent.key == "Enter") {
       return;
@@ -444,15 +452,14 @@ Template.map.rendered = function() {
      
     container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
+    
     if (dist > 100){
     popup
       .setLatLng(event.latlng)
       .setContent(container)
       .openOn(map);
     }
-    else{
-      alert('too close to neighbor');
-    }
+   
 
       if (!gUserName) {
         $('#post').css('display','none');
@@ -473,13 +480,6 @@ Template.map.rendered = function() {
      console.log(noteText);
       // alert(noteText);
       createNoteModal(popup, event.latlng, noteText, userName);
-      circle_drop = L.circle([event.latlng.lat,event.latlng.lng],
-           {color:'#13EDDB',
-            fillColor:'#13EDDB',
-            fillOpacity:0.5,
-            weight:0.1,
-            radius:100}).addTo(map);
-            circles.push([event.latlng.lat,event.latlng.lng]);
       map.closePopup();
     });
 
@@ -494,9 +494,12 @@ Template.map.rendered = function() {
           $('.creatediv').children().fadeOut(500);
           $('#post').fadeIn(500);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           
 >>>>>>> 0d36b14f048b2361738bf66db8a33907c0d199f1
+=======
+>>>>>>> 8d32e6794b13ad48cf3888ba5b14758a0acf595c
           }
           
         });
@@ -507,8 +510,6 @@ Template.map.rendered = function() {
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');
     });
-
-   
 
     L.DomEvent.on(popup._container, 'mousemove', function(e) {
       // console.log("mousemove popup._container");
@@ -529,49 +530,46 @@ Template.map.rendered = function() {
     .setContent('Start drawing to see tooltip change')
     .setLatLng(new L.LatLng(bounds.getNorth(), bounds.getCenter().lng));
 
-
   var polygon;
   var circle_move;
   var circle_drop;
+  var cx = null;
+  var cy = null;
+  var poly_center = [cx,cy];
   
   map.on('mousemove', function(event) {
-     if (polygon) {
-      map.removeLayer(polygon);
-    }
-     if (circle_move){
-      map.removeLayer(circle_move);
-     }
-     if (tooltip) {
-      updateTooltip(event);
-    }
-    
     var latFloor = Math.floor(event.latlng.lat * 10)/10;
     var latCeil = Math.ceil(event.latlng.lat * 10)/10;
     var lngFloor = Math.floor(event.latlng.lng * 10)/10;
     var lngCeil = Math.ceil(event.latlng.lng * 10)/10;
+    cx = (latFloor + latCeil)/2;
+    cy = (lngFloor + lngCeil)/2;
+     if (tooltip) {
+      updateTooltip(event);
+    }
+    if(poly_center[0]!=cx || poly_center[1]!=cy){
+       if(polygon){
+        map.removeLayer(polygon);
+       }
+       var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
+       polygon = L.polygon(latlngs, {color: '#0AE0CE',weight: 0.5}).addTo(map);
+       poly_center = [cx,cy];
+    }
+  });
 
-    var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
-    polygon = L.polygon(latlngs, {color: '#0AE0CE',weight: 0.5}).addTo(map);
-
-    circle_move = L.circle([event.latlng.lat,event.latlng.lng],
+  map.on('mousemove', function(event) {
+    if (circle_move){
+      map.removeLayer(circle_move);
+     }
+      circle_move = L.circle([event.latlng.lat,event.latlng.lng],
       {color:'#929292',
       fillColor:'#929292',
       fillOpacity:0.5,
       weight:0.1,
       radius:100}).addTo(map);
 
-    for(var i in circles){
-      dist = map.distance([event.latlng.lat,event.latlng.lng],circles[i]);
-      if(dist <= 100){
-        circle_move.setStyle({color:'red',fillColor:'red'});
-        break;
-      }
-    }
+  })
 
-  });
-
-
-   
   // add clustermarkers
   var markers = L.markerClusterGroup();
   map.addLayer(markers);

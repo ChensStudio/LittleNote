@@ -7,9 +7,10 @@ class AccountsCollection extends Mongo.Collection {
   insert(account, callback, language = 'en') {
     const ourAccount = account;
     if (!ourAccount.name) {
-      const defaultName = TAPi18n.__('accounts.insert.account', null, language);
-      let nextLetter = 'A';
-      ourAccount.name = `${defaultName} ${nextLetter}`;
+      const defaultName = TAPi18n.__('accounts.insert', null, language);
+      let nextLetter = Math.round(+new Date()/1000);
+      let rand = Math.floor(Math.random()*100);
+      ourAccount.name = `${defaultName}_${nextLetter}_${rand}`;
     }
     return super.insert(ourAccount, callback);
   }

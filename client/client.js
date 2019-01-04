@@ -456,7 +456,7 @@ Template.map.rendered = function() {
             html: '<div class="errormarkertip"><div class="errormarker-tip-container"><div class="errormarker-tip"></div></div><div class="errormarker-inner">Too Close</div></div>'
         })})
     .addTo(map);
-
+     error_marker.setZIndexOffset(1000);
     // error_marker.bringToFront();
     }
    

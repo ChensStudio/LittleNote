@@ -1,4 +1,4 @@
-import {Template} from 'meteor/templating';
+ import {Template} from 'meteor/templating';
 import {Notes} from '../../../imports/api/notes/notes.js';
 import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
@@ -205,11 +205,11 @@ Template.note.helpers({
 });
 
 Template.note.events({
-    'click .forsell': function(e) {
-        myContract = $(e.target).data('contract');
-        // myContract = e.target.dataset.contract;
-        Modal.show('qrModal');
-    },
+    // 'click .forsell': function(e) {
+    //     myContract = $(e.target).data('contract');
+    //     // myContract = e.target.dataset.contract;
+    //     Modal.show('qrModal');
+    // },
     'click .notecoordinates': function(e) {
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
@@ -297,17 +297,18 @@ Template.map.events({
 
 Template.header.helpers({
     'balance'(){
-        var template = Template.instance();
+        // var template = Template.instance();
         chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
             if(e){
                 console.log(e);
             }
             else{
                 var balance = r.toNumber()/1e18;
-                TemplateVar.set(template,'balance',balance.toFixed(3));
+                // TemplateVar.set(template,'balance',balance.toFixed(3));
+                Session.set('balance',balance.toFixed(3));
             }
         });
-        return TemplateVar.get('balance');
+        return Session.get('balance');
     }
     
 });

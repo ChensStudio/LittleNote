@@ -397,7 +397,9 @@ Template.map.rendered = function() {
   }).setView([49.25044, -123.137], 15);
 
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors.'
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors.',
+    minZoom: 1,
+    maxZoom: 18
   }).addTo(map);
 
   map.addControl(L.control.locate({
@@ -568,7 +570,7 @@ Template.map.rendered = function() {
   })
 
   // add clustermarkers
-  var markers = L.markerClusterGroup();
+  var markers = L.markerClusterGroup(/*{maxClusterRadius:80}*/);
   map.addLayer(markers);
 
   var query = Markers.find();

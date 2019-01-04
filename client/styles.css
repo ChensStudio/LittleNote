@@ -137,6 +137,7 @@ body {
   padding: 0px 7px 50px 7px;
   margin-right: 0px;
   box-shadow: 0px 2px #888888;
+  word-wrap:break-word;
 
 }
 
@@ -445,6 +446,7 @@ textarea {
   width: 200px;
   margin-top: 9px;
   margin-left: -1px;
+  word-wrap:break-word;
 }
 
 .markertooltip-inner {
@@ -455,6 +457,7 @@ textarea {
   background-color: rgba(255, 255, 255, 0.8 );
   border-radius: 4px;
   position: relative;
+
 }
 
 .markertooltip-tip-container {
@@ -484,18 +487,16 @@ textarea {
 }
 
 .errormarkertip {
-  z-index: 200;
   display: block;
-  font-family:Arial Black;
   font-style: normal;
   letter-spacing: normal;
   line-break: auto;
-  line-height: 3;
+  line-height: 2.5;
   text-align: left;
   text-align: start;
   font-size: 12px;
   opacity: 1;
-  width: 150px;
+  width: 120px;
   margin-top: 9px;
   margin-left: -1px;
   margin-top:25px;
@@ -509,6 +510,9 @@ textarea {
   background-color: #F88C8C;
   border-radius: 10px;
   position: relative;
+  letter-spacing: 1px;
+  font-family: system-ui;
+  font-weight: bold;
 }
 
 .errormarker-tip-container {
@@ -520,6 +524,7 @@ textarea {
   margin-top: -10px;
   overflow: hidden;
   pointer-events: none;
+  margin-top:30px;
 }
 
 .errormarker-tip {
@@ -527,7 +532,7 @@ textarea {
   width: 10px;
   height: 10px;
   padding: 1px;
-  margin: 7px auto 4px;
+  margin-left:18px;
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
   -ms-transform: rotate(45deg);

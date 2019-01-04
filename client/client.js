@@ -453,10 +453,12 @@ Template.map.rendered = function() {
      error_marker = L.marker([event.latlng.lat,event.latlng.lng],{
         icon: new L.DivIcon({
             className: 'error_marker',
+            iconAnchor:[10,65],
             html: '<div class="errormarkertip"><div class="errormarker-tip-container"><div class="errormarker-tip"></div></div><div class="errormarker-inner">Too Close</div></div>'
         })})
     .addTo(map);
      error_marker.setZIndexOffset(1000);
+     tooltip.hide();
     // error_marker.bringToFront();
     }
    

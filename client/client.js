@@ -18,6 +18,7 @@ var gNoteCount;
 var notesLoaded = false;
 var accountsLoaded = false;
 var overlap = false;
+var rad = 50;
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
@@ -60,6 +61,16 @@ var monitorUserAddress = function() {
     }
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
+        chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
+            if(e){
+                console.log(e);
+            }
+            else{
+                var balance = r.toNumber()/1e18;
+                // TemplateVar.set(template,'balance',balance.toFixed(3));
+                Session.set('balance',balance.toFixed(3));
+            }
+        });
         gUserAddress = chain3js.mc.accounts[0];
         console.log('gUserAddress is updated to [' + gUserAddress + ']');
         dbAccount = loadUserName();
@@ -399,7 +410,7 @@ Template.map.rendered = function() {
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors.',
     minZoom: 1,
-    maxZoom: 18
+    maxZoom: 19
   }).addTo(map);
 
   map.addControl(L.control.locate({
@@ -559,7 +570,7 @@ Template.map.rendered = function() {
       fillColor:'#929292',
       fillOpacity:0.5,
       weight:0.1,
-      radius:100}).addTo(map);
+      radius:rad}).addTo(map);
 
       circle_move.bringToBack();
 
@@ -582,7 +593,7 @@ Template.map.rendered = function() {
             fillColor:'#13EDDB',
             fillOpacity:0.5,
             weight:0.1,
-            radius:100}).addTo(map);
+            radius:rad}).addTo(map);
 
       circle_drop.on('mouseover',function(event){
         overlap = true;
@@ -628,7 +639,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
     }
     note.displayDate = dateFormat(note.updatedAt);
   }
-  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
+  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext" style="word-wrap:break-word">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
   if (note.forSell) {
     console.log("note forsell")
     var price = getPrice(note.grid10, true);

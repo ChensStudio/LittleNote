@@ -297,17 +297,18 @@ Template.map.events({
 
 Template.header.helpers({
     'balance'(){
-        var template = Template.instance();
+        // var template = Template.instance();
         chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
             if(e){
                 console.log(e);
             }
             else{
                 var balance = r.toNumber()/1e18;
-                TemplateVar.set(template,'balance',balance.toFixed(3));
+                // TemplateVar.set(template,'balance',balance.toFixed(3));
+                Session.set('balance',balance.toFixed(3));
             }
         });
-        return TemplateVar.get('balance');
+        return Session.get('balance');
     }
     
 });

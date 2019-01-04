@@ -15,11 +15,9 @@ var map;
 var gUserAddress;
 var gUserName;
 var gNoteCount;
-var dist = 101;
 var notesLoaded = false;
 var accountsLoaded = false;
-var circles =[];
-console.log(Markers.find());
+var overlap = false;
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
@@ -30,6 +28,7 @@ Meteor.subscribe('accounts', function(){
 
 
 var tooltip;
+var error_marker;
 // var chain3js;
 
 // on startup run resizing event
@@ -413,15 +412,6 @@ Template.map.rendered = function() {
   var popup = L.popup();
   var container = L.DomUtil.create('div','popup_container');
 
-  map.on('preclick',function(event){
-    for(var i in circles){
-      dist = map.distance([event.latlng.lat,event.latlng.lng],circles[i]);
-      if(dist <= 100){
-        circle_move.setStyle({color:'red',fillColor:'red'});
-        break;
-      }
-    }
-  })
 
   map.on('click', function(event) {
     if (event.originalEvent && event.originalEvent.key == "Enter") {
@@ -453,14 +443,23 @@ Template.map.rendered = function() {
     container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
     
-    if (dist > 100){
+    if (overlap === false){
     popup
       .setLatLng(event.latlng)
       .setContent(container)
       .openOn(map);
     }
-   
+    else{
+     error_marker = L.marker([event.latlng.lat,event.latlng.lng],{
+        icon: new L.DivIcon({
+            className: 'error_marker',
+            html: '<div class="errormarkertip"><div class="errormarker-tip-container"><div class="errormarker-tip"></div></div><div class="errormarker-inner">Too Close</div></div>'
+        })})
+    .addTo(map);
 
+    // error_marker.bringToFront();
+    }
+   
       if (!gUserName) {
         $('#post').css('display','none');
       }
@@ -493,10 +492,8 @@ Template.map.rendered = function() {
           $('.creatediv').fadeOut(500);
           $('.creatediv').children().fadeOut(500);
           $('#post').fadeIn(500);
-          }
-          
+          }  
         });
-
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');
     });
@@ -534,7 +531,7 @@ Template.map.rendered = function() {
     var lngCeil = Math.ceil(event.latlng.lng * 10)/10;
     cx = (latFloor + latCeil)/2;
     cy = (lngFloor + lngCeil)/2;
-     if (tooltip) {
+    if (tooltip) {
       updateTooltip(event);
     }
     if(poly_center[0]!=cx || poly_center[1]!=cy){
@@ -544,10 +541,14 @@ Template.map.rendered = function() {
        var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
        polygon = L.polygon(latlngs, {color: '#0AE0CE',weight: 0.5}).addTo(map);
        poly_center = [cx,cy];
+       polygon.bringToBack();
     }
   });
 
   map.on('mousemove', function(event) {
+    if(error_marker){
+      map.removeLayer(error_marker);
+    }
     if (circle_move){
       map.removeLayer(circle_move);
      }
@@ -557,6 +558,12 @@ Template.map.rendered = function() {
       fillOpacity:0.5,
       weight:0.1,
       radius:100}).addTo(map);
+
+      circle_move.bringToBack();
+
+      if(overlap === true){
+        circle_move.setStyle({color:'red',fillColor:'red'});
+      }
 
   })
 
@@ -574,8 +581,14 @@ Template.map.rendered = function() {
             fillOpacity:0.5,
             weight:0.1,
             radius:100}).addTo(map);
-            circles.push(document.latlng);
 
+      circle_drop.on('mouseover',function(event){
+        overlap = true;
+      })      
+
+      circle_drop.on('mouseout',function(event){
+        overlap = false;
+      })    
       var marker = L.marker(document.latlng, {
         icon: new L.DivIcon({
             className: 'marker-tooltip',

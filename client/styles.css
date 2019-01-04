@@ -441,7 +441,7 @@ textarea {
 
 
 .markertooltip {
-  z-index: 1070;
+  z-index: 100;
   display: block;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
@@ -451,13 +451,6 @@ textarea {
   line-height: 1.42857143;
   text-align: left;
   text-align: start;
-  text-decoration: none;
-  text-shadow: none;
-  text-transform: none;
-  white-space: normal;
-  word-break: normal;
-  word-spacing: normal;
-  word-wrap: normal;
   font-size: 12px;
   opacity: 1;
   width: 200px;
@@ -498,6 +491,60 @@ textarea {
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
   background-color: rgba(255, 255, 255, 0.8 );
+  opacity: 1;
+}
+
+.errormarkertip {
+  z-index: 200;
+  display: block;
+  font-family:Arial Black;
+  font-style: normal;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 3;
+  text-align: left;
+  text-align: start;
+  font-size: 12px;
+  opacity: 1;
+  width: 150px;
+  margin-top: 9px;
+  margin-left: -1px;
+  margin-top:25px;
+}
+
+.errormarker-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #fff;
+  text-align: center;
+  background-color: #F88C8C;
+  border-radius: 10px;
+  position: relative;
+}
+
+.errormarker-tip-container {
+  width: 40px;
+  height: 20px;
+  position: absolute;
+  left: 50%;
+  margin-left: -19px;
+  margin-top: -10px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.errormarker-tip {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  padding: 1px;
+  margin: 7px auto 4px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-color: #F88C8C;
   opacity: 1;
 }
 

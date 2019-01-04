@@ -26,7 +26,6 @@ Meteor.subscribe('accounts', function(){
   monitorUserAddress();
 });
 
-
 var tooltip;
 var error_marker;
 // var chain3js;
@@ -34,7 +33,6 @@ var error_marker;
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
-    // console.log('map height',window.innerHeight);
     $('#map').css('height', '550px');
   });
   $(window).resize(); // trigger resize event 
@@ -637,7 +635,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
   content +='</div></div>';
   if (zoomFlag) {
-    map.setView([lat, lng], 10);
+    map.setView([lat, lng], 16);
   } else {
     map.setView([lat, lng]);
   }

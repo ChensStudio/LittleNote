@@ -493,20 +493,10 @@ Template.map.rendered = function() {
           $('.creatediv').fadeOut(500);
           $('.creatediv').children().fadeOut(500);
           $('#post').fadeIn(500);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          
->>>>>>> 0d36b14f048b2361738bf66db8a33907c0d199f1
-=======
->>>>>>> 8d32e6794b13ad48cf3888ba5b14758a0acf595c
           }
           
         });
-<<<<<<< HEAD
-=======
-        
->>>>>>> 0d36b14f048b2361738bf66db8a33907c0d199f1
+
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');
     });

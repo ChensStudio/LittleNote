@@ -67,7 +67,7 @@ var monitorUserAddress = function() {
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
         gUserName = '';
-        chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
+        chain3js.mc.getBalance(chain3js.mc.accounts[0],function(e,r){
             if(e){
                 console.log(e);
             }

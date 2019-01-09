@@ -10,6 +10,9 @@ import { Accounts } from '../accounts/accounts.js';
 export const insert = new ValidatedMethod({
     name: 'notes.insert',
     validate: new SimpleSchema({
+        _id:{
+            type: String,
+        },
         address:{
             type: String,
         },
@@ -31,8 +34,9 @@ export const insert = new ValidatedMethod({
           type: Boolean,
         },
     }).validator(),
-    run({address, latlng, grid, grid10, noteText, forSell}) {
+    run({_id,address, latlng, grid, grid10, noteText, forSell}) {
         const note={
+            _id:_id,
             address: address,
             latlng: latlng,
             grid: grid,

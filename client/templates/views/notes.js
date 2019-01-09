@@ -35,8 +35,12 @@ Template.body.events({
     $('#drawer').removeClass('draw_icon');
     $('#drawer').addClass('close_ico');
    }
+},
 
-}
+// 'click #zoom'(){
+
+// }
+
 })
 
 Template.notesbody.helpers({

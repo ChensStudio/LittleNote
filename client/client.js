@@ -6,8 +6,12 @@ import {accountinsert} from '../imports/api/accounts/methods.js';
 import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
+import { Random } from 'meteor/random';
 // import {encode, decode} from 'rlp';
+// import { statesData } from './statesData'
+// $(document).width() = document.width()*2;
 
+// console.log("random Id",Random.id(17));
 var Markers = Notes;
 
 var currLatitude, currLongitude;
@@ -61,6 +65,7 @@ var monitorUserAddress = function() {
     }
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
+        gUserName = '';
         chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
             if(e){
                 console.log(e);
@@ -153,7 +158,7 @@ var createNewUserName = function(address, userName, callback) {
       callback(err);
       return;
     }
-
+    else{
     gUserName = userName;
     MoacConnect.AddUser(userName, address, function(e, c){
       console.log('MoacConnect.AddUser callback', e, c);
@@ -184,6 +189,8 @@ var createNewUserName = function(address, userName, callback) {
         });
       }, 1000);
     });
+
+  }
   });
 
 }
@@ -307,22 +314,24 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
 var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
   console.log('createNote', byMyselfFlag, moacInserts, mongoInserts);
 
-  createNoteInDatabase(mongoInserts, function(err, _id) {
-    console.log('createNoteInDatabase called', mongoInserts, err, _id);
-    if (err) {
-      console.log('createNoteInDatabase err', err);
-      return;
-    }
-
-    moacInserts._id = _id;
-
+   moacInserts._id = Random.id(17);
+   mongoInserts._id = moacInserts._id;
+   console.log("random id", moacInserts._id);
     if (!byMyselfFlag) {
       MoacConnect.HelpAddNote(moacInserts, function(err, result){
         if (err) {
           console.log("error", err);
           return;
         }
-
+        else{
+         createNoteInDatabase(mongoInserts, function(err, _id) {
+              console.log('createNoteInDatabase called', mongoInserts, err, _id);
+              if (err) {
+              console.log('createNoteInDatabase err', err);
+              return;
+          }
+              });
+        }
         //TODO: update onChainFlag
       })
     } else {
@@ -332,11 +341,19 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
           console.log("error", err);
           return;
         }
-
+        else{
+            createNoteInDatabase(mongoInserts, function(err, _id) {
+              console.log('createNoteInDatabase called', mongoInserts, err, _id);
+              if (err) {
+              console.log('createNoteInDatabase err', err);
+              return;
+          }
+              });
+        }
         //TODO: update onChainFlag
       });
     }
-  });
+  
 }
 
 var createNoteInDatabase = function(mongoInserts, callback) {
@@ -364,7 +381,6 @@ Template.map.rendered = function() {
     else{
       price = TAPi18n.__("app.Free");
     }
-
     var content = TAPi18n.__("app.Price") + price;
     tooltip
       .setContent(content)
@@ -375,10 +391,8 @@ Template.map.rendered = function() {
   var createNoteModal = function(popup, latlng, noteText, userName) {
     popUserInfo(function(e, userInfo) {
       console.log('createNoteModal userInfo', userInfo);
-
       if (!userInfo) {
         if (!gUserAddress) {
-
           //TODO: ask about whether to sign in on moacmask or create a new address.
           gUserAddress = createNewAddress();
         } 
@@ -397,7 +411,6 @@ Template.map.rendered = function() {
       } else {
         toCreateNote(latlng, noteText);
       }
-
     });
   }
 
@@ -412,6 +425,9 @@ Template.map.rendered = function() {
     minZoom: 1,
     maxZoom: 19
   }).addTo(map);
+
+  // L.geoJson(statesData).addTo(map);
+
 
   map.addControl(L.control.locate({
     locateOptions: {
@@ -455,6 +471,12 @@ Template.map.rendered = function() {
     // var canvas = $('#cvs')[0];
     
     if (overlap === false){
+      // circle_pending = L.circle([event.latlng.lat,event.latlng.lng],
+      //      {color:'red',
+      //       fillColor:'red',
+      //       fillOpacity:0.3,
+      //       weight:0.1,
+      //       radius:rad}).addTo(map);
     popup
       .setLatLng(event.latlng)
       .setContent(container)
@@ -487,9 +509,10 @@ Template.map.rendered = function() {
     
     //post note
     $('#post').click(function(){
+      
      var noteText = $('.notetobeposted').val();
      var userName = $('.username').val();
-     console.log(noteText);
+     
       // alert(noteText);
       createNoteModal(popup, event.latlng, noteText, userName);
       map.closePopup();
@@ -533,6 +556,7 @@ Template.map.rendered = function() {
   var polygon;
   var circle_move;
   var circle_drop;
+  var circle_pending;
   var cx = null;
   var cy = null;
   var poly_center = [cx,cy];
@@ -587,7 +611,7 @@ Template.map.rendered = function() {
   var query = Markers.find();
   query.observe({
     added: function (document) {
-
+      // map.removeLayer(circle_pending);
       circle_drop = L.circle(document.latlng,
            {color:'#13EDDB',
             fillColor:'#13EDDB',

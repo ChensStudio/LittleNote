@@ -2,7 +2,7 @@ import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
-import {accountinsert} from '../imports/api/accounts/methods.js';
+import {accountinsert, setOnChainFlag} from '../imports/api/accounts/methods.js';
 import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
@@ -50,12 +50,13 @@ var monitorUserAddress = function() {
   try {
     gUserAddress = chain3js.mc.accounts[0];
     var dbAccount = loadUserName();
+    console.log('dbAccount',dbAccount);
     if (gUserAddress) {
       MoacConnect.GetAccount(gUserAddress, function(err, result) {
         console.log('MoacConnect.GetAccount userInfo', result);
         if (gUserAddress) {
           if (dbAccount && result[1] !== '' && result[1] !== dbAccount.name) {
-
+             gUserName = result[1];
           }
         }
       });
@@ -148,21 +149,11 @@ var createNewAddress = function() {
 
 var createNewUserName = function(address, userName, callback) {
   console.log('createNewUserName', address, userName);
-  accountinsert.call({
-    name: userName,
-    address: address
-  }, (err, _id)=>{
-    console.log('createNewUserName in database', err, _id);
-    if (err) {
-      alert(err.message);
-      callback(err);
-      return;
-    }
-    else{
-    gUserName = userName;
+
     MoacConnect.AddUser(userName, address, function(e, c){
+      if (!e){
+      console.log('add user submit');
       console.log('MoacConnect.AddUser callback', e, c);
-      callback(e, c);
 
       var totalTry = 600;
       var tryCount = 0;
@@ -176,23 +167,39 @@ var createNewUserName = function(address, userName, callback) {
             console.log('MoacConnect.GetAccount error', e);
             return;
           }
+          console.log('get account',c);
+          if (!c || (c[1] !== '' && c[1] === userName)) {
 
-          if (c[1] !== '' && c[1] === gUserName) {
-            setOnChainFlag({
-              accountId: _id,
-              onChainFlag: true
-            });
-            clearInterval(addUserInterval);
+             accountinsert.call({
+                  name: userName,
+                  address: address
+                  }, (err, _id)=>{
+                  console.log('createNewUserName in database', err, _id);
+                   if (err) {
+                      alert(err.message);
+                      callback(err);
+                      return;
+                    }
+                    else{
+                        
+                        gUserName = userName;
+                        callback(e, c);
+                   //      setOnChainFlag.call({
+                   //      accountId: _id,
+                   //      onChainFlag: true
+                   // });
+                    }
+              })
+             clearInterval(addUserInterval);
+            
           } else {
-            console.log('Inconsistent userName', c[1], gUserName);
+            console.log('Inconsistent userName', c[1], userName);
           }
         });
-      }, 1000);
+      }, 5000);
+      }
+      
     });
-
-  }
-  });
-
 }
 
 var global_keystore;
@@ -520,15 +527,17 @@ Template.map.rendered = function() {
 
     //create user
     $('#createuser').click(function(){
-       var userName = $('.username').val();
+        var userName = $('.username').val();
         console.log('username',userName);
         // alert(noteText);
         createNewUserName(gUserAddress, userName, function(e, c) {
-          if (!e) {
-          $('.creatediv').fadeOut(500);
-          $('.creatediv').children().fadeOut(500);
-          $('#post').fadeIn(500);
-          }  
+
+            if(gUserName){
+              $('.creatediv').fadeOut(500);
+              $('.creatediv').children().fadeOut(500);
+              $('#post').fadeIn(500);
+            }
+          
         });
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');

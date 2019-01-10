@@ -1,0 +1,41 @@
+<template name="Area">
+    <div class="notecontainer" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>
+        <div class="notevalue" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>
+            <div>
+                <span class="notelink">
+                    <a href={{notelink}}><i class="fas fa-link"></i></a>
+                </span> 
+                <span class="noteuser">{{name}}</span>
+                <span class="notetime">{{displayDate}}</span>
+            </div>
+            <div class="noteaccount">{{address}}</div>
+            <div class="notetext" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{note}}</div>
+            <div>
+                <span class="notecoordinates" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{_ "app.Lat"}}{{latlng.lat}}   {{_ "app.Lng"}}{{latlng.lng}}</span>
+                {{#if forSell}}
+                    <span class="forsell">{{_ "app.Price"}}{{forSellInfo}} {{_ "app.Unit"}}</span>
+                {{else}}
+                    <div class="notforsell">{{notenotforsell}}</div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+
+
+<template name="biddingbody">
+    <div class='notehead'> 
+    <div class="subtitle" style="text-align: left;">Area Open for Bidding</div>
+    
+   </div>
+
+    <div class="rTable" >
+        <div class="rTableBody">
+            {{#each openArea}}
+               {{> Area}}
+               <hr class='divider' style="margin-top:14px">
+            {{/each}}
+        </div>
+    </div>
+</template>

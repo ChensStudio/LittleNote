@@ -5,36 +5,13 @@
 </head>
 
 <body>
-    {{>header}}
+    {{> header}}
+    {{> slideOption}}
     {{> map}}
     {{> footer}}
     <!-- <button id="zoom">zoom out</button> -->
 </body>
 
-<template name="map">
-    <div id="container">
-      <div class="smallcontainer">
-        <div class="mapcontainer" id='mapcontainer'>
-          <div id="map" class="map"></div>       
-        </div>
-          <div id='drawer' class='close_ico'></div> 
-         <div id="notes" class="notes">
-        {{> notesbody}}
-        </div>
-      </div>
-   </div>
-      
-</template>
-
-<template name='footer'>
-  <hr>
-  <div class="notice">
-          {{_ "notice.main_l1"}}
-          <br>
-          {{_ "notice.main_l2"}}
-  </div>
-    
-</template>
 
 <template name='header'>
   <div class='header'> 
@@ -48,8 +25,41 @@
     </div>
      <marquee class='marquee' behavior="scroll" scrollamount="5" direction="left" width="350"  onmouseover=this.stop() onmouseout=this.start()>{{TemplateVar.get "headline"}} </marquee>
      <div style="display: flex;margin:auto">
-     <span class='badge-balance'><p style="margin: auto">{{balance}} MC</p></span>
+     <span class='badge-balance' id="nav"><p style="margin: auto">{{balance}} MC</p></span>
      <span style="width:100px;margin: auto 10px">{{> i18n_dropdown}}</span>
     </div>
   </div>
+</template>
+
+<template name='slideOption'>
+<div class="slideOption">
+  <span class="slideNote btn btn-default {{slideOption 'Notes'}}" >Notes</span>
+  <span class="slideBidding btn btn-default {{slideOption 'Bidding'}}">Area For Bidding</span>
+</div>
+</template>
+
+<template name="map">
+    <div id="container">
+      <div class="smallcontainer">
+        <div class="mapcontainer" id='mapcontainer'>
+          <div id="map" class="map"></div>       
+        </div>
+          <div id='drawer' class='close_ico'></div> 
+         <div id="notes" class="notes">
+        {{> notesbody}}
+        </div>
+      </div>
+   </div>
+</template>
+
+
+
+<template name='footer'>
+  <hr>
+  <div class="notice">
+          {{_ "notice.main_l1"}}
+          <br>
+          {{_ "notice.main_l2"}}
+  </div>
+    
 </template>

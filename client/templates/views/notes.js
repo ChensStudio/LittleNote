@@ -28,12 +28,14 @@ Template.body.events({
     // $('.close_ico').css('background','url(drawer_icon.png)');
     $('#drawer').removeClass('close_ico');
     $('#drawer').addClass('draw_icon');
+    
    }
    else{
     $('.mapcontainer').css('width','78%');
     // $('.close_ico').css('background','url(close_ico.png)');
     $('#drawer').removeClass('draw_icon');
     $('#drawer').addClass('close_ico');
+    
    }
 },
 
@@ -316,3 +318,34 @@ Template.header.helpers({
     }
     
 });
+
+Template.header.events({
+    'click #nav'(){
+        if($('div.slideOption').css('opacity') == 0){
+            $('div.slideOption').css('opacity','1');
+        }
+        else{
+            $('div.slideOption').css('opacity','0');
+        }   
+    }
+});
+
+Template.slideOption.onCreated(function(){
+    Session.set('slideOption',"Notes");
+})
+
+Template.slideOption.helpers({
+    'slideOption'(select){
+        var cruOption = Session.get('slideOption');
+        return (select == cruOption) && 'selected';
+    }
+})
+
+Template.slideOption.events({
+    'click .slideNote'(){
+        Session.set('slideOption',"Notes");
+    },
+    'click .slideBidding'(){
+        Session.set('slideOption',"Bidding");
+    }
+})

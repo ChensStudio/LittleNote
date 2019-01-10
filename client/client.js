@@ -434,7 +434,7 @@ Template.map.rendered = function() {
   }).addTo(map);
 
   // L.geoJson(statesData).addTo(map);
-
+  
 
   map.addControl(L.control.locate({
     locateOptions: {
@@ -681,7 +681,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
   content +='</div></div>';
   if (zoomFlag) {
-    map.setView([lat, lng], 16);
+    map.flyTo([lat, lng], 16,{duration:2});
   } else {
     map.setView([lat, lng]);
   }

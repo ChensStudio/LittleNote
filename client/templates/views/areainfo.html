@@ -24,18 +24,35 @@
 
 
 
-<template name="biddingbody">
+<template name="areainfobody">
     <div class='notehead'> 
+        <div style="margin-top:10px">    
+    {{#if TemplateVar.get "areaForBidding"}}
+        <button class="btn-grey bidding" style="background-color: rgb(55, 197, 197);">{{_ "app.BtnBidding"}}</button> 
+    {{else}}
+        <button class="btn-grey bidding">{{_ "app.BtnBidding"}}</button>
+    {{/if}}
+    
+    {{#if TemplateVar.get "ownedAsset"}}
+        <button class="btn-grey ownedAsset" style="background-color:  rgb(55, 197, 197);">{{_ "app.BtnOwnedAsset"}}</button>
+    {{else}}
+        <button class="btn-grey ownedAsset">{{_ "app.BtnOwnedAsset"}}</button>
+        {{/if}}
+    </div>
+    {{#if TemplateVar.get "areaForBidding"}}
     <div class="subtitle" style="text-align: left;">Area Open for Bidding</div>
+     {{else}}
+     <div class="subtitle" style="text-align: left;">My Asset</div>
+     {{/if}}
     
    </div>
 
     <div class="rTable" >
         <div class="rTableBody">
-            {{#each openArea}}
+            <!-- {{#each openArea}}
                {{> Area}}
                <hr class='divider' style="margin-top:14px">
-            {{/each}}
+            {{/each}} -->
         </div>
     </div>
 </template>

@@ -285,6 +285,12 @@ Template.map.onRendered(function (){
 
 });
 
+Template.map.helpers({
+    'slideContent'(){
+        return Session.get('slideOption');
+    }
+})
+
 Template.map.events({
     'mouseover .notes'(){
         $('.close_ico').css('opacity','1');
@@ -321,17 +327,18 @@ Template.header.helpers({
 
 Template.header.events({
     'click #nav'(){
-        if($('div.slideOption').css('opacity') == 0){
-            $('div.slideOption').css('opacity','1');
-        }
-        else{
-            $('div.slideOption').css('opacity','0');
-        }   
+        // if($('div.slideOption').css('opacity') == 0){
+        //     $('div.slideOption').css('opacity','1');
+        // }
+        // else{
+        //     $('div.slideOption').css('opacity','0');
+        // }   
+        $('div.slideOption').toggleClass('showSlide');
     }
 });
 
 Template.slideOption.onCreated(function(){
-    Session.set('slideOption',"Notes");
+    Session.set('slideOption',"notesbody");
 })
 
 Template.slideOption.helpers({
@@ -343,9 +350,12 @@ Template.slideOption.helpers({
 
 Template.slideOption.events({
     'click .slideNote'(){
-        Session.set('slideOption',"Notes");
+        Session.set('slideOption',"notesbody");
     },
     'click .slideBidding'(){
-        Session.set('slideOption',"Bidding");
+        Session.set('slideOption',"areainfobody");
+    },
+    'click .slideGame'(){
+        Session.set('slideOption',"gamebody");
     }
 })

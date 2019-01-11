@@ -119,12 +119,17 @@ body {
 }
 
 .slideOption {
-  margin-top:70px;
+  margin-top:60px;
   width: 200px;
-  margin-left: 75%;
+  margin-left: 74%;
   opacity: 0;
   display: flex;
   transition: all 0.4s ease 0s;
+}
+
+.showSlide {
+  margin-top:70px;
+  opacity: 1;
 }
 
 .btn {

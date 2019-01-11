@@ -33,8 +33,9 @@
 
 <template name='slideOption'>
 <div class="slideOption">
-  <span class="slideNote btn btn-default {{slideOption 'Notes'}}" >Notes</span>
-  <span class="slideBidding btn btn-default {{slideOption 'Bidding'}}">Area For Bidding</span>
+  <span class="slideNote btn btn-default {{slideOption 'notesbody'}}" >Notes</span>
+  <span class="slideBidding btn btn-default {{slideOption 'areainfobody'}}">Area Info</span>
+  <span class="slideGame btn btn-default {{slideOption 'gamebody'}}">Ongoing Game</span>
 </div>
 </template>
 
@@ -46,7 +47,7 @@
         </div>
           <div id='drawer' class='close_ico'></div> 
          <div id="notes" class="notes">
-        {{> notesbody}}
+        {{> Template.dynamic template=slideContent }}
         </div>
       </div>
    </div>

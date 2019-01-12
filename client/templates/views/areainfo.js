@@ -8,6 +8,11 @@ Template.areainfobody.onCreated(function(){
 });
 
 
+Template.areainfobody.helpers({
+	
+})
+
+
 Template.areainfobody.events({
 	'click .bidding'(){
 		 var template = Template.instance();

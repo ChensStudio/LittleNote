@@ -10,6 +10,8 @@
 		"NoJackpotInfo": "Jackpot information is not avalable now. Please wait. Thanks!",
 		"BtnLatest": "Latest",
 		"BtnHottest": "Hottest",
+		"BtnBidding":"Bidding",
+		"BtnOwnedAsset":"My Area",
 		"BuyNoteMessage": "Buy this Note for"
 	},
 	"notice":{

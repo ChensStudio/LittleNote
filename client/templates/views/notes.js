@@ -244,6 +244,8 @@ Template.note.events({
  });
 
 
+
+
 Template.header.onCreated(function(){
 
     var template = this;

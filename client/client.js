@@ -7,6 +7,8 @@ import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
 import { Random } from 'meteor/random';
+import {Areas} from  '../imports/api/areas/areas.js'
+import {newBidding, insertarea} from '../imports/api/areas/methods.js';
 // import {encode, decode} from 'rlp';
 // import { statesData } from './statesData'
 // $(document).width() = document.width()*2;
@@ -23,6 +25,21 @@ var notesLoaded = false;
 var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
+
+var bound = [{lat:40.712,lng:-74.227},{lat:40.774,lng:74.125}];
+
+ var AreaInsert = {
+    admin:"0x6457ec6E7F12b0dED0F0616202434970103FcB83",
+    bounds:bound,
+    highestBidding:5,
+    history:[],
+    startTime:new Date(),
+    endTime:new Date(new Date().getTime() + 1000*60*60)
+  }
+  console.log(AreaInsert.startTime);
+  console.log(AreaInsert.endTime);
+
+  insertarea.call(AreaInsert);
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 

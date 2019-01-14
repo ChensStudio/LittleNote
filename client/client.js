@@ -29,18 +29,20 @@ var rad = 50;
 
 var bound = [{lat:40.712,lng:-74.227},{lat:40.774,lng:74.125}];
 
- var AreaInsert = {
-    admin:"0x6457ec6E7F12b0dED0F0616202434970103FcB83",
-    bounds:bound,
-    highestBidding:5,
-    history:[],
-    startTime:new Date(),
-    endTime:new Date(new Date().getTime() + 1000*60*60)
-  }
-  console.log(AreaInsert.startTime);
-  console.log(AreaInsert.endTime);
+ // var AreaInsert = {
+ //    admin:"0x6457ec6E7F12b0dED0F0616202434970103FcB83",
+ //    bounds:bound,
+ //    highestBidding:5,
+ //    history:[],
+ //    startTime:new Date(),
+ //    endTime:new Date(new Date().getTime() + 1000*60*60)
+ //  }
+ //  console.log(AreaInsert.startTime);
+ //  console.log(AreaInsert.endTime);
 
-  insertarea.call(AreaInsert);
+ //  insertarea.call(AreaInsert);
+
+ newBidding.call({areaId:'ELarq3QHTXjJjoR9S',newBidding:6,userAddress:'0x4657ec6E7F12b0dED0F0616202434970103FcB83'});
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 

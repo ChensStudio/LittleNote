@@ -61,6 +61,7 @@ export const newBidding = new ValidatedMethod({
     validate: new SimpleSchema({
         areaId: Areas.simpleSchema().schema('_id'),
         newBidding: Areas.simpleSchema().schema('highestBidding'),
+        userAddress:Areas.simpleSchema().schema('admin'),
     }).validator({ clean: true, filter: false }),
     run({ areaId, newBidding, userAddress }) {
         const area = Areas.findOne(areaId);

@@ -48,22 +48,22 @@ Meteor.startup(() => {
     });
   }
 
-var bound = [{lat:40.712,lng:-74.227},{lat:40.774,lng:74.125}];
+// var bound = [{lat:40.712,lng:-74.227},{lat:40.774,lng:74.125}];
 
- var AreaInsert = {
-    admin:"0x6457ec6E7F12b0dED0F0616202434970103FcB83",
-    bounds:bound,
-    highestBidding:5,
-    history:[{_id:"12312dssaasd",
-                bidder: "0x6457ec6E7F12b0dED0F0616202434970103FcB83",
-                updatedAt:new Date()}],
-    startTime:new Date(),
-    endTime:new Date(new Date().getTime() + 1000*60*60)
-  }
-  console.log(AreaInsert.startTime);
-  console.log(AreaInsert.endTime);
+//  var AreaInsert = {
+//     admin:"0x6457ec6E7F12b0dED0F0616202434970103FcB83",
+//     // bounds:bound,
+//     highestBidding:5,
+//     // history:[{_id:"12312dssaasd",
+//     //             bidder: "0x6457ec6E7F12b0dED0F0616202434970103FcB83",
+//     //             updatedAt:new Date()}],
+//     startTime:new Date(),
+//     endTime:new Date(new Date().getTime() + 1000*60*60)
+//   }
+//   console.log(AreaInsert.startTime);
+//   console.log(AreaInsert.endTime);
 
-  insertarea.call(AreaInsert);
+//   insertarea.call(AreaInsert);
   
 
   // newBidding.call({'ngyWNzFet3xhsY8MS',6,'0x4657ec6E7F12b0dED0F0616202434970103FcB83'});

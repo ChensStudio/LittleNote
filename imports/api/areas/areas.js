@@ -103,7 +103,7 @@ Areas.attachSchema(Areas.schema);
 
 Areas.publicFields = {
     admin: 1,
-    bounds: 1,
+    // bounds: 1,
     highestBidding: 1,
     endTime: 1
 };

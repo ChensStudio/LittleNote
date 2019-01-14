@@ -26,6 +26,7 @@ var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
 
+
 var bound = [{lat:40.712,lng:-74.227},{lat:40.774,lng:74.125}];
 
  var AreaInsert = {

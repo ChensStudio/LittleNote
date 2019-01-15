@@ -14,10 +14,10 @@ export var InitChain3 = function() {
     // Use Mist/MetaMask's provider
     global.chain3js = new Chain3(chain3.currentProvider);
   } else if (typeof web3 !== 'undefined') {
-    console.log("web3 is defined");
+    // console.log("web3 is defined");
     // Use Mist/MetaMask's provider
     global.chain3js = new Chain3(web3.currentProvider);
-    console.log("accounts", chain3js.mc.accounts);
+    // console.log("accounts", chain3js.mc.accounts);
 
     GetInstance();
     // moacSetupContract();

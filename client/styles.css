@@ -284,6 +284,52 @@ background-color: rgb(55, 197, 197);
 transition: all 0.4s ease 0s;
 }
 
+.bidcontainer {
+  background: white;
+  padding: 2px 1px 0px 4px;
+  margin-top: 2px;
+  margin-bottom:8px;
+
+
+}
+
+.timeprice {
+   display: flex;
+   margin-left: 10px;
+}
+
+.countdown{
+  margin-left: 15px;
+  font-size:24px;
+  width: 150px;
+  height: 30px;
+  font-family: impact;
+  color:rgba(0,0,0,.6);
+}
+
+.highestBidding{
+  margin-left: 60px;
+  font-size:20px;
+   width: 150px;
+  height: 30px;
+  font-family: impact;
+  color:rgba(0,0,0,.6);
+}
+
+.bid {
+  margin-left: 63%;
+  width: 100px;
+}
+
+.bid:hover{
+  background-color: rgba(0,0,0,.2);
+  color:black;
+}
+
+.bid:active{
+   background-color: rgba(0,0,0,.4);
+}
+
 .popup_container {
   width: 250px;
 }

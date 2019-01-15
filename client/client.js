@@ -7,15 +7,14 @@ import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
 import { Random } from 'meteor/random';
-import {Areas} from  '../imports/api/areas/areas.js'
-import {newBidding, insertarea} from '../imports/api/areas/methods.js';
+
+
 // import {encode, decode} from 'rlp';
 // import { statesData } from './statesData'
 // $(document).width() = document.width()*2;
 
 // console.log("random Id",Random.id(17));
 var Markers = Notes;
-
 var currLatitude, currLongitude;
 var map;
 var gUserAddress;
@@ -27,29 +26,14 @@ var overlap = false;
 var rad = 50;
 
 
-var bound = [{lat:40.712,lng:-74.227},{lat:40.774,lng:74.125}];
-
- // var AreaInsert = {
- //    admin:"0x6457ec6E7F12b0dED0F0616202434970103FcB83",
- //    bounds:bound,
- //    highestBidding:5,
- //    history:[],
- //    startTime:new Date(),
- //    endTime:new Date(new Date().getTime() + 1000*60*60)
- //  }
- //  console.log(AreaInsert.startTime);
- //  console.log(AreaInsert.endTime);
-
- //  insertarea.call(AreaInsert);
-
- newBidding.call({areaId:'ELarq3QHTXjJjoR9S',newBidding:6,userAddress:'0x4657ec6E7F12b0dED0F0616202434970103FcB83'});
-
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
   console.log('meteor subscribe accounts');
   accountsLoaded = true; 
   monitorUserAddress();
 });
+
+
 
 var tooltip;
 var error_marker;
@@ -722,3 +706,13 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
     })
   }
 }
+
+Template.map.flyToBiddingArea = function(lat, lng){
+  map.flyTo([lat, lng], 12,{duration:2});
+}
+
+
+Template.map.biddingArea = function(bounds){
+  var bounds = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
+}
+

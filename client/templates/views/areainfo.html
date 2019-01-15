@@ -1,24 +1,23 @@
-<template name="Area">
-    <div class="notecontainer" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>
-        <div class="notevalue" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>
-            <div>
-                <span class="notelink">
-                    <a href={{notelink}}><i class="fas fa-link"></i></a>
-                </span> 
-                <span class="noteuser">{{name}}</span>
-                <span class="notetime">{{displayDate}}</span>
+<template name="area">
+    <div class="bidcontainer"  data-areaid={{_id}}>
+        <div class="notevalue"  data-areaid={{_id}}>
+            <div class="notecoordinates" style="margin-left: 25px" data-lat={{position.lat}} data-lng={{position.lng}}>
+            Coordinate: ({{position.lat}},    {{position.lng}})
             </div>
-            <div class="noteaccount">{{address}}</div>
-            <div class="notetext" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{note}}</div>
-            <div>
-                <span class="notecoordinates" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{_ "app.Lat"}}{{latlng.lat}}   {{_ "app.Lng"}}{{latlng.lng}}</span>
-                {{#if forSell}}
-                    <span class="forsell">{{_ "app.Price"}}{{forSellInfo}} {{_ "app.Unit"}}</span>
-                {{else}}
-                    <div class="notforsell">{{notenotforsell}}</div>
-                {{/if}}
+            <div class="timeprice">
+            <span class="countdown">{{time}} </span>
+            <span class="highestBidding">Price:{{highestBidding}} MOAC</span>
+            </div>
+
+             <div class="bid btn btn-default}" >
+             {{#if forsale}}
+                 BID
+             {{else}}
+                 RESALE
+             {{/if}} 
             </div>
         </div>
+
     </div>
 </template>
 
@@ -49,10 +48,10 @@
 
     <div class="rTable" >
         <div class="rTableBody">
-            <!-- {{#each openArea}}
-               {{> Area}}
+            {{#each areas}}
+               {{> area this forsale='11'}}
                <hr class='divider' style="margin-top:14px">
-            {{/each}} -->
+            {{/each}}
         </div>
     </div>
 </template>

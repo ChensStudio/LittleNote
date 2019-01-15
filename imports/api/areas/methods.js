@@ -32,6 +32,7 @@ export const insertarea = new ValidatedMethod({
         },
         'history.$._id': {type: String},
         'history.$.bidder': {type: String},
+        'history.$.price': {type: Number},
         'history.$.updatedAt': {type: Date},
         startTime:{
             type:Date,
@@ -61,23 +62,23 @@ export const newBidding = new ValidatedMethod({
     validate: new SimpleSchema({
         areaId: Areas.simpleSchema().schema('_id'),
         newBidding: Areas.simpleSchema().schema('highestBidding'),
-        userAddress:Areas.simpleSchema().schema('admin'),
+        bidder:Areas.simpleSchema().schema('admin'),
     }).validator({ clean: true, filter: false }),
-    run({ areaId, newBidding, userAddress }) {
+    run({ areaId, newBidding, bidder }) {
         const area = Areas.findOne(areaId);
         var updateDate = new Date();
-        // XXX the security check above is not atomic, so in theory a race condition could
-        // result in exposing private data
 
     Areas.update(areaId, {
         $set: { 
+            admin:bidder,
             highestBidding: newBidding,
             updatedAt: updateDate,
         },
         $push: {
             history:{
                 _id:areaId,
-                bidder: userAddress,
+                bidder: bidder,
+                price:newBidding,
                 updatedAt:updateDate
             }
         }

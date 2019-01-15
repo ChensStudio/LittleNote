@@ -43,6 +43,9 @@ const historySchema = new SimpleSchema({
     bidder: {
       type: String
     },
+    price:{
+      type:Number
+    },
      updatedAt: { 
       type: Date,
     }
@@ -103,7 +106,7 @@ Areas.attachSchema(Areas.schema);
 
 Areas.publicFields = {
     admin: 1,
-    // bounds: 1,
+    bounds: 1,
     highestBidding: 1,
     endTime: 1
 };

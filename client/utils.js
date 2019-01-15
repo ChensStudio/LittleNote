@@ -47,6 +47,21 @@ export const dateFormat = function(d) {
     return display;
 }
 
+export const countDownFormat = function(end){
+    var now = new Date();
+    var diff = end - now;
+    if(diff <= 0){
+        return "expired";
+    }
+    var sec = Math.floor(diff/1000);
+    var hr = Math.floor(sec/3600);
+    var min = Math.floor(sec/60);
+    var sec = sec%60;
+    var formated = hr + " : " + min + " : " + sec;
+    return formated;
+
+}
+
 export const getPrice = function(grid10, selfFlag, freeFlag) {
     var count = Notes.find({"grid10": grid10}).count();
     // console.log("getPrice count", count, "grid10", grid10);

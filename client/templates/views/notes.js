@@ -108,7 +108,7 @@ Template.notesbody.helpers({
             });
         }
 
-        console.log('getNotes 1', notes);
+        // console.log('getNotes', notes);
         return notes;
     },
     'isMicroMessage': function () {
@@ -247,7 +247,6 @@ Template.note.events({
 
 
 Template.header.onCreated(function(){
-
     var template = this;
     TemplateVar.set(template, 'headline', 'Retrieving Jackpot........');
 

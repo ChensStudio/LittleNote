@@ -105,6 +105,7 @@ Areas.schema = new SimpleSchema({
 Areas.attachSchema(Areas.schema);
 
 Areas.publicFields = {
+    _id:1,
     admin: 1,
     bounds: 1,
     highestBidding: 1,

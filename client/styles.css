@@ -284,6 +284,7 @@ background-color: rgb(55, 197, 197);
 transition: all 0.4s ease 0s;
 }
 
+
 .bidcontainer {
   background: white;
   padding: 2px 1px 0px 4px;
@@ -293,40 +294,98 @@ transition: all 0.4s ease 0s;
 
 }
 
+.bidderlabel{
+border-right: 1px solid rgba(0,0,0,.4);
+padding-right:4px;
+color:black;
+}
+
+.bidderaddress{
+  color: grey;
+  margin-left: 12px;
+  font-size: 11px;
+  font-style: italic;
+  cursor:pointer;
+}
+
 .timeprice {
    display: flex;
    margin-left: 10px;
+   height:90px;
 }
 
 .countdown{
+  margin:auto;
   margin-left: 15px;
-  font-size:24px;
+  font-size:30px;
   width: 150px;
-  height: 30px;
   font-family: impact;
   color:rgba(0,0,0,.6);
 }
 
 .highestBidding{
-  margin-left: 60px;
-  font-size:20px;
+  font-size:17px;
    width: 150px;
-  height: 30px;
+  height: 150px;
   font-family: impact;
   color:rgba(0,0,0,.6);
+  margin-top: 10px;
+  position: relative;
+
 }
 
-.bid {
-  margin-left: 63%;
+.bidprice{
+  margin-left: 6px;
+  overflow: scroll;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(0,0,0,.4);
+
+}
+
+.yourbid{
+  width: 150px;
+  margin-top: 100px;
+}
+
+.bidinput{
+  width: 70px;
+  margin-left: 5px;
+  height: 25px;
+}
+
+/*.bidprice::-webkit-scrollbar {
+  width: 5px;
+  background-color: #F5F5F5;
+}
+
+.bidprice::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: white;
+  border: 1px solid #ccc;
+}
+
+.bidprice::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: linear-gradient(left, #fff, #e4e4e4);
+  border: 1px solid #aaa;
+}
+
+.bidprice::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}*/
+.bidbtn {
   width: 100px;
+  height:25px;
+  padding: 2px;
+  margin-top: 10px;
 }
 
-.bid:hover{
+.bidbtn:hover{
   background-color: rgba(0,0,0,.2);
   color:black;
 }
 
-.bid:active{
+.bidbtn:active{
    background-color: rgba(0,0,0,.4);
 }
 

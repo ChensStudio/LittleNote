@@ -8,7 +8,6 @@ Meteor.subscribe('areas',function(){
   });
 
 Template.areainfobody.onCreated(function(){
-    var template = Template.instance();
     TemplateVar.set('areaForBidding', true);
     TemplateVar.set('ownedAsset', false);
     
@@ -16,6 +15,7 @@ Template.areainfobody.onCreated(function(){
 
 Template.areainfobody.helpers({
 	'areas'(){
+		var template = Template.instance();
 		var areas
 		if(TemplateVar.get('areaForBidding')){
 			areas = Areas.find({endTime:{$gte: new Date()}}).fetch();
@@ -33,8 +33,9 @@ Template.areainfobody.helpers({
 				lng:((area.bounds[0].lng + area.bounds[1].lng)/2).toFixed(4)
 			}
 			area.position = position; 
+			
 			 area.time = countDownFormat(area.endTime);
-			// Meteor.setInterval(function(){area.time += 1; console.log(area.time)},1000);
+			 // Meteor.setInterval(function(){ Session.set('countdown',countDownFormat(area.endTime))},1000);
 		})
 		return areas;
 	}
@@ -54,20 +55,53 @@ Template.areainfobody.events({
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
     	Template.map.flyToBiddingArea(lat, lng);
-
     }
+    
+       	
 })
 
 Template.area.helpers({
 	'forsale'(){
 		return ( this.endTime - new Date() ) > 0;
+	},
+	'baseprice'(){
+		return this.highestBidding * 1.05;
 	}
+	// 'countdown'(){
+	// 	return Session.get('countdown');
+	// }
+})
+
+Template.area.events({
+'click .bidbtn'(e){
+    	var areaid = $(e.target).data('areaid');
+    	var balance = Session.get('balance');
+  		console.log(balance);
+    	console.log('input id is',$('.bidinput')[0])
+    	if(( this.endTime - new Date() ) > 0){
+    		var id = `input#${areaid}`;
+    		var yourbid = $(id).val();
+ 			if(yourbid < this.highestBidding * 1.05){
+ 				alert("Bid price must add 5% on base price")
+ 			}
+ 			else if (yourbid > balance){
+ 				alert("Not enough MOAC in your account")
+ 			}
+ 			else{
+ 				newBidding.call({areaId:areaid,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
+ 			}
+    		
+   		}
+   		else {
+   			console.log('resale');
+   		} 
+    	}
 })
 
 
-// var bound = [{lat:45.712,lng:-74.227},{lat:45.774,lng:74.125}];
+// var bound = [{lat:55.712,lng:-74.227},{lat:55.774,lng:74.125}];
 //  var AreaInsert = {
-//     admin:"0x4657ec6e7f12b0ded0f0616202434970103fcb83",
+//     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
 //     bounds:bound,
 //     highestBidding:5,
 //     history:[],
@@ -77,4 +111,4 @@ Template.area.helpers({
 
 //   insertarea.call(AreaInsert);
 
- // newBidding.call({areaId:'m29qd2nHuXSpwrPti',newBidding:10,bidder:'0x9957ec6E7F12b0dED0F0616202434970103FcB83'});
+ // 

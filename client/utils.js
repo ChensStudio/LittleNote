@@ -55,8 +55,11 @@ export const countDownFormat = function(end){
     }
     var sec = Math.floor(diff/1000);
     var hr = Math.floor(sec/3600);
+    if(hr < 10){hr = "0" + hr}
     var min = Math.floor(sec/60);
+    if(min < 10){min = "0" + min}
     var sec = sec%60;
+    if(sec < 10){sec = "0" + sec}
     var formated = hr + " : " + min + " : " + sec;
     return formated;
 

@@ -1,23 +1,43 @@
 <template name="area">
     <div class="bidcontainer"  data-areaid={{_id}}>
         <div class="notevalue"  data-areaid={{_id}}>
+
             <div class="notecoordinates" style="margin-left: 25px" data-lat={{position.lat}} data-lng={{position.lng}}>
             Coordinate: ({{position.lat}},    {{position.lng}})
             </div>
-            <div class="timeprice">
-            <span class="countdown">{{time}} </span>
-            <span class="highestBidding">Price:{{highestBidding}} MOAC</span>
+        {{#if forsale}}
+            <div class="bidderaddress">
+            <span class="notelink">
+                    <a href={{notelink}}><i class="fas fa-link"></i></a>
+            </span> 
+           
+            <span class="bidderlabel">BIDDER</span> 
+            <span>{{admin}}</span>
             </div>
+        {{/if}}
 
-             <div class="bid btn btn-default}" >
-             {{#if forsale}}
+        <div class="timeprice">
+            <span class="countdown">{{time}} </span>
+            <div class="highestBidding">
+           <span class="bidprice"> Price:{{highestBidding}} MOAC</span>
+           {{#if forsale}}
+           <span class="yourbid" style="margin-top: 10px">
+            <input class='bidinput' id={{_id}} placeholder={{baseprice}} value={{baseprice}} type="number" title="Minimum bidding price is: {{baseprice}}">
+            MOAC
+           </span>
+            {{/if}}
+            <br>
+            <div class="bidbtn btn btn-default" data-areaid={{_id}}>
+        {{#if forsale}}
                  BID
-             {{else}}
+            {{else}}
                  RESALE
-             {{/if}} 
+        {{/if}} 
+            </div>
             </div>
         </div>
-
+             
+        </div>
     </div>
 </template>
 

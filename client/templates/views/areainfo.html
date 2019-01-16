@@ -17,7 +17,12 @@
         {{/if}}
 
         <div class="timeprice">
-            <span class="countdown">{{time}} </span>
+              {{#if forsale}}
+                 <span class="countdown">{{countdown}} </span>
+            {{else}}
+                <span class="countdown">Place Game </span>
+            {{/if}} 
+            
             <div class="highestBidding">
            <span class="bidprice"> Price:{{highestBidding}} MOAC</span>
            {{#if forsale}}

@@ -76,9 +76,11 @@ var monitorUserAddress = function() {
                 console.log(e);
             }
             else{
+                console.log('r = ',r);
                 var balance = r.toNumber()/1e18;
                 // TemplateVar.set(template,'balance',balance.toFixed(3));
-                Session.set('balance',balance.toFixed(3));
+                Session.set('balance',balance);
+                console.log('balance = ',typeof balance);
             }
         });
         gUserAddress = chain3js.mc.accounts[0];

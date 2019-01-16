@@ -34,7 +34,7 @@ Template.areainfobody.helpers({
 			}
 			area.position = position; 
 			
-			 area.time = countDownFormat(area.endTime);
+			 // area.time = countDownFormat(area.endTime);
 			 // Meteor.setInterval(function(){ Session.set('countdown',countDownFormat(area.endTime))},1000);
 		})
 		return areas;
@@ -56,8 +56,7 @@ Template.areainfobody.events({
         var lng = parseFloat($(e.target).data('lng'));
     	Template.map.flyToBiddingArea(lat, lng);
     }
-    
-       	
+     	
 })
 
 Template.area.helpers({
@@ -66,21 +65,30 @@ Template.area.helpers({
 	},
 	'baseprice'(){
 		return this.highestBidding * 1.05;
+	},
+	'countdown'(){
+		var countdown = this._id;
+		// 
+		var setCountdown = Meteor.setInterval(()=>{Session.set(countdown,countDownFormat(this.endTime))},1000);
+		if(Session.get(countdown) == "expired"){
+			Meteor.clearInterval(setCountdown);
+		}
+		return Session.get(countdown);
 	}
-	// 'countdown'(){
-	// 	return Session.get('countdown');
-	// }
 })
 
 Template.area.events({
 'click .bidbtn'(e){
     	var areaid = $(e.target).data('areaid');
-    	var balance = Session.get('balance');
-  		console.log(balance);
-    	console.log('input id is',$('.bidinput')[0])
+    	
+  		var balance =Session.get('balance');
+    	// console.log('input id is',$('.bidinput')[0])
     	if(( this.endTime - new Date() ) > 0){
     		var id = `input#${areaid}`;
     		var yourbid = $(id).val();
+    		console.log(typeof balance);
+    		console.log('your balance',balance);
+  			console.log('yourbid',yourbid)
  			if(yourbid < this.highestBidding * 1.05){
  				alert("Bid price must add 5% on base price")
  			}
@@ -106,9 +114,9 @@ Template.area.events({
 //     highestBidding:5,
 //     history:[],
 //     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*60)
+//     endTime:new Date(new Date().getTime() + 1000*60*10)
 //   }
 
 //   insertarea.call(AreaInsert);
 
- // 
+ 

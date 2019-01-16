@@ -318,22 +318,18 @@ Template.header.helpers({
             else{
                 var balance = r.toNumber()/1e18;
                 // TemplateVar.set(template,'balance',balance.toFixed(3));
-                Session.set('balance',balance.toFixed(3));
+                Session.set('balance',balance);
             }
         });
-        return Session.get('balance');
+
+        if(Session.get('balance') - 0.0005 <= 0) return "0.000";
+        return (Session.get('balance') - 0.0005).toFixed(3);
     }
     
 });
 
 Template.header.events({
     'click #nav'(){
-        // if($('div.slideOption').css('opacity') == 0){
-        //     $('div.slideOption').css('opacity','1');
-        // }
-        // else{
-        //     $('div.slideOption').css('opacity','0');
-        // }   
         $('div.slideOption').toggleClass('showSlide');
     }
 });

@@ -311,14 +311,17 @@ color:black;
   white-space: nowrap;
 }
 
-.timeprice {
+
+
+
+@media screen and (min-width: 1611px) {
+  .timeprice {
    display: flex;
    margin-left: 10px;
    height:90px;
 }
-
-.countdown{
-  margin:auto;
+  .countdown{
+  margin:auto; 
   margin-left: 15px;
   font-size:30px;
   width: 150px;
@@ -337,8 +340,42 @@ color:black;
   margin-top: 10px;
   position: relative;
 
+}
+}
+
+@media screen and (max-width: 1610px) {
+  .timeprice {
+   display: flex;
+   margin-left: 10px;
+   height:80px;
+}
+  .countdown{
+  margin:auto; 
+  margin-left: 15px;
+  font-size:20px;
+  width: 150px;
+  font-family: impact;
+  color:rgba(0,0,0,.6);
+  white-space: nowrap;
 
 }
+
+.highestBidding{
+  font-size:11px;
+   width: 150px;
+  height: 100%;
+  font-family: impact;
+  color:rgba(0,0,0,.6);
+  margin-top: 10px;
+  position: relative;
+
+}
+}
+
+
+
+
+
 
 .bidprice{
   margin-left: 6px;

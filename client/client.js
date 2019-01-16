@@ -25,6 +25,10 @@ var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
 
+// $(window).resize(function(){
+//   console.log('browser width',$(window).width())
+// })
+
 
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 

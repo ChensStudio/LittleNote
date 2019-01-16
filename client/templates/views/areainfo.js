@@ -79,17 +79,19 @@ Template.area.helpers({
 
 Template.area.events({
 'click .bidbtn'(e){
+	    
     	var areaid = $(e.target).data('areaid');
-    	
   		var balance =Session.get('balance');
     	// console.log('input id is',$('.bidinput')[0])
     	if(( this.endTime - new Date() ) > 0){
     		var id = `input#${areaid}`;
     		var yourbid = $(id).val();
-    		console.log(typeof balance);
-    		console.log('your balance',balance);
-  			console.log('yourbid',yourbid)
- 			if(yourbid < this.highestBidding * 1.05){
+    		// 	console.log(typeof balance);
+    		// 	console.log('your balance',balance);
+  			// console.log('yourbid',yourbid)
+    		var confirmed = confirm("Are you sure to bid with " + yourbid+ " MOAC?");
+    		if (confirmed == true){
+    				if(yourbid < this.highestBidding * 1.05){
  				alert("Bid price must add 5% on base price")
  			}
  			else if (yourbid > balance){
@@ -98,6 +100,7 @@ Template.area.events({
  			else{
  				newBidding.call({areaId:areaid,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
  			}
+    		}
     		
    		}
    		else {
@@ -114,7 +117,7 @@ Template.area.events({
 //     highestBidding:5,
 //     history:[],
 //     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*10)
+//     endTime:new Date(new Date().getTime() + 1000*60*100)
 //   }
 
 //   insertarea.call(AreaInsert);

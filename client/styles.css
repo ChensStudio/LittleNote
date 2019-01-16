@@ -308,6 +308,7 @@ color:black;
   font-size: 11px;
   font-style: italic;
   cursor:pointer;
+  white-space: nowrap;
 }
 
 .timeprice {
@@ -324,16 +325,18 @@ color:black;
   font-family: impact;
   color:rgba(0,0,0,.6);
   white-space: nowrap;
+
 }
 
 .highestBidding{
   font-size:17px;
    width: 150px;
-  height: 150px;
+  height: 100%;
   font-family: impact;
   color:rgba(0,0,0,.6);
   margin-top: 10px;
   position: relative;
+
 
 }
 

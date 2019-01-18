@@ -8,6 +8,8 @@
 		"NoJackpotInfo": "头奖信息目前不可用，请稍后，谢谢。",
 		"BtnLatest": "最新",
 		"BtnHottest": "最热",
+		"BtnBidding":"正在竞拍",
+		"BtnOwnedAsset":"我的地产",
 		"BuyNoteMessage": "购买此贴士位置的价格"
 	},
 	"notice":{

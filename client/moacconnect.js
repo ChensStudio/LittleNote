@@ -11,10 +11,10 @@ export var InitChain3 = function() {
     // Use Mist/MetaMask's provider
     global.chain3js = new Chain3(chain3.currentProvider);
   } else if (typeof web3 !== 'undefined') {
-    console.log("web3 is defined");
+    // console.log("web3 is defined");
     // Use Mist/MetaMask's provider
     global.chain3js = new Chain3(web3.currentProvider);
-    console.log("accounts", chain3js.mc.accounts);
+    // console.log("accounts", chain3js.mc.accounts);
 
     GetInstance();
     // moacSetupContract();
@@ -36,11 +36,9 @@ export var InitChain3 = function() {
       console.log('Error', err);
       //if pc user
       alert('Please install MOACMask wallet.\n\nFor crypto geeks who will run local nodes, you can run a local MOAC node at port 8545');
-      //if mobile user
 
     }
   }
-
 }
 
 export var GetInstance = function() {
@@ -77,6 +75,7 @@ export var AddUser = function(userName, userAddress, callback) {
 }
 
 export var AddNote = function(inserts, callback) {
+  console.log('to be add',inserts);
   var opt =  {
     from: chain3js.mc.accounts[0],
     gas: 5000000,
@@ -93,7 +92,7 @@ export var AddNote = function(inserts, callback) {
     inserts.mediaFlag,
     opt,
     function (e,c) {
-      console.log(e, c);
+      console.log('addnote',e, c);
       if (callback) {
         callback(e, c);
       }
@@ -152,7 +151,6 @@ var sendtx = function(src, tgtaddr, amount, strData, callback) {
       data: strData
     },
     callback);
-    
   console.log('sending from:' +   src + ' to:' + tgtaddr  + ' with data:' + strData);
 
 }

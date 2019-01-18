@@ -4,17 +4,20 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { _ } from 'meteor/underscore';
 
-import { Notes, addressSchema } from './notes.js';
+import { Notes, locationSchema } from './notes.js';
 import { Accounts } from '../accounts/accounts.js';
 
 export const insert = new ValidatedMethod({
     name: 'notes.insert',
     validate: new SimpleSchema({
+        _id:{
+            type: String,
+        },
         address:{
             type: String,
         },
         latlng:{
-            type: addressSchema,
+            type: locationSchema,
         },
         'latlng.lat': {type: Number, decimal: true},
         'latlng.lng': {type: Number, decimal: true},
@@ -31,8 +34,9 @@ export const insert = new ValidatedMethod({
           type: Boolean,
         },
     }).validator(),
-    run({address, latlng, grid, grid10, noteText, forSell}) {
+    run({_id,address, latlng, grid, grid10, noteText, forSell}) {
         const note={
+            _id:_id,
             address: address,
             latlng: latlng,
             grid: grid,
@@ -44,29 +48,7 @@ export const insert = new ValidatedMethod({
             updatedAt: new Date(),
         };
 
-        return Notes.insert(note, function(err, records){
-            if(!err){
-                var count = Notes.find({"address":note.address}).count();
-                Accounts.update(
-                    {
-                        "address" : ourNote.address
-                    },
-                    {$set:
-                        {
-                            "noteCounts": parseInt(count)
-                        }
-                    },
-                    {
-                        "multi" : false,
-                        "upsert" : false
-                    }
-                );
-            }
-            else
-            {
-                return err;
-            }
-        });
+        return Notes.insert(note);
     },
 });
 

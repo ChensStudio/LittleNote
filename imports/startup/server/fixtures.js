@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import {initAccount, initNote} from './initDBfromChain';
 import { Notes } from '../../api/notes/notes.js';
 import { Accounts } from '../../api/accounts/accounts.js';
+import {Areas} from  '../../api/areas/areas.js'
+import {newBidding, insertarea} from '../../api/areas/methods.js';
 
 // if the database is empty on server start, create some sample data.
 Meteor.startup(() => {
@@ -9,30 +11,8 @@ Meteor.startup(() => {
     var timestamp = (new Date()).getTime();
     let accountsData = initAccount();
 
-    // const accountsData = [
-    //   {
-    //     address: '0x57d83802a772adf506a89f5021c9',
-    //     name: 'C Ronaldo',
-    //     noteCounts: 0,
-    //   },
-    //   {
-    //     address: '0xadf57d83802a772506a89f5034d6',
-    //     name: 'L Messi',
-    //     noteCounts: 0,
-    //   },
-    //   {
-    //     address: '0x506a857d83802a7df9f5021c972a',
-    //     name: 'Z Zidane',
-    //     noteCounts: 0,
-    //   },
-    //   {
-    //     address: '0xadf50657d83802a79f5021c972a8',
-    //     name: 'RealDonaldTrump',
-    //     noteCounts: 0,
-    //   },
-    // ];
-
     accountsData.forEach((data) => {
+      console.log(data);
       Accounts.insert(
         {
           address: data.address,
@@ -46,74 +26,13 @@ Meteor.startup(() => {
     });
   }
 
-
   if (Notes.find().count() === 0) {
-    // const data = [
-    //   {
-    //     address: '0x57d83802a772adf506a89f5021c9',
-    //     latlng: {
-    //       lng: -111.3574,
-    //       lat: 41.4427,
-    //     },
-    //     //grid: 2486440144,
-    //     note: 'my note test1',
-    //     forSell: false,
-    //   },
-    //   {
-    //     address: '0xadf57d83802a772506a89f5034d6',
-    //     latlng: {
-    //       lng: -122.1291,
-    //       lat: 47.3669,
-    //     },
-    //     //grid: 0,
-    //     note: 'my note test2',
-    //     forSell: false,
-    //   },
-    //   {
-    //     address: '0x506a857d83802a7df9f5021c972a',
-    //     latlng: {
-    //       lng: -116.1914,
-    //       lat: 43.4529,
-    //     },
-    //     //grid: 0,
-    //     note: 'my note test3',
-    //     forSell: true,
-    //   },
-    //   {
-    //     address: '0xadf50657d83802a79f5021c972a8',
-    //     latlng: {
-    //       lng: -119.1357,
-    //       lat: 47.1299,
-    //     },
-    //     //grid: 0,
-    //     note: 'I am your President. I like to use Twitter. And, you are fired!',
-    //     forSell: true,
-    //   },
-    //   {
-    //     address: '0xadf50657d83802a79f5021c972a8',
-    //     latlng: {
-    //       lng: -178.1357,
-    //       lat: 28.1299,
-    //     },
-    //     //grid: 0,
-    //     note: 'I am in pacific',
-    //     forSell: true,
-    //   },
-    //   {
-    //     address: '0xadf50657d83802a79f5021c972a8',
-    //     latlng: {
-    //       lng: 178.1357,
-    //       lat: 26.1299,
-    //     },
-    //     //grid: 0,
-    //     note: 'I am still in pacific',
-    //     forSell: true,
-    //   },
-    // ];
+
     var timestamp = (new Date()).getTime();
     let notesData = initNote();
 
     notesData.forEach((note) => {
+     console.log(note);
       Notes.insert({
         address: note.address,
         latlng: note.latlng,
@@ -128,4 +47,5 @@ Meteor.startup(() => {
       timestamp += 10000; // ensure unique timestamp.
     });
   }
+
 });

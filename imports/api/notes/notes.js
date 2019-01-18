@@ -9,6 +9,7 @@ class NotesCollection extends Mongo.Collection {
       const ourNote = note;
       return super.insert(ourNote, function(err, records){
         if(!err){
+          console.log('Note insert sucess');
             var count = Notes.find({"address":note.address}).count();
             Accounts.update(
                 {
@@ -27,6 +28,7 @@ class NotesCollection extends Mongo.Collection {
         }
         else
         {
+          console.log('Note insert err');
             return err;
         }
     });
@@ -67,7 +69,7 @@ class NotesCollection extends Mongo.Collection {
 
 export const Notes = new NotesCollection('notes');
 
-const locationSchema = new SimpleSchema({
+export const locationSchema = new SimpleSchema({
     lat: {
         type: Number,
         // required: true,

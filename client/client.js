@@ -2,14 +2,19 @@ import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
-import {accountinsert} from '../imports/api/accounts/methods.js';
+import {accountinsert, setOnChainFlag} from '../imports/api/accounts/methods.js';
 import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
+import { Random } from 'meteor/random';
+
+
 // import {encode, decode} from 'rlp';
+// import { statesData } from './statesData'
+// $(document).width() = document.width()*2;
 
+// console.log("random Id",Random.id(17));
 var Markers = Notes;
-
 var currLatitude, currLongitude;
 var map;
 var gUserAddress;
@@ -20,12 +25,19 @@ var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
 
+// $(window).resize(function(){
+//   console.log('browser width',$(window).width())
+// })
+
+
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
   console.log('meteor subscribe accounts');
   accountsLoaded = true; 
   monitorUserAddress();
 });
+
+
 
 var tooltip;
 var error_marker;
@@ -46,12 +58,13 @@ var monitorUserAddress = function() {
   try {
     gUserAddress = chain3js.mc.accounts[0];
     var dbAccount = loadUserName();
+    console.log('dbAccount',dbAccount);
     if (gUserAddress) {
       MoacConnect.GetAccount(gUserAddress, function(err, result) {
         console.log('MoacConnect.GetAccount userInfo', result);
         if (gUserAddress) {
           if (dbAccount && result[1] !== '' && result[1] !== dbAccount.name) {
-
+             gUserName = result[1];
           }
         }
       });
@@ -61,14 +74,17 @@ var monitorUserAddress = function() {
     }
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
-        chain3js.mc.getBalance(chain3js.mc.coinbase,function(e,r){
+        gUserName = '';
+        chain3js.mc.getBalance(chain3js.mc.accounts[0],function(e,r){
             if(e){
                 console.log(e);
             }
             else{
+                console.log('r = ',r);
                 var balance = r.toNumber()/1e18;
                 // TemplateVar.set(template,'balance',balance.toFixed(3));
-                Session.set('balance',balance.toFixed(3));
+                Session.set('balance',balance);
+                console.log('balance = ',typeof balance);
             }
         });
         gUserAddress = chain3js.mc.accounts[0];
@@ -143,21 +159,11 @@ var createNewAddress = function() {
 
 var createNewUserName = function(address, userName, callback) {
   console.log('createNewUserName', address, userName);
-  accountinsert.call({
-    name: userName,
-    address: address
-  }, (err, _id)=>{
-    console.log('createNewUserName in database', err, _id);
-    if (err) {
-      alert(err.message);
-      callback(err);
-      return;
-    }
 
-    gUserName = userName;
     MoacConnect.AddUser(userName, address, function(e, c){
+      if (!e){
+      console.log('add user submit');
       console.log('MoacConnect.AddUser callback', e, c);
-      callback(e, c);
 
       var totalTry = 600;
       var tryCount = 0;
@@ -171,21 +177,39 @@ var createNewUserName = function(address, userName, callback) {
             console.log('MoacConnect.GetAccount error', e);
             return;
           }
+          console.log('get account',c);
+          if (!c || (c[1] !== '' && c[1] === userName)) {
 
-          if (c[1] !== '' && c[1] === gUserName) {
-            setOnChainFlag({
-              accountId: _id,
-              onChainFlag: true
-            });
-            clearInterval(addUserInterval);
+             accountinsert.call({
+                  name: userName,
+                  address: address
+                  }, (err, _id)=>{
+                  console.log('createNewUserName in database', err, _id);
+                   if (err) {
+                      alert(err.message);
+                      callback(err);
+                      return;
+                    }
+                    else{
+                        
+                        gUserName = userName;
+                        callback(e, c);
+                   //      setOnChainFlag.call({
+                   //      accountId: _id,
+                   //      onChainFlag: true
+                   // });
+                    }
+              })
+             clearInterval(addUserInterval);
+            
           } else {
-            console.log('Inconsistent userName', c[1], gUserName);
+            console.log('Inconsistent userName', c[1], userName);
           }
         });
-      }, 1000);
+      }, 5000);
+      }
+      
     });
-  });
-
 }
 
 var global_keystore;
@@ -307,22 +331,24 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
 var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
   console.log('createNote', byMyselfFlag, moacInserts, mongoInserts);
 
-  createNoteInDatabase(mongoInserts, function(err, _id) {
-    console.log('createNoteInDatabase called', mongoInserts, err, _id);
-    if (err) {
-      console.log('createNoteInDatabase err', err);
-      return;
-    }
-
-    moacInserts._id = _id;
-
+   moacInserts._id = Random.id(17);
+   mongoInserts._id = moacInserts._id;
+   console.log("random id", moacInserts._id);
     if (!byMyselfFlag) {
       MoacConnect.HelpAddNote(moacInserts, function(err, result){
         if (err) {
           console.log("error", err);
           return;
         }
-
+        else{
+         createNoteInDatabase(mongoInserts, function(err, _id) {
+              console.log('createNoteInDatabase called', mongoInserts, err, _id);
+              if (err) {
+              console.log('createNoteInDatabase err', err);
+              return;
+          }
+              });
+        }
         //TODO: update onChainFlag
       })
     } else {
@@ -332,11 +358,19 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
           console.log("error", err);
           return;
         }
-
+        else{
+            createNoteInDatabase(mongoInserts, function(err, _id) {
+              console.log('createNoteInDatabase called', mongoInserts, err, _id);
+              if (err) {
+              console.log('createNoteInDatabase err', err);
+              return;
+          }
+              });
+        }
         //TODO: update onChainFlag
       });
     }
-  });
+  
 }
 
 var createNoteInDatabase = function(mongoInserts, callback) {
@@ -364,7 +398,6 @@ Template.map.rendered = function() {
     else{
       price = TAPi18n.__("app.Free");
     }
-
     var content = TAPi18n.__("app.Price") + price;
     tooltip
       .setContent(content)
@@ -375,10 +408,8 @@ Template.map.rendered = function() {
   var createNoteModal = function(popup, latlng, noteText, userName) {
     popUserInfo(function(e, userInfo) {
       console.log('createNoteModal userInfo', userInfo);
-
       if (!userInfo) {
         if (!gUserAddress) {
-
           //TODO: ask about whether to sign in on moacmask or create a new address.
           gUserAddress = createNewAddress();
         } 
@@ -397,7 +428,6 @@ Template.map.rendered = function() {
       } else {
         toCreateNote(latlng, noteText);
       }
-
     });
   }
 
@@ -412,6 +442,9 @@ Template.map.rendered = function() {
     minZoom: 1,
     maxZoom: 19
   }).addTo(map);
+
+  // L.geoJson(statesData).addTo(map);
+  
 
   map.addControl(L.control.locate({
     locateOptions: {
@@ -446,7 +479,7 @@ Template.map.rendered = function() {
     }
 
     var header = '<div style="text-align:center;transition: all 0.8s ease 0s;"><p style="font-weight:bolder;margin:0 auto">' + coordinates + 
-    '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px"></div>';
+    '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px;transition: all 0.8s ease 0s;"></div>';
     var body = '<div style="margin-top:1px">' + createUserDiv + 
     '<textarea class="notetobeposted" type="text" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="type your note here....."></textarea><span id="signature">' + userNameDiv + '</span></div>';
     var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="post" >post</button><button id="getqr" value="QR">QR</button></span></div>';
@@ -455,6 +488,12 @@ Template.map.rendered = function() {
     // var canvas = $('#cvs')[0];
     
     if (overlap === false){
+      // circle_pending = L.circle([event.latlng.lat,event.latlng.lng],
+      //      {color:'red',
+      //       fillColor:'red',
+      //       fillOpacity:0.3,
+      //       weight:0.1,
+      //       radius:rad}).addTo(map);
     popup
       .setLatLng(event.latlng)
       .setContent(container)
@@ -487,9 +526,10 @@ Template.map.rendered = function() {
     
     //post note
     $('#post').click(function(){
+      
      var noteText = $('.notetobeposted').val();
      var userName = $('.username').val();
-     console.log(noteText);
+     
       // alert(noteText);
       createNoteModal(popup, event.latlng, noteText, userName);
       map.closePopup();
@@ -497,15 +537,17 @@ Template.map.rendered = function() {
 
     //create user
     $('#createuser').click(function(){
-       var userName = $('.username').val();
+        var userName = $('.username').val();
         console.log('username',userName);
         // alert(noteText);
         createNewUserName(gUserAddress, userName, function(e, c) {
-          if (!e) {
-          $('.creatediv').fadeOut(500);
-          $('.creatediv').children().fadeOut(500);
-          $('#post').fadeIn(500);
-          }  
+
+            if(gUserName){
+              $('.creatediv').fadeOut(500);
+              $('.creatediv').children().fadeOut(500);
+              $('#post').fadeIn(500);
+            }
+          
         });
         // createNoteModal(popup, event.latlng, noteText, userName);
       // $('#post').css('visibility', 'hidden');
@@ -533,6 +575,7 @@ Template.map.rendered = function() {
   var polygon;
   var circle_move;
   var circle_drop;
+  var circle_pending;
   var cx = null;
   var cy = null;
   var poly_center = [cx,cy];
@@ -587,7 +630,7 @@ Template.map.rendered = function() {
   var query = Markers.find();
   query.observe({
     added: function (document) {
-
+      // map.removeLayer(circle_pending);
       circle_drop = L.circle(document.latlng,
            {color:'#13EDDB',
             fillColor:'#13EDDB',
@@ -648,7 +691,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
   content +='</div></div>';
   if (zoomFlag) {
-    map.setView([lat, lng], 16);
+    map.flyTo([lat, lng], 16,{duration:2});
   } else {
     map.setView([lat, lng]);
   }
@@ -669,3 +712,13 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
     })
   }
 }
+
+Template.map.flyToBiddingArea = function(lat, lng){
+  map.flyTo([lat, lng], 12,{duration:2});
+}
+
+
+Template.map.biddingArea = function(bounds){
+  var bounds = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
+}
+

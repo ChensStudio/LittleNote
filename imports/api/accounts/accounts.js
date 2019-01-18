@@ -14,7 +14,7 @@ class AccountsCollection extends Mongo.Collection {
     }
     return super.insert(ourAccount, callback);
   }
-
+  
   update(selector, modifier) {
     const result = super.update(selector, modifier);
     return result;
@@ -22,7 +22,6 @@ class AccountsCollection extends Mongo.Collection {
 }
 
 export const Accounts = new AccountsCollection('accounts');
-
 // Deny all client-side updates since we will be using methods to manage this collection
 Accounts.deny({
   insert() { return true; },

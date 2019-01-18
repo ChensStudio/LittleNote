@@ -28,15 +28,21 @@ Template.body.events({
     // $('.close_ico').css('background','url(drawer_icon.png)');
     $('#drawer').removeClass('close_ico');
     $('#drawer').addClass('draw_icon');
+    
    }
    else{
     $('.mapcontainer').css('width','78%');
     // $('.close_ico').css('background','url(close_ico.png)');
     $('#drawer').removeClass('draw_icon');
     $('#drawer').addClass('close_ico');
+    
    }
+},
 
-}
+// 'click #zoom'(){
+
+// }
+
 })
 
 Template.notesbody.helpers({
@@ -102,7 +108,7 @@ Template.notesbody.helpers({
             });
         }
 
-        console.log('getNotes 1', notes);
+        // console.log('getNotes', notes);
         return notes;
     },
     'isMicroMessage': function () {
@@ -238,8 +244,9 @@ Template.note.events({
  });
 
 
-Template.header.onCreated(function(){
 
+
+Template.header.onCreated(function(){
     var template = this;
     TemplateVar.set(template, 'headline', 'Retrieving Jackpot........');
 
@@ -279,6 +286,12 @@ Template.map.onRendered(function (){
 
 });
 
+Template.map.helpers({
+    'slideContent'(){
+        return Session.get('slideOption');
+    }
+})
+
 Template.map.events({
     'mouseover .notes'(){
         $('.close_ico').css('opacity','1');
@@ -305,10 +318,41 @@ Template.header.helpers({
             else{
                 var balance = r.toNumber()/1e18;
                 // TemplateVar.set(template,'balance',balance.toFixed(3));
-                Session.set('balance',balance.toFixed(3));
+                Session.set('balance',balance);
             }
         });
-        return Session.get('balance');
+
+        if(Session.get('balance') - 0.0005 <= 0) return "0.000";
+        return (Session.get('balance') - 0.0005).toFixed(3);
     }
     
 });
+
+Template.header.events({
+    'click #nav'(){
+        $('div.slideOption').toggleClass('showSlide');
+    }
+});
+
+Template.slideOption.onCreated(function(){
+    Session.set('slideOption',"notesbody");
+})
+
+Template.slideOption.helpers({
+    'slideOption'(select){
+        var cruOption = Session.get('slideOption');
+        return (select == cruOption) && 'selected';
+    }
+})
+
+Template.slideOption.events({
+    'click .slideNote'(){
+        Session.set('slideOption',"notesbody");
+    },
+    'click .slideBidding'(){
+        Session.set('slideOption',"areainfobody");
+    },
+    'click .slideGame'(){
+        Session.set('slideOption',"gamebody");
+    }
+})

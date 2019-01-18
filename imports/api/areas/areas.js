@@ -84,11 +84,9 @@ Areas.schema = new SimpleSchema({
   },
   startTime:{
     type:Date,
-    defaultValue:new Date()
   },
   endTime:{
     type:Date,
-    defaultValue:new Date(new Date().getTime() + 1000*60*60*2)
   },
   createdAt: { 
     type: Date,
@@ -101,6 +99,8 @@ Areas.schema = new SimpleSchema({
     // denyUpdate: true,
   },
 });
+
+
 
 Areas.attachSchema(Areas.schema);
 

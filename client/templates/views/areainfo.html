@@ -1,82 +1,82 @@
-<template name="area">
-    <div class="bidcontainer"  data-areaid={{_id}}>
-        <div class="notevalue"  data-areaid={{_id}}>
+    <template name="area">
+        <div class="bidcontainer"  data-areaid={{_id}}>
+            <div class="notevalue"  data-areaid={{_id}}>
 
-            <div class="notecoordinates" style="margin-left: 25px" data-lat={{position.lat}} data-lng={{position.lng}}>
-            Coordinate: ({{position.lat}},    {{position.lng}})
-            </div>
-        {{#if forsale}}
-            <div class="bidderaddress">
-            <span class="notelink">
-                    <a href={{notelink}}><i class="fas fa-link"></i></a>
-            </span> 
-           
-            <span class="bidderlabel">BIDDER</span> 
-            <span>{{admin}}</span>
-            </div>
-        {{/if}}
-
-        <div class="timeprice">
-              {{#if forsale}}
-                 <span class="countdown">{{countdown}} </span>
-            {{else}}
-                <span class="countdown">Place Game </span>
-            {{/if}} 
-            
-            <div class="highestBidding">
-           <span class="bidprice"> Price:{{highestBidding}} MOAC</span>
-           {{#if forsale}}
-           <span class="yourbid" style="margin-top: 10px">
-            <input class='bidinput' id={{_id}} placeholder={{baseprice}} value={{baseprice}} type="number" title="Minimum bidding price is: {{baseprice}}">
-            MOAC
-           </span>
+                <div class="notecoordinates" style="margin-left: 25px">
+                Coordinate: ({{position.lat}},    {{position.lng}})
+                </div>
+            {{#if forsale}}
+                <div class="bidderaddress">
+                <span class="notelink">
+                        <a href={{notelink}}><i class="fas fa-link"></i></a>
+                </span> 
+               
+                <span class="bidderlabel">BIDDER</span> 
+                <span>{{admin}}</span>
+                </div>
             {{/if}}
-            <br>
-            <div class="bidbtn btn btn-default" data-areaid={{_id}}>
-        {{#if forsale}}
-                 BID
-            {{else}}
-                 RESALE
-        {{/if}} 
+
+            <div class="timeprice">
+                  {{#if forsale}}
+                     <span class="countdown">{{countdown}} </span>
+                {{else}}
+                        <span class="countdown placegame" >Place Game </span>
+                {{/if}} 
+                
+                <div class="highestBidding">
+               <span class="bidprice"> Price:{{highestBidding}} MOAC</span>
+               {{#if forsale}}
+               <span class="yourbid" style="margin-top: 10px">
+                <input class='bidinput' id={{_id}} placeholder={{baseprice}} value={{baseprice}} type="number" title="Minimum bidding price is: {{baseprice}}">
+                MOAC
+               </span>
+                {{/if}}
+                <br>
+                <div class="bidbtn btn btn-default" data-areaid={{_id}}>
+            {{#if forsale}}
+                     BID
+                {{else}}
+                     RESALE
+            {{/if}} 
+                </div>
+                </div>
             </div>
+                 
             </div>
         </div>
-             
-        </div>
-    </div>
-</template>
+    </template>
 
 
 
-<template name="areainfobody">
-    <div class='notehead'> 
-        <div style="margin-top:10px">    
-    {{#if TemplateVar.get "areaForBidding"}}
-        <button class="btn-grey bidding" style="background-color: rgb(55, 197, 197);">{{_ "app.BtnBidding"}}</button> 
-    {{else}}
-        <button class="btn-grey bidding">{{_ "app.BtnBidding"}}</button>
-    {{/if}}
-    
-    {{#if TemplateVar.get "ownedAsset"}}
-        <button class="btn-grey ownedAsset" style="background-color:  rgb(55, 197, 197);">{{_ "app.BtnOwnedAsset"}}</button>
-    {{else}}
-        <button class="btn-grey ownedAsset">{{_ "app.BtnOwnedAsset"}}</button>
+    <template name="areainfobody">
+        <div class='notehead'> 
+            <div style="margin-top:10px">    
+        {{#if TemplateVar.get "areaForBidding"}}
+            <button class="btn-grey bidding" style="background-color: rgb(55, 197, 197);">{{_ "app.BtnBidding"}}</button> 
+        {{else}}
+            <button class="btn-grey bidding">{{_ "app.BtnBidding"}}</button>
         {{/if}}
-    </div>
-    {{#if TemplateVar.get "areaForBidding"}}
-    <div class="subtitle" style="text-align: left;">Area Open for Bidding</div>
-     {{else}}
-     <div class="subtitle" style="text-align: left;">My Asset</div>
-     {{/if}}
-    
-   </div>
-
-    <div class="rTable" >
-        <div class="rTableBody">
-            {{#each areas}}
-               {{> area this forsale='11'}}
-               <hr class='divider' style="margin-top:14px">
-            {{/each}}
+        
+        {{#if TemplateVar.get "ownedAsset"}}
+            <button class="btn-grey ownedAsset" style="background-color:  rgb(55, 197, 197);">{{_ "app.BtnOwnedAsset"}}</button>
+        {{else}}
+            <button class="btn-grey ownedAsset">{{_ "app.BtnOwnedAsset"}}</button>
+            {{/if}}
         </div>
-    </div>
-</template>
+        {{#if TemplateVar.get "areaForBidding"}}
+        <div class="subtitle" style="text-align: left;">Area Open for Bidding</div>
+         {{else}}
+         <div class="subtitle" style="text-align: left;">My Asset</div>
+         {{/if}}
+        
+       </div>
+
+        <div class="rTable" >
+            <div class="rTableBody">
+                {{#each areas}}
+                   {{> area}}
+                   <hr class='divider' style="margin-top:14px">
+                {{/each}}
+            </div>
+        </div>
+    </template>

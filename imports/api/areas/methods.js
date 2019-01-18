@@ -53,6 +53,7 @@ export const insertarea = new ValidatedMethod({
             updatedAt: new Date(),
         };
         console.log(area);
+        console.log('server time',new Date())
         return Areas.insert(area);
     },
 });

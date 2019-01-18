@@ -713,12 +713,21 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
 }
 
-Template.map.flyToBiddingArea = function(lat, lng){
-  map.flyTo([lat, lng], 12,{duration:2});
+var BidArea;
+Template.map.flyToBiddingArea = function(bounds){
+  var bound = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
+  var lat = parseFloat((bounds[0].lat + bounds[1].lat))/2;
+  var lng= parseFloat((bounds[0].lng + bounds[1].lng))/2;
+  if (BidArea){
+    map.removeLayer(BidArea);
+  }
+   BidArea = L.rectangle(bound, {color: "black",weight: 0.5}).addTo(map);
+  map.flyTo([lat, lng], 10,{duration:2});
 }
 
 
-Template.map.biddingArea = function(bounds){
-  var bounds = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
-}
+// Template.map.biddingArea = function(bounds){
+//   var bounds = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
+//   L.rectangle(bounds, {color: "black",weight: 0.5}).addTo(map);
+// }
 

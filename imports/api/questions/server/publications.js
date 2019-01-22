@@ -3,10 +3,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Questions } from '../questions.js';
 
-Meteor.publish('quesitons', function() {
+Meteor.publish('questions', function() {
 	
-    return Quesitons.find({
+    return Questions.find({
     }, {
-        fields: Quesitons.publicFields,
+        fields: Questions.publicFields,
     });
 });

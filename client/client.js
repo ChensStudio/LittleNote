@@ -722,7 +722,7 @@ Template.map.flyToBiddingArea = function(bounds){
   if (BidArea){
     map.removeLayer(BidArea);
   }
-   BidArea = L.rectangle(bound, {color: "black",weight: 0.5}).addTo(map);
+   BidArea = L.rectangle(bound, {color: "black",weight: 0.2}).addTo(map);
   map.flyTo([lat, lng], 10,{duration:2});
 }
 
@@ -731,9 +731,9 @@ Template.map.flyToBiddingArea = function(bounds){
 
 // var question = {
 //     admin: "0x4657ec6E7F12b0dED0F0616202434970103FcB83",
-//     areaid:"XLJI8294BJ40Z2JIB",
+//     areaid:"uafMPpbENPRLBmoD5",
 //     latlng:lg,
-//     content:"QUESTION TEST?",
+//     noteText:"QUESTION TEST?",
 //     answers:[],
 //     startTime:new Date(),
 //     endTime:new Date(new Date().getTime() + 1000*60*60)
@@ -741,13 +741,13 @@ Template.map.flyToBiddingArea = function(bounds){
 
 // insertquestion.call(question);
 
-var answers = {
-  questionId : "AKRh885SqQirhhmMQ",
-  newAnswer: {
-    address: "0x4657ec6E7F12b0dED0F0616202434970103FcB89",
-    content: "this is answer"
-  }
-}
+// var answers = {
+//   questionId : "AKRh885SqQirhhmMQ",
+//   newAnswer: {
+//     address: "0x4657ec6E7F12b0dED0F0616202434970103FcB89",
+//     content: "this is answer"
+//   }
+// }
 
-latestAnswer.call(answers);
+// latestAnswer.call(answers);
 

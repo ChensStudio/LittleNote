@@ -448,6 +448,23 @@
      background-color: rgba(0,0,0,.4);
   }
 
+   .joinbtn {
+    width: 100px;
+    height:40px;
+    font-size: 17px;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .joinbtn:hover{
+    background-color: rgba(0,0,0,.2);
+    color:black;
+  }
+
+  .joinbtn:active{
+     background-color: rgba(0,0,0,.4);
+  }
+
   .popup_container {
     width: 250px;
   }

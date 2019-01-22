@@ -68,7 +68,7 @@ Questions.schema = new SimpleSchema({
    latlng:{
     type: locationSchema,
   },
-  content: {
+  noteText: {   
     type: String,
   },
   answers:{
@@ -103,6 +103,7 @@ Questions.publicFields = {
     _id:1,
     areaid:1,
     admin: 1,
+    latlng:1,
     content:1,
     answers:1,
     endTime: 1

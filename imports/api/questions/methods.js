@@ -10,9 +10,6 @@ import { Questions,locationSchema,answersSchema } from './questions.js';
 export const insertquestion = new ValidatedMethod({
     name: 'questions.insert',
     validate: new SimpleSchema({
-        _id: {
-            type: String
-        },
         admin:{
             type: String,
         },
@@ -24,9 +21,9 @@ export const insertquestion = new ValidatedMethod({
         },
         'latlng.lat': {type: Number, decimal: true},
         'latlng.lng': {type: Number, decimal: true},
-        content: {
+        noteText: {   
             type: String,
-        },
+         },
         answers:{
             type:Array
         },
@@ -43,12 +40,12 @@ export const insertquestion = new ValidatedMethod({
             type:Date,
         }
     }).validator(),
-    run({admin,areaid,latlng,content,answers,startTime,endTime}) {
+    run({admin,areaid,latlng,noteText,answers,startTime,endTime}) {
         const question={
             admin: admin,
             areaid:areaid,
             latlng:latlng,
-            content: content,
+            noteText: noteText,
             answers:answers,
             startTime:startTime,
             endTime:endTime,

@@ -7,6 +7,7 @@ import lightwallet from 'eth-lightwallet';
 import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
 import { Random } from 'meteor/random';
+import {insertquestion,latestAnswer} from '../imports/api/questions/methods.js';
 
 
 // import {encode, decode} from 'rlp';
@@ -726,8 +727,27 @@ Template.map.flyToBiddingArea = function(bounds){
 }
 
 
-// Template.map.biddingArea = function(bounds){
-//   var bounds = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
-//   L.rectangle(bounds, {color: "black",weight: 0.5}).addTo(map);
+// var lg = {lat: 47.222, lng: 45.212};
+
+// var question = {
+//     admin: "0x4657ec6E7F12b0dED0F0616202434970103FcB83",
+//     areaid:"XLJI8294BJ40Z2JIB",
+//     latlng:lg,
+//     content:"QUESTION TEST?",
+//     answers:[],
+//     startTime:new Date(),
+//     endTime:new Date(new Date().getTime() + 1000*60*60)
 // }
+
+// insertquestion.call(question);
+
+var answers = {
+  questionId : "AKRh885SqQirhhmMQ",
+  newAnswer: {
+    address: "0x4657ec6E7F12b0dED0F0616202434970103FcB89",
+    content: "this is answer"
+  }
+}
+
+latestAnswer.call(answers);
 

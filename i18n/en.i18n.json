@@ -12,7 +12,8 @@
 		"BtnHottest": "Hottest",
 		"BtnBidding":"Bidding",
 		"BtnOwnedAsset":"My Area",
-		"BuyNoteMessage": "Buy this Note for"
+		"BuyNoteMessage": "Buy this Note for",
+		"Close":"Close"
 	},
 	"notice":{
 		"main_l1": "Post your note permanently on MOAC Blockchain.",

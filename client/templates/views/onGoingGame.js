@@ -16,7 +16,6 @@ Template.gamebody.onCreated(function(){
 Template.gamebody.helpers({
 	'games'(){
 		var games = Questions.find({endTime:{$gte: new Date()}},{sort: {endTime: -1}}).fetch();
-		console.log(games);
 		return games;
 	}
 })
@@ -41,9 +40,40 @@ Template.game.events({
 		var areaid = this.areaid;
 		console.log("areaid",areaid);
 		var area = Areas.findOne({_id: areaid});
-		console.log(area);
 		Template.map.flyToBiddingArea(area.bounds);
 		Template.map.joinGame(this.latlng.lat,this.latlng.lng);
 
+	}
+})
+
+Template.answerModal.onCreated(function(){
+	console.log(this);
+})
+
+
+Template.answerModal.helpers({
+	'totalAnswers'(){
+		return Questions.findOne({_id:this.questionId}).answers.length;
+	},
+	'expired'(){
+		return Questions.findOne({_id:this.questionId}).endTime < new Date();
+	},
+	'answers'(){
+		return Questions.findOne({_id:this.questionId}).answers;
+	}
+})
+
+Template.answerModal.events({
+	'click #submitAnswer'(){
+		var content = $('#answerArea').val();
+
+		var answers = {
+            questionId : this.questionId,
+             newAnswer: {
+                address:this.address,
+                content: content
+            }
+          }
+          latestAnswer.call(answers);
 	}
 })

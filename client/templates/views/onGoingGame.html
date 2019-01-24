@@ -29,8 +29,6 @@
         </div>
     </template>
 
-
-
     <template name="gamebody">
         <div class='notehead'> 
          <div style="font-size: 20px;text-align: center;margin-top: 25px;font-family: impact">Ongoing Games</div>
@@ -46,3 +44,44 @@
             </div>
         </div>
     </template>
+
+    <template name="answerModal">
+    <div class="modal fade qrbox" style="color:black;margin-top:100px" align="center" >
+         <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header" style="text-align: left">
+                    <h3 class="modal-title" style="font-family: impact">{{question}}</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                     </button>
+                    <span style="color: grey; font-style: italic;">{{totalAnswers}} Answers</span>
+                      
+                </div>
+
+                <div class="modal-body">
+                    {{#unless expired}}
+                    <textarea autofocus id="answerArea"></textarea>
+                    {{else}}
+                        {{#each answers}}
+                            {{address}}
+                            {{content}}
+                        {{/each}}
+                    {{/unless}}
+                    
+                </div>
+
+                <div class="modal-footer" style="text-align: center">
+                    {{#unless expired}}
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="submitAnswer">Submit</button>
+                    {{else}}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
+                    {{/unless}}
+                </div>
+            </div>
+        </div>
+    </div>
+       
+        
+    
+</template>

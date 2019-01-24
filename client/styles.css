@@ -658,6 +658,10 @@
     resize:none;
   }
 
+  #answerArea {
+    outline:rgba(0,0,0,0.3) solid 1px;
+  }
+
 
   .markertooltip {
     z-index: 100;

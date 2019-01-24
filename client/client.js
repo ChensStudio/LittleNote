@@ -515,19 +515,36 @@ Template.map.rendered = function() {
     else {
         if (gInArea === true) {
           var lg = {lat: event.latlng.lat, lng: event.latlng.lng};
+          var header = '<div style="text-align:center;transition: all 0.8s ease 0s;"><p style="font-weight:bolder;margin:0 auto">' + coordinates + 
+           '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px;transition: all 0.8s ease 0s;"></div>';
+          var body = '<div style="margin-top:1px"><textarea class="notetobeposted" type="text" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="Set your Question here....."></textarea></div>';
+         
+          var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="submitQuestion" class="btn-grey">Submit</button></span></div>';
+          container.innerHTML = header + body + footer;
 
-          var question = {
-          admin: chain3js.mc.accounts[0],
-          areaid:gAreaid,
-          latlng:lg,
-          noteText:"QUESTION TEST?",
-          answers:[],
-          startTime:new Date(),
-          endTime:new Date(new Date().getTime() + 1000*60*60)
-          }
+        popup
+          .setLatLng(event.latlng)
+          .setContent(container)
+          .openOn(map);
+
+          $('#submitQuestion').click(function(){
+            let content = $('.notetobeposted').val();
+            var question = {
+            admin: chain3js.mc.accounts[0],
+            areaid:gAreaid,
+            latlng:lg,
+            noteText:content,
+            answers:[],
+            startTime:new Date(),
+            endTime:new Date(new Date().getTime() + 1000*60*60)
+           }
 
           insertquestion.call(question);
           gSetGame = false;
+    
+          });
+          
+          
         }
         else {
           alert("Please set game in your Area");
@@ -723,15 +740,11 @@ game.observe({
     L.marker(document.latlng,{icon: myIcon}).addTo(map)
     .bindPopup(document.noteText)
     .openPopup().on('click', function(event) {
-          var answers = {
-            questionId : document._id,
-             newAnswer: {
-                address: chain3js.mc.accounts[0],
-                content: "this is answer"
-            }
-          }
-          console.log('insert answer');
-          latestAnswer.call(answers);
+          Modal.show('answerModal',{
+            question:document.noteText,
+            questionId:document._id, 
+            address: chain3js.mc.accounts[0]
+          }); 
         });
   }
 })
@@ -806,6 +819,8 @@ Template.map.flyToBiddingArea = function(bounds){
 Template.map.joinGame = function(lat,lng){
    map.flyTo([lat, lng], 15,{duration:2});
 }
+
+
 
 
 

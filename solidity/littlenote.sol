@@ -10,6 +10,7 @@ pragma solidity ^0.4.21;
 contract LittleNote {
 
     address public founder;
+    address public admin;
 
     bool public haltFlag;
     bool public anybodyAddOtherUser;
@@ -17,7 +18,7 @@ contract LittleNote {
     uint256 public MaxNoteLength = 128;
     uint256 public MaxFreeNoteCount = 1;
 
-    uint256 public MinPrice = 25 * 10 ** 18;
+    uint256 public MinPrice = 5 * 10 ** 16;
     uint256 public MaxPrice = 4 * 10 ** 29;
     uint256 public ratio = 130;
     uint256 public MaxPresetPricePower = 100;
@@ -58,6 +59,44 @@ contract LittleNote {
         uint256 noteNumber;
     }
 
+    struct Area {
+        string uid;
+        uint256 activeFlag; //0: inactive; 1: active based on end time; 2: active
+        string nickname;
+        string description;
+        address admin;
+        uint256 lat0;
+        uint256 lng0;
+        uint256 lat1;
+        uint256 lng1;
+        uint256 highestBidding;
+        uint256 startBidding;
+        uint256 increaseRatio;
+        uint256 startTime;
+        uint256 endTime;
+        uint256 createdAt;
+        uint256 updatedAt;
+        uint256 balance;
+        address adminCan;
+        string highBidId;
+    }
+
+    struct Bid {
+        string _id;
+        string areaId;
+        address bidder;
+        uint256 price;
+        uint256 refund;
+        uint256 updatedAt;
+    }
+
+    mapping (string => string[]) public bidHistory;
+    mapping (string => Bid) public bids;
+    string[] public bidHistoryArray;
+
+    mapping (string => Area) public areas;
+    string[] public areasArray;
+
     mapping (address => Account) private accounts;
     mapping (string => uint256) private accountsByUserName;
     address[] public accountsArray;
@@ -93,6 +132,107 @@ contract LittleNote {
         return true;
     }
 
+    function AddArea(
+        string uid, 
+        string nickname, 
+        string description, 
+        address _admin, 
+        uint256 lat0, 
+        uint256 lng0, 
+        uint256 lat1, 
+        uint256 lng1, 
+        uint256 _startBidding, 
+        uint256 _increaseRatio, 
+        uint256 _startTime, 
+        uint256 _endTime) public payable {
+
+        if (msg.sender != founder || msg.sender != admin) {
+            revert();
+        }
+
+        areasArray.push(uid);
+        areas[uid].uid = uid;
+        areas[uid].nickname = nickname;
+        areas[uid].description = description;
+        areas[uid].admin = _admin;
+        areas[uid].lat0 = lat0;
+        areas[uid].lng0 = lng0;
+        areas[uid].lat1 = lat1;
+        areas[uid].lng1 = lng1;
+        areas[uid].startBidding = _startBidding;
+        areas[uid].increaseRatio = _increaseRatio;
+        areas[uid].startTime = _startTime;
+        areas[uid].endTime = _endTime;
+        areas[uid].updatedAt = now;
+        areas[uid].createdAt = now;
+        areas[uid].activeFlag = 1;
+        areas[uid].highestBidding = 0;
+        areas[uid].balance += msg.value;
+    }
+
+    function AddMoneyToArea(string uid) public payable {
+        areas[uid].balance += msg.value;
+    }
+
+    function ActivateArea(string uid, uint256 activeFlag) public payable {
+        if (areas[uid].updatedAt > 0) {
+            areas[uid].activeFlag = activeFlag;
+        }
+
+        areas[uid].balance += msg.value;
+    }
+
+    function AddBid(string _id, string areaId) public payable {
+        if (areas[areaId].updatedAt == 0 || areas[areaId].startTime >= now || areas[areaId].endTime < now) {
+            revert();
+        }
+
+        if (areas[areaId].startBidding > msg.value || 
+            areas[areaId].highestBidding * areas[areaId].increaseRatio / 10000 > msg.value) {
+            revert();
+        }
+
+        bidHistory[areaId].push(_id);
+        bids[_id]._id = _id;
+        bids[_id].areaId = areaId;
+        bids[_id].bidder = msg.sender;
+        bids[_id].price = msg.value;
+        bids[_id].refund = 0;
+        bids[_id].updatedAt = now;
+        areas[areaId].highestBidding = msg.value;
+        areas[areaId].balance += msg.value;
+        areas[areaId].adminCan = msg.sender;
+        areas[areaId].highBidId = _id;
+    }
+
+    function RefundBid(string _id) public {
+        if (msg.sender != founder || msg.sender != admin) {
+            revert();
+        }
+
+        if (bids[_id].balance > bids[_id].refund) {
+            bids[_id].bidder.transfer(bids[_id].balance-bids[_id].refund);
+            bids[_id].refund = bids[_id].balance;
+        }
+    }
+
+    function TriggerAreaAdmin(string areaId) public {
+        if (msg.sender != founder || msg.sender != admin) {
+            revert();
+        }
+
+        areas[areaId].admin = areas[areaId].adminCan;
+        uint256 len = bidHistory[areaId].length;
+        string bidId = "";
+        for (uint i=0; i<len; i++) {
+            bidId = bidHistory[areaId][i];
+            if (bidId != areas[aredId].highBidId) {
+                RefundBid(bidId);
+            }
+        }
+    }
+
+
     function AddAccount(string userName, address userAddress) public returns (bool) {
         if (bytes(userName).length > MaxUserNameLength) {
             revert();
@@ -127,7 +267,7 @@ contract LittleNote {
     }
 
     function AddNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
-        if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength) {
+        if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt >= 0) {
             revert();
         }
         uint256 grid10 = getGrid10(lat, lng);
@@ -142,28 +282,26 @@ contract LittleNote {
         } else {
             distributePayment(referral, grid10, 0, 0);
         }
-        if (notes[_id].createdAt == 0) {
-            uint256 grid = getGrid(lat, lng);
-            notesArray.push(_id);
-            notes[_id]._id = _id;
-            notes[_id].userAddress = msg.sender;
-            notes[_id].note = noteText;
-            notes[_id].lat = lat;
-            notes[_id].lng = lng;
-            notes[_id].grid = grid;
-            notes[_id].grid10 = grid10;
-            notes[_id].forSell = forSell;
-            notes[_id].referral = referral;
-            notes[_id].mediaFlag = mediaFlag;
-            notes[_id].createdAt = now;
-            lastPurchaseTime = now;
-            notesCountByGrid10[grid10]++;
-            string[] notesId = notesIdByGrid10[grid10];
-            notesId.push(_id);
-            notesIdByGrid10[grid10] = notesId;
-            potNotesId.push(_id);
-            notesArrayByTime.push(lastPurchaseTime);
-        }
+        uint256 grid = getGrid(lat, lng);
+        notesArray.push(_id);
+        notes[_id]._id = _id;
+        notes[_id].userAddress = msg.sender;
+        notes[_id].note = noteText;
+        notes[_id].lat = lat;
+        notes[_id].lng = lng;
+        notes[_id].grid = grid;
+        notes[_id].grid10 = grid10;
+        notes[_id].forSell = forSell;
+        notes[_id].referral = referral;
+        notes[_id].mediaFlag = mediaFlag;
+        notes[_id].createdAt = now;
+        lastPurchaseTime = now;
+        notesCountByGrid10[grid10]++;
+        string[] notesId = notesIdByGrid10[grid10];
+        notesId.push(_id);
+        notesIdByGrid10[grid10] = notesId;
+        potNotesId.push(_id);
+        notesArrayByTime.push(lastPurchaseTime);
     }
 
     function BuyNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
@@ -229,7 +367,7 @@ contract LittleNote {
         return grid;
     }
 
-    function getPrice(bool freeFlag, bool newFlag, uint grid10, bool mediaFlag) public returns (uint256) {
+    function getPrice(bool freeFlag, bool newFlag, uint grid10, bool mediaFlag) public view returns (uint256) {
         uint256 count = notesCountByGrid10[grid10];
 
         if (newFlag) {
@@ -279,10 +417,7 @@ contract LittleNote {
         }
     }
 
-    function getBigPrice(uint n) public returns (uint256) {
-        if (PriceTable.length <= MaxPresetPricePower) {
-            initPriceTable();
-        }
+    function getBigPrice(uint n) public view returns (uint256) {
         uint256 price = PriceTable[MaxPresetPricePower];
         uint256 tempPrice;
         for (uint256 i=0; i<n; i++) {
@@ -334,7 +469,7 @@ contract LittleNote {
         return output;
     }
 
-    function sellerDistribution(uint256 totalMoney, uint256 availableMoney, uint256 sellerCost, address seller) public returns (uint256) {
+    function sellerDistribution(uint256 totalMoney, uint256 availableMoney, uint256 sellerCost, address seller) public payable returns (uint256) {
         //0) Seller will retain the purchasing cost and receive 75% of the profit
         uint256 sellerTake;
         if (totalMoney > sellerCost) {
@@ -350,7 +485,7 @@ contract LittleNote {
         return availableMoney;
     }
 
-    function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public returns (uint256) {
+    function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public payable returns (uint256) {
         //1) 20% patron bonus
         // 1.1) 20% to patrons in this grid10
         if (notesIdByGrid10[grid10].length != 0 ) {
@@ -373,7 +508,7 @@ contract LittleNote {
         return availableMoney;
     }
 
-    function allPatronDistribution(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+    function allPatronDistribution(uint256 totalMoney, uint256 availableMoney) public payable returns (uint256) {
         // 1.2) 20% to all patrons
         if (notesArray.length != 0) {
             uint256 allPatronBonus = totalMoney * 20 / 100;
@@ -403,8 +538,8 @@ contract LittleNote {
         return availableMoney;
     }
 
-    function distributeReferral(uint256 totalMoney, uint256 availableMoney, address referral) public returns (uint256) {
-        // 3） 8% referral reward
+    function distributeReferral(uint256 totalMoney, uint256 availableMoney, address referral) public payable returns (uint256) {
+        // 3） 8% referral 
         uint256 referralReward = totalMoney * 8 / 100;
         if (availableMoney < referralReward) {
             referralReward = availableMoney;
@@ -425,8 +560,11 @@ contract LittleNote {
         return availableMoney;
     }
 
-    function investorDistribution(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+    function investorDistribution(uint256 totalMoney, uint256 availableMoney) public payable returns (uint256) {
         // 5） 8% investors
+        if (totalInvestment == 0) {
+            return availableMoney;
+        }
         uint256 investorShare = totalMoney * 8 / 100;
 
         uint256 uintShare = investorShare / totalInvestment;
@@ -480,7 +618,7 @@ contract LittleNote {
 
     }
 
-    function distributePotReserve() public {
+    function distributePotReserve() public payable {
         if (canDistributePotReserve()) {
             uint256 lastNotesCount = 5;
             uint256 len = notesArray.length;
@@ -539,13 +677,13 @@ contract LittleNote {
         delete hourlyPotReservesArray;
     }
 
-    function ManualTransfer(uint256 amount, address to) public {
+    function ManualTransfer(uint256 amount, address to) public payable {
         if (msg.sender != founder) revert();
 
         to.transfer(amount);
     }
 
-    function SafetySendout(uint256 amount) public {
+    function SafetySendout(uint256 amount) public payable {
         if (msg.sender != founder) revert();
 
         founder.transfer(amount);

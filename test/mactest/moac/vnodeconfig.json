@@ -1,0 +1,6 @@
+{
+  "SCSservice": true,
+  "GrpcCfg": ":50061",
+  "VnodeServiceCfg": ":50062",
+  "VnodeBeneficialAddress" : "0x71bef1a57901d4c73de7683edb830f0b9914311a"
+}

@@ -8,6 +8,7 @@ import UserInfo from './lib/userinfo.min.js';
 import MoacConnect from './moacconnect.js';
 import { Random } from 'meteor/random';
 import {insertquestion,latestAnswer} from '../imports/api/questions/methods.js';
+import {Questions} from '../imports/api/questions/questions.js';
 
 
 // import {encode, decode} from 'rlp';
@@ -16,6 +17,7 @@ import {insertquestion,latestAnswer} from '../imports/api/questions/methods.js';
 
 // console.log("random Id",Random.id(17));
 var Markers = Notes;
+var games = Questions;
 var currLatitude, currLongitude;
 var map;
 var gUserAddress;
@@ -25,6 +27,10 @@ var notesLoaded = false;
 var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
+
+global.gSetGame = false;
+global.gInArea = false;
+global.gAreaid = "";
 
 // $(window).resize(function(){
 //   console.log('browser width',$(window).width())
@@ -457,7 +463,7 @@ Template.map.rendered = function() {
   var popup = L.popup();
   var container = L.DomUtil.create('div','popup_container');
 
-
+  
   map.on('click', function(event) {
     if (event.originalEvent && event.originalEvent.key == "Enter") {
       return;
@@ -488,19 +494,13 @@ Template.map.rendered = function() {
     container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
     
-    if (overlap === false){
-      // circle_pending = L.circle([event.latlng.lat,event.latlng.lng],
-      //      {color:'red',
-      //       fillColor:'red',
-      //       fillOpacity:0.3,
-      //       weight:0.1,
-      //       radius:rad}).addTo(map);
+    if (overlap === false && gSetGame === false){ //set regular note if not under setgame model
     popup
       .setLatLng(event.latlng)
       .setContent(container)
       .openOn(map);
     }
-    else{
+    else if (overlap === true){
      error_marker = L.marker([event.latlng.lat,event.latlng.lng],{
         icon: new L.DivIcon({
             className: 'error_marker',
@@ -511,6 +511,27 @@ Template.map.rendered = function() {
      error_marker.setZIndexOffset(1000);
      tooltip.hide();
     // error_marker.bringToFront();
+    }
+    else {
+        if (gInArea === true) {
+          var lg = {lat: event.latlng.lat, lng: event.latlng.lng};
+
+      var question = {
+          admin: "0x4657ec6E7F12b0dED0F0616202434970103FcB83",
+          areaid:gAreaid,
+          latlng:lg,
+          noteText:"QUESTION TEST?",
+          answers:[],
+         startTime:new Date(),
+          endTime:new Date(new Date().getTime() + 1000*60*60)
+        }
+
+        insertquestion.call(question);
+        gSetGame = false;
+        }
+        else {
+          alert("Please set game in your Area");
+        }
     }
    
       if (!gUserName) {
@@ -564,6 +585,7 @@ Template.map.rendered = function() {
     })
   });
 
+
   var bounds = map.getBounds().pad(0.25); // slightly out of screen
   tooltip = L.tooltip({
     position: 'bottom',
@@ -581,6 +603,7 @@ Template.map.rendered = function() {
   var cy = null;
   var poly_center = [cx,cy];
   
+
   map.on('mousemove', function(event) {
     var latFloor = Math.floor(event.latlng.lat * 10)/10;
     var latCeil = Math.ceil(event.latlng.lat * 10)/10;
@@ -632,6 +655,7 @@ Template.map.rendered = function() {
   query.observe({
     added: function (document) {
       // map.removeLayer(circle_pending);
+      console.log("get note observe");
       circle_drop = L.circle(document.latlng,
            {color:'#13EDDB',
             fillColor:'#13EDDB',
@@ -670,7 +694,49 @@ Template.map.rendered = function() {
       }
     }
   });
+
+
+var game = games.find();
+game.observe({
+  added: function(document){
+    
+    var myIcon = L.icon({
+        iconUrl:'question.png',
+        iconSize: [15, 15],
+        })
+
+    circle_drop = L.circle(document.latlng,
+           {color:'#13EDDB',
+            fillColor:'#13EDDB',
+            fillOpacity:0.5,
+            weight:0.1,
+            radius:rad}).addTo(map);
+
+ circle_drop.on('mouseover',function(event){
+        overlap = true;
+      })      
+
+      circle_drop.on('mouseout',function(event){
+        overlap = false;
+      })    
+
+    L.marker(document.latlng,{icon: myIcon}).addTo(map)
+    .bindPopup(document.noteText)
+    .openPopup().on('click', function(event) {
+          var answers = {
+            questionId : document._id,
+             newAnswer: {
+                address: chain3js.mc.accounts[0],
+                content: "this is answer"
+            }
+          }
+          console.log('insert answer');
+          latestAnswer.call(answers);
+        });
+  }
+})
 };
+
 
 Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   var n = Notes.find({_id: noteid}).fetch();
@@ -723,31 +789,25 @@ Template.map.flyToBiddingArea = function(bounds){
     map.removeLayer(BidArea);
   }
    BidArea = L.rectangle(bound, {color: "black",weight: 0.2}).addTo(map);
-  map.flyTo([lat, lng], 10,{duration:2});
+    
+   BidArea.bringToBack();
+   BidArea.on("mouseover",function(event){
+     gInArea = true;
+   });
+
+
+   BidArea.on("mouseout",function(event){
+     gInArea = false;
+   });
+  
+   map.flyTo([lat, lng], 13,{duration:2});
+}
+
+Template.map.joinGame = function(lat,lng){
+   map.flyTo([lat, lng], 15,{duration:2});
 }
 
 
-// var lg = {lat: 47.222, lng: 45.212};
 
-// var question = {
-//     admin: "0x4657ec6E7F12b0dED0F0616202434970103FcB83",
-//     areaid:"uafMPpbENPRLBmoD5",
-//     latlng:lg,
-//     noteText:"QUESTION TEST?",
-//     answers:[],
-//     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*60)
-// }
 
-// insertquestion.call(question);
-
-// var answers = {
-//   questionId : "AKRh885SqQirhhmMQ",
-//   newAnswer: {
-//     address: "0x4657ec6E7F12b0dED0F0616202434970103FcB89",
-//     content: "this is answer"
-//   }
-// }
-
-// latestAnswer.call(answers);
 

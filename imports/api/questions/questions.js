@@ -104,7 +104,7 @@ Questions.publicFields = {
     areaid:1,
     admin: 1,
     latlng:1,
-    content:1,
+    noteText:1,
     answers:1,
     endTime: 1
 };

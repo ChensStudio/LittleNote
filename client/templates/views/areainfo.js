@@ -24,7 +24,7 @@ Template.areainfobody.helpers({
 			areas = Areas.find({ 
 				endTime:{$lt: new Date()},
 				admin: chain3js.mc.accounts[0]
-			}).fetch();
+			},{sort: {endTime: -1}}).fetch();
 		}
 		
 		_.each(areas,(area)=>{
@@ -107,24 +107,26 @@ Template.area.events({
    		} 
     	},
   'click .placegame'(e){
+  	    gSetGame = true;
+  	    gAreaid = this._id;
     	Template.map.flyToBiddingArea(this.bounds);
   }
 })
 
 
-// var bound = [{lat:64.08342,lng:25.76727},{lat:64.5125,lng:25.2381}];
-//  var AreaInsert = {
-//     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
-//     bounds:bound,
-//     highestBidding:5,
-//     history:[],
-//     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*60)
-//   }
+var bound = [{lat:63.08342,lng:25.76727},{lat:63.5125,lng:25.2381}];
+ var AreaInsert = {
+    admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
+    bounds:bound,
+    highestBidding:5,
+    history:[],
+    startTime:new Date(),
+    endTime:new Date(new Date().getTime() + 1000*60)
+  }
 
-//   console.log('startTime',AreaInsert.startTime);
-//   console.log('endTime',AreaInsert.endTime);
+  console.log('startTime',AreaInsert.startTime);
+  console.log('endTime',AreaInsert.endTime);
 
-//   insertarea.call(AreaInsert);
+  insertarea.call(AreaInsert);
 
  

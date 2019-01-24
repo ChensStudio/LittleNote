@@ -61,19 +61,30 @@
 
                 <div class="modal-body">
                     {{#unless expired}}
-                    <textarea autofocus id="answerArea"></textarea>
+                        {{#unless answered}}
+                        <textarea autofocus id="answerArea"></textarea>
+                        {{else}}
+                        <div style="text-align: left; margin:auto 10px">
+                        <span style="color: grey; font-style: italic;">Your Answer,</span>
+                        <br>
+                        <span>{{yourAnswer}}</span>
+                        </div>
+                        {{/unless}}
                     {{else}}
                         {{#each answers}}
                             {{address}}
                             {{content}}
                         {{/each}}
                     {{/unless}}
-                    
                 </div>
 
                 <div class="modal-footer" style="text-align: center">
                     {{#unless expired}}
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="submitAnswer">Submit</button>
+                        {{#unless answered}}
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="submitAnswer">Submit</button>
+                        {{else}}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
+                        {{/unless}}
                     {{else}}
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
                     {{/unless}}

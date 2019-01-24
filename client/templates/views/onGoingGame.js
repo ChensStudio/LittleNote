@@ -60,6 +60,24 @@ Template.answerModal.helpers({
 	},
 	'answers'(){
 		return Questions.findOne({_id:this.questionId}).answers;
+	},
+	"answered"(){
+		var answered = false;
+		var participants = Questions.findOne({_id:this.questionId}).answers;
+		_.each(participants, (participant) => {
+
+			if (participant.address == this.address){
+				console.log('pat',participant.address,"this",this.address)
+				console.log(participant.content);
+				answered = true;
+				this.yourAnswer = participant.content;
+			}
+		})
+		return answered;
+	},
+	"isadmin"(){
+		var admin = Questions.findOne({_id:this.questionId}).admin;
+		return admin == this.address;
 	}
 })
 

@@ -1,2 +1,6 @@
 node_modules/
 meteor-leaflet-demo/
+test/v101/
+test/_logs/
+test/mactest/moac/data/
+test/mactest/moac/_logs/

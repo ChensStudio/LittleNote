@@ -516,18 +516,18 @@ Template.map.rendered = function() {
         if (gInArea === true) {
           var lg = {lat: event.latlng.lat, lng: event.latlng.lng};
 
-      var question = {
-          admin: "0x4657ec6E7F12b0dED0F0616202434970103FcB83",
+          var question = {
+          admin: chain3js.mc.accounts[0],
           areaid:gAreaid,
           latlng:lg,
           noteText:"QUESTION TEST?",
           answers:[],
-         startTime:new Date(),
+          startTime:new Date(),
           endTime:new Date(new Date().getTime() + 1000*60*60)
-        }
+          }
 
-        insertquestion.call(question);
-        gSetGame = false;
+          insertquestion.call(question);
+          gSetGame = false;
         }
         else {
           alert("Please set game in your Area");

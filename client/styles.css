@@ -662,6 +662,14 @@
     outline:rgba(0,0,0,0.3) solid 1px;
   }
 
+  .answerList {
+    margin-bottom: 6px;
+    padding:4px 0px;
+    text-align: left;
+    background-color: white;
+    border-radius: 5px;
+  }
+
 
   .markertooltip {
     z-index: 100;

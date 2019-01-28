@@ -114,20 +114,20 @@ Template.area.events({
 })
 
 
-var bound = [{lat:64.08342,lng:25.76727},{lat:64.5125,lng:25.2381}];
- var AreaInsert = {
-    admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
-    bounds:bound,
-    highestBidding:5,
-    history:[],
-    startTime:new Date(),
-    endTime:new Date(new Date().getTime() + 1000*60*60)
-  }
+// var bound = [{lat:64.08342,lng:25.76727},{lat:64.5125,lng:25.2381}];
+//  var AreaInsert = {
+//     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
+//     bounds:bound,
+//     highestBidding:5,
+//     history:[],
+//     startTime:new Date(),
+//     endTime:new Date(new Date().getTime() + 1000*60*60)
+//   }
 
 
-  console.log('startTime',AreaInsert.startTime);
-  console.log('endTime',AreaInsert.endTime);
+//   console.log('startTime',AreaInsert.startTime);
+//   console.log('endTime',AreaInsert.endTime);
 
-  insertarea.call(AreaInsert);
+//   insertarea.call(AreaInsert);
 
  

@@ -46,8 +46,8 @@
     </template>
 
     <template name="answerModal">
-    <div class="modal fade qrbox" style="color:black;margin-top:100px" align="center" >
-         <div class="modal-dialog">
+    <div class="modal fade" align="center">
+         <div class="modal-dialog" >
             <div class="modal-content">
 
                 <div class="modal-header" style="text-align: left">
@@ -59,29 +59,49 @@
                       
                 </div>
 
-                <div class="modal-body">
-                    {{#unless expired}}
-                        {{#unless answered}}
-                        <textarea autofocus id="answerArea"></textarea>
+                <div class="modal-body" style="background-color: #EBEBEB">
+                    {{#if isadmin}}
+                        {{#if totalAnswers}}
+                            {{#each answers}}
+                             <div class="answerList">
+                                <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
+                                <div style="margin-left: 12px;">{{content}}</div>
+                             </div>
+                             {{/each}}
                         {{else}}
-                        <div style="text-align: left; margin:auto 10px">
-                        <span style="color: grey; font-style: italic;">Your Answer,</span>
-                        <br>
-                        <span>{{yourAnswer}}</span>
-                        </div>
-                        {{/unless}}
+                            <span>No Answers Yet...</span>
+                        {{/if}}
                     {{else}}
+                        {{#unless expired}}
+                            {{#unless answered}}
+                            <textarea autofocus id="answerArea"></textarea>
+                            {{else}}
+                             <div style="text-align: left; margin:auto 10px">
+                            <span style="color: grey; font-style: italic;">Your Answer,</span>
+                            <br>
+                             <span>{{yourAnswer}}</span>
+                             </div>
+                        {{/unless}}
+                     {{else}}
                         {{#each answers}}
-                            {{address}}
-                            {{content}}
+                        <div class="answerList">
+                            <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
+                            <div style="margin-left: 12px;">{{content}}</div>
+                         </div>   
                         {{/each}}
                     {{/unless}}
+                    {{/if}}
+
                 </div>
 
                 <div class="modal-footer" style="text-align: center">
                     {{#unless expired}}
                         {{#unless answered}}
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="submitAnswer">Submit</button>
+                            {{#unless isadmin}}
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="submitAnswer">Submit</button>
+                            {{else}}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
+                             {{/unless}}
                         {{else}}
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
                         {{/unless}}

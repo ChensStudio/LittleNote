@@ -820,6 +820,12 @@ Template.map.joinGame = function(lat,lng){
    map.flyTo([lat, lng], 15,{duration:2});
 }
 
+Template.map.exitSetGame = function(){
+  if (BidArea){
+    map.removeLayer(BidArea);
+  }
+}
+
 
 
 

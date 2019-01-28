@@ -274,6 +274,7 @@ Template.header.onCreated(function(){
 
 Template.map.onRendered(function (){
      Meteor.setInterval(()=>{
+        
      if($(document).scrollTop() > 20){
        $('.header').css('height','10px');
        $('.header').children().hide();
@@ -304,6 +305,11 @@ Template.map.events({
     },
     'mouseleave .notes'(){
         $('.close_ico').css('opacity','0');
+    },
+    'click .exiticon'(e){
+        gSetGame = false;
+         $(".exiticon").css('opacity',0);
+        Template.map.exitSetGame();
     }
 
 })

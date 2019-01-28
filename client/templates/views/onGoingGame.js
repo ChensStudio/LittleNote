@@ -10,6 +10,8 @@ Meteor.subscribe('questions',function(){
 
 Template.gamebody.onCreated(function(){
     gSetGame = false;
+     $(".exiticon").css('opacity',0);
+    Template.map.exitSetGame();
     
 });
 
@@ -74,6 +76,9 @@ Template.answerModal.helpers({
 			}
 		})
 		return answered;
+	},
+	"admin"(){
+		return Questions.findOne({_id:this.questionId}).admin;
 	},
 	"isadmin"(){
 		var admin = Questions.findOne({_id:this.questionId}).admin;

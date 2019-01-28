@@ -83,6 +83,25 @@
 
   }
 
+  .exiticon{
+    position: absolute;
+    margin-left: 74%;
+    height: 50px;
+    width:50px;
+    z-index:1500;
+    opacity: 0;
+    transition: all 0.4s ease 0s;
+  }
+
+  .exitGameModel{
+    background: url(exit.png);
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    cursor: pointer;
+  }
+
   .bar {
     border-right: 1px solid rgba(0,0,0,.3);
     height:30px;

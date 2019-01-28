@@ -109,7 +109,8 @@ Template.area.events({
   'click .placegame'(e){
   	    gSetGame = true;
   	    gAreaid = this._id;
-    	Template.map.flyToBiddingArea(this.bounds);
+  	    Template.map.flyToBiddingArea(this.bounds);
+  	    $(".exiticon").css('opacity',1);
   }
 })
 

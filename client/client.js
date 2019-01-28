@@ -746,6 +746,8 @@ game.observe({
           }); 
         }).on('mouseover',function(e){
           this.openPopup();
+        }).on('mouseout',function(e){
+          this.closePopup();
         });
 
         

@@ -10,7 +10,7 @@ Meteor.subscribe('questions',function(){
 
 Template.gamebody.onCreated(function(){
     gSetGame = false;
-     $(".exiticon").css('opacity',0);
+     $(".exiticon").css('visibility','hidden');
     Template.map.exitSetGame();
     
 });

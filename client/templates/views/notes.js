@@ -308,7 +308,7 @@ Template.map.events({
     },
     'click .exiticon'(e){
         gSetGame = false;
-         $(".exiticon").css('opacity',0);
+         $(".exiticon").css('visibility','hidden');
         Template.map.exitSetGame();
     }
 

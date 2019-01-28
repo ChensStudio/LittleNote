@@ -377,7 +377,6 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
         //TODO: update onChainFlag
       });
     }
-  
 }
 
 var createNoteInDatabase = function(mongoInserts, callback) {
@@ -739,13 +738,17 @@ game.observe({
 
     L.marker(document.latlng,{icon: myIcon}).addTo(map)
     .bindPopup(document.noteText)
-    .openPopup().on('click', function(event) {
+    .on('click', function(event) {
           Modal.show('answerModal',{
             question:document.noteText,
             questionId:document._id, 
             address: chain3js.mc.accounts[0]
           }); 
+        }).on('mouseover',function(e){
+          this.openPopup();
         });
+
+        
   }
 })
 };

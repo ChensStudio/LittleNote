@@ -110,7 +110,7 @@ Template.area.events({
   	    gSetGame = true;
   	    gAreaid = this._id;
   	    Template.map.flyToBiddingArea(this.bounds);
-  	    $(".exiticon").css('opacity',1);
+  	    $(".exiticon").css('visibility','visible');
   }
 })
 

@@ -540,6 +540,9 @@ Template.map.rendered = function() {
 
           insertquestion.call(question);
           gSetGame = false;
+          $(".exiticon").css('visibility','hidden');
+          Template.map.exitSetGame();
+          map.closePopup();
     
           });
           

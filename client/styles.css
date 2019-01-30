@@ -330,7 +330,37 @@
     white-space: nowrap;
   }
 
+ .modal-countdown{
+    background: white;
+    padding:2px 5px;
+    margin-left: 5px;
+    color:rgba(0,0,0,.6);
+    border: 1px solid rgba(0,0,0,.2);
+    font-size: 12px;
+    border-radius: 10px;
+    font-family: Impact;
+    cursor: pointer;
+}
 
+.distribute {
+    background-color: #1876ce;
+    padding:2px 5px;
+    margin-left: 5px;
+    color:rgba(0,0,0,.6);
+    border: 1px solid rgba(0,0,0,.2);
+    font-size: 12px;
+    border-radius: 10px;
+    font-family: Impact;
+    cursor: pointer;
+}
+
+.distribute:hover{
+  background: #20E11E;
+}
+
+.distribute:active{
+  background: #1DCF1D;
+}
 
 
   @media screen and (min-width: 1611px) {

@@ -310,6 +310,7 @@ Template.map.events({
         gSetGame = false;
          $(".exiticon").css('visibility','hidden');
         Template.map.exitSetGame();
+        Session.set("gAreaid","");
     }
 
 })

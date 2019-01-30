@@ -4,6 +4,15 @@ import {latestAnswer, insertquestion} from '../../../imports/api/questions/metho
 import {countDownFormat} from '../../utils.js';
 import {Areas} from  '../../../imports/api/areas/areas.js'
 
+
+var getCountDown = function(countdown,endTime){
+var setCountdown = Meteor.setInterval(()=>{Session.set(countdown,countDownFormat(endTime))},1000);
+		if(Session.get(countdown) == "expired"){
+			Meteor.clearInterval(setCountdown);
+		}
+		
+}
+
 Meteor.subscribe('questions',function(){
       console.log('questions subscribed');
   });
@@ -12,6 +21,7 @@ Template.gamebody.onCreated(function(){
     gSetGame = false;
      $(".exiticon").css('visibility','hidden');
     Template.map.exitSetGame();
+    Session.set("gAreaid","");
     
 });
 
@@ -25,12 +35,9 @@ Template.gamebody.helpers({
 Template.game.helpers({
 	'countdown'(){
 		var countdown = this._id;
-		// 
-		var setCountdown = Meteor.setInterval(()=>{Session.set(countdown,countDownFormat(this.endTime))},1000);
-		if(Session.get(countdown) == "expired"){
-			Meteor.clearInterval(setCountdown);
-		}
+		getCountDown(countdown,this.endTime);
 		return Session.get(countdown);
+		
 	},
 	'coordinate'(){
 		return this.latlng.lat.toFixed(4) + ", " + this.latlng.lng.toFixed(4);
@@ -83,6 +90,13 @@ Template.answerModal.helpers({
 	"isadmin"(){
 		var admin = Questions.findOne({_id:this.questionId}).admin;
 		return admin == this.address;
+	},
+	"countdown"(){
+
+		var question = Questions.findOne({_id:this.questionId});
+		var countdown = question._id;
+		getCountDown(countdown,question.endTime);
+		return Session.get(countdown);
 	}
 })
 

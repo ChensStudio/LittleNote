@@ -30,7 +30,7 @@ var rad = 50;
 
 global.gSetGame = false;
 global.gInArea = false;
-global.gAreaid = "";
+Session.set("gAreaid", "");
 
 // $(window).resize(function(){
 //   console.log('browser width',$(window).width())
@@ -528,6 +528,7 @@ Template.map.rendered = function() {
 
           $('#submitQuestion').click(function(){
             let content = $('.notetobeposted').val();
+            let gAreaid = Session.get("gAreaid");
             var question = {
             admin: chain3js.mc.accounts[0],
             areaid:gAreaid,
@@ -542,6 +543,7 @@ Template.map.rendered = function() {
           gSetGame = false;
           $(".exiticon").css('visibility','hidden');
           Template.map.exitSetGame();
+          Session.set("gAreaid","");
           map.closePopup();
     
           });

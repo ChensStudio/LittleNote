@@ -56,8 +56,19 @@
                             <span aria-hidden="true">&times;</span>
                      </button>
                     <span style="color: grey; font-style: italic;font-size: 14px">{{admin}}</span>
-                    <br>
+                    <div style="margin-top: 5px">
                     <span style="color: grey; font-style: italic;font-size: 12px">{{totalAnswers}} Answers</span>
+                    {{#if expired}}
+                        {{#if isadmin}}
+                            <span class="distribute" style="color:white" >Distrubute</span>
+                          {{else}}
+                            <span class="modal-countdown" style="background-color: red">Expired</span>
+                        {{/if}}
+                    {{else}}
+                             <span class="modal-countdown" style="background-color: white">{{countdown}}</span>
+                    {{/if}}
+                     </div>
+                  
                       
                 </div>
 
@@ -72,17 +83,28 @@
                              {{/each}}
                         {{else}}
                             <span>No Answers Yet...</span>
-                        {{/if}}
+                    {{/if}}
+
                     {{else}}
-                        {{#unless expired}}
-                            {{#unless answered}}
+                      {{#unless expired}}
+                        {{#unless answered}}
                             <textarea autofocus id="answerArea"></textarea>
-                            {{else}}
-                             <div style="text-align: left; margin:auto 10px">
+                        {{else}}
+                             <!-- <div style="text-align: left; margin:auto 10px">
                             <span style="color: grey; font-style: italic;">Your Answer,</span>
                             <br>
                              <span>{{yourAnswer}}</span>
+                             </div> -->
+                        {{#if totalAnswers}}
+                            {{#each answers}}
+                             <div class="answerList">
+                                <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
+                                <div style="margin-left: 12px;">{{content}}</div>
                              </div>
+                             {{/each}}
+                        {{else}}
+                            <span>No Answers Yet...</span>
+                        {{/if}}
                         {{/unless}}
                      {{else}}
                         {{#each answers}}

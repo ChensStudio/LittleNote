@@ -20,7 +20,12 @@
                   {{#if forsale}}
                      <span class="countdown">{{countdown}} </span>
                 {{else}}
-                        <span class="countdown placegame" >Place Game </span>
+                    {{#unless setGame}}
+                        <span class="countdown placegame" id="placegame">Place Game</span>
+                    {{else}}
+                        <span class="countdown placegame" id="cancel">Cancel</span>
+                    {{/unless}}
+                    
                 {{/if}} 
                 
                 <div class="highestBidding">

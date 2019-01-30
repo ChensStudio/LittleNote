@@ -3,6 +3,7 @@ import {Areas} from  '../../../imports/api/areas/areas.js'
 import {newBidding, insertarea} from '../../../imports/api/areas/methods.js';
 import {countDownFormat} from '../../utils.js';
 
+
 Meteor.subscribe('areas',function(){
       console.log('areas subscribed');
   });
@@ -10,7 +11,7 @@ Meteor.subscribe('areas',function(){
 Template.areainfobody.onCreated(function(){
     TemplateVar.set('areaForBidding', true);
     TemplateVar.set('ownedAsset', false);
-    
+
 });
 
 Template.areainfobody.helpers({
@@ -73,7 +74,13 @@ Template.area.helpers({
 			Meteor.clearInterval(setCountdown);
 		}
 		return Session.get(countdown);
+	},
+	"setGame"(){
+	    let gAreaid = Session.get("gAreaid");
+		console.log(this._id, "g_id:",gAreaid);
+		return this._id == gAreaid;
 	}
+
 })
 
 Template.area.events({
@@ -106,23 +113,34 @@ Template.area.events({
    			console.log('resale');
    		} 
     	},
-  'click .placegame'(e){
+  'click #placegame'(e){
   	    gSetGame = true;
-  	    gAreaid = this._id;
+  	    Session.set("gAreaid",this._id);
   	    Template.map.flyToBiddingArea(this.bounds);
   	    $(".exiticon").css('visibility','visible');
+  },
+  'click #cancel'(e){
+  	 gSetGame = false;
+     $(".exiticon").css('visibility','hidden');
+     Template.map.exitSetGame();
+     Session.set("gAreaid","");
   }
 })
 
 
-// var bound = [{lat:64.08342,lng:25.76727},{lat:64.5125,lng:25.2381}];
+// Tracker.autorun(function () {
+      
+//       console.log(gAreaid)
+//    });
+
+// var bound = [{lat:65.08342,lng:25.76727},{lat:65.5125,lng:25.2381}];
 //  var AreaInsert = {
 //     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
 //     bounds:bound,
 //     highestBidding:5,
 //     history:[],
 //     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*60)
+//     endTime:new Date(new Date().getTime() + 1000*60*60*30)
 //   }
 
 

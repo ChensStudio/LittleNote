@@ -88,6 +88,12 @@
                     {{else}}
                       {{#unless expired}}
                         {{#unless answered}}
+                        {{#each answers}}
+                             <div class="answerList">
+                                <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
+                                <div style="margin-left: 12px;">{{content}}</div>
+                             </div>
+                             {{/each}}
                             <textarea autofocus id="answerArea"></textarea>
                         {{else}}
                              <!-- <div style="text-align: left; margin:auto 10px">

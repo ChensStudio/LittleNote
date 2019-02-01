@@ -4,9 +4,14 @@ import { Notes } from '../../api/notes/notes.js';
 import { Accounts } from '../../api/accounts/accounts.js';
 import {Areas} from  '../../api/areas/areas.js'
 import {newBidding, insertarea} from '../../api/areas/methods.js';
+import {Questions} from  '../../api/questions/questions.js';
+import {each} from 'underscore'
 
 // if the database is empty on server start, create some sample data.
 Meteor.startup(() => {
+
+  import './observeGameAndArea.js'
+  
   if (Accounts.find().count() === 0) {
     var timestamp = (new Date()).getTime();
     let accountsData = initAccount();

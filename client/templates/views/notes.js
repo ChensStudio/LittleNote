@@ -306,12 +306,12 @@ Template.map.events({
     'mouseleave .notes'(){
         $('.close_ico').css('opacity','0');
     },
-    'click .exiticon'(e){
-        gSetGame = false;
-         $(".exiticon").css('visibility','hidden');
-        Template.map.exitSetGame();
-        Session.set("gAreaid","");
-    }
+    // 'click .exiticon'(e){
+    //     gSetGame = false;
+    //      $(".exiticon").css('visibility','hidden');
+    //     Template.map.exitSetGame();
+    //     Session.set("gAreaid","");
+    // }
 
 })
 
@@ -336,9 +336,9 @@ Template.header.helpers({
 });
 
 Template.header.events({
-    'click #nav'(){
-        $('div.slideOption').toggleClass('showSlide');
-    }
+    // 'click #nav'(){
+    //     $('div.slideOption').toggleClass('showSlide');
+    // }
 });
 
 Template.slideOption.onCreated(function(){

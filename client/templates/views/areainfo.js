@@ -3,7 +3,6 @@ import {Areas} from  '../../../imports/api/areas/areas.js'
 import {newBidding, insertarea} from '../../../imports/api/areas/methods.js';
 import {countDownFormat} from '../../utils.js';
 
-
 Meteor.subscribe('areas',function(){
       console.log('areas subscribed');
   });
@@ -11,7 +10,6 @@ Meteor.subscribe('areas',function(){
 Template.areainfobody.onCreated(function(){
     TemplateVar.set('areaForBidding', true);
     TemplateVar.set('ownedAsset', false);
-
 });
 
 Template.areainfobody.helpers({
@@ -43,7 +41,6 @@ Template.areainfobody.helpers({
 	}
 })
 
-
 Template.areainfobody.events({
 	'click .bidding'(){
 		 TemplateVar.set('areaForBidding', true);
@@ -64,7 +61,7 @@ Template.area.helpers({
 		return ( this.endTime - new Date() ) > 0;
 	},
 	'baseprice'(){
-		return this.highestBidding * 1.05;
+		return this.highestBidding + 0.5;
 	},
 	'countdown'(){
 		var countdown = this._id;
@@ -80,7 +77,6 @@ Template.area.helpers({
 		console.log(this._id, "g_id:",gAreaid);
 		return this._id == gAreaid;
 	}
-
 })
 
 Template.area.events({
@@ -97,8 +93,8 @@ Template.area.events({
   			// console.log('yourbid',yourbid)
     		var confirmed = confirm("Are you sure to bid with " + yourbid+ " MOAC?");
     		if (confirmed == true){
-    				if(yourbid < this.highestBidding * 1.05){
- 				alert("Bid price must add 5% on base price")
+    				if(yourbid < this.highestBidding + 0.5){
+ 				alert("Bid price must add 0.5MOAC on base price")
  			}
  			else if (yourbid > balance){
  				alert("Not enough MOAC in your account")
@@ -117,11 +113,11 @@ Template.area.events({
   	    gSetGame = true;
   	    Session.set("gAreaid",this._id);
   	    Template.map.flyToBiddingArea(this.bounds);
-  	    $(".exiticon").css('visibility','visible');
+  	    // $(".exiticon").css('visibility','visible');
   },
   'click #cancel'(e){
   	 gSetGame = false;
-     $(".exiticon").css('visibility','hidden');
+     // $(".exiticon").css('visibility','hidden');
      Template.map.exitSetGame();
      Session.set("gAreaid","");
   }
@@ -133,14 +129,14 @@ Template.area.events({
 //       console.log(gAreaid)
 //    });
 
-// var bound = [{lat:65.08342,lng:25.76727},{lat:65.5125,lng:25.2381}];
+// var bound = [{lat:66.08342,lng:25.76727},{lat:66.5125,lng:25.2381}];
 //  var AreaInsert = {
 //     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
 //     bounds:bound,
 //     highestBidding:5,
 //     history:[],
 //     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*60*30)
+//     endTime:new Date(new Date().getTime() + 1000*60)
 //   }
 
 
@@ -149,4 +145,3 @@ Template.area.events({
 
 //   insertarea.call(AreaInsert);
 
- 

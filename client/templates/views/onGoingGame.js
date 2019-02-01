@@ -6,10 +6,12 @@ import {Areas} from  '../../../imports/api/areas/areas.js'
 
 
 var getCountDown = function(countdown,endTime){
-var setCountdown = Meteor.setInterval(()=>{Session.set(countdown,countDownFormat(endTime))},1000);
-		if(Session.get(countdown) == "expired"){
-			Meteor.clearInterval(setCountdown);
-		}
+		if (endTime > new Date()){
+		 	Meteor.setTimeout(()=>{Session.set(countdown,countDownFormat(endTime))},1000);
+		 }
+		 else{
+		 	Session.set(countdown,"expired")
+		 }
 		
 }
 
@@ -92,7 +94,6 @@ Template.answerModal.helpers({
 		return admin == this.address;
 	},
 	"countdown"(){
-
 		var question = Questions.findOne({_id:this.questionId});
 		var countdown = question._id;
 		getCountDown(countdown,question.endTime);

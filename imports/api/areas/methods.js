@@ -68,17 +68,17 @@ export const newBidding = new ValidatedMethod({
     run({ areaId, newBidding, bidder }) {
         const area = Areas.findOne(areaId);
         var updateDate = new Date();
-        // if(area.endTime - new Date() < 1000*60) {
-        //     console.log('extend bidding time');
-        //     console.log(area.endTime);
+        if(area.endTime - new Date() < 1000*60) {
+            console.log('extend bidding time');
+            console.log(area.endTime);
 
-        //     Areas.update(areaId,
-        //         {
-        //             $set:{
-        //                 endTime: new Date(area.endTime.getTime() + 1000*60)
-        //             }
-        //         });
-        // }
+            Areas.update(areaId,
+                {
+                    $set:{
+                        endTime: new Date(area.endTime.getTime() + 1000*60)
+                    }
+                });
+        }
 
          Areas.update(areaId, {
             $set: { 

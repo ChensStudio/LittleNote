@@ -66,10 +66,17 @@ Template.area.helpers({
 	'countdown'(){
 		var countdown = this._id;
 		// 
-		var setCountdown = Meteor.setInterval(()=>{Session.set(countdown,countDownFormat(this.endTime))},1000);
-		if(Session.get(countdown) == "expired"){
-			Meteor.clearInterval(setCountdown);
-		}
+		// var setCountdown = Meteor.setInterval(()=>{Session.set(countdown,countDownFormat(this.endTime))},1000);
+		// if(Session.get(countdown) == "expired"){
+		// 	Meteor.clearInterval(setCountdown);
+		// }
+		 if (this.endTime > new Date()){
+		 	Meteor.setTimeout(()=>{Session.set(countdown,countDownFormat(this.endTime))},1000);
+		 }
+		 else{
+		 	Session.set(countdown,"expired")
+		 }
+		 
 		return Session.get(countdown);
 	},
 	"setGame"(){
@@ -136,7 +143,7 @@ Template.area.events({
 //     highestBidding:5,
 //     history:[],
 //     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60)
+//     endTime:new Date(new Date().getTime() + 1000*60*3)
 //   }
 
 

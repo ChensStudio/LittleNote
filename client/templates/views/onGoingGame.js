@@ -12,7 +12,6 @@ var getCountDown = function(countdown,endTime){
 		 else{
 		 	Session.set(countdown,"expired")
 		 }
-		
 }
 
 Meteor.subscribe('questions',function(){

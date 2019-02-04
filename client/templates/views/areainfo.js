@@ -76,7 +76,7 @@ Template.area.helpers({
 		 else{
 		 	Session.set(countdown,"expired")
 		 }
-		 
+
 		return Session.get(countdown);
 	},
 	"setGame"(){
@@ -136,19 +136,19 @@ Template.area.events({
 //       console.log(gAreaid)
 //    });
 
-// var bound = [{lat:66.08342,lng:25.76727},{lat:66.5125,lng:25.2381}];
-//  var AreaInsert = {
-//     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
-//     bounds:bound,
-//     highestBidding:5,
-//     history:[],
-//     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*3)
-//   }
+var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
+ var AreaInsert = {
+    admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
+    bounds:bound,
+    highestBidding:5,
+    history:[],
+    startTime:new Date(),
+    endTime:new Date(new Date().getTime() + 1000*60*2)
+  }
 
 
-//   console.log('startTime',AreaInsert.startTime);
-//   console.log('endTime',AreaInsert.endTime);
+  console.log('startTime',AreaInsert.startTime);
+  console.log('endTime',AreaInsert.endTime);
 
-//   insertarea.call(AreaInsert);
+  insertarea.call(AreaInsert);
 

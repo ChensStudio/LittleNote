@@ -243,9 +243,6 @@ Template.note.events({
 
  });
 
-
-
-
 Template.header.onCreated(function(){
     var template = this;
     TemplateVar.set(template, 'headline', 'Retrieving Jackpot........');

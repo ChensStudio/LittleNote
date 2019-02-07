@@ -1,7 +1,7 @@
-import {contractAddr, contractAbi, httpProvider} from '../imports/api/const';
+import {littleNoteContractAddr, littleNoteContractAbi, httpProvider} from '../imports/api/const';
 
-global.gContractAddress = contractAddr; 
-global.gContractAbi = contractAbi; 
+global.gContractAddress = littleNoteContractAddr; 
+global.gContractAbi = littleNoteContractAbi; 
 global.gContractInstance = null;
 
 export var InitChain3 = function() {

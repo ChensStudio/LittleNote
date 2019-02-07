@@ -1,11 +1,11 @@
 import {Questions} from  '../../api/questions/questions.js';
 import {Areas} from  '../../api/areas/areas.js';
 import Chain3 from 'chain3';
-import {contractAddr, contractAbi} from '../../api/const';
+import {areaGameContractAddr, areaGameContractAbi} from '../../api/const';
 
 var games = Questions.find({endTime:{$gte: new Date()}});
 
-let contractInstance = chain3.mc.contract(contractAbi).at(contractAddr);
+let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
 
 var checkAreaStatus = function(){
   var areas = Areas.find({endTime:{$gte: new Date()}}).fetch();

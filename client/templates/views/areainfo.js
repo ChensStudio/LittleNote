@@ -10,19 +10,30 @@ Meteor.subscribe('areas',function(){
 Template.areainfobody.onCreated(function(){
     TemplateVar.set('areaForBidding', true);
     TemplateVar.set('ownedAsset', false);
+
+});
+
+Template.areainfobody.onRendered(function(){
+
+Tracker.autorun(function () {
+      console.log(Session.get('gUserAddress'));
+  	  //  Blaze.remove(); // this will remove the current template.
+	  // Blaze.render(this); // rerender
+   });
+    
 });
 
 Template.areainfobody.helpers({
 	'areas'(){
 		var template = Template.instance();
-		var areas
+		var areas;
 		if(TemplateVar.get('areaForBidding')){
 			areas = Areas.find({endTime:{$gte: new Date()}}).fetch();
 		}
 		else{
 			areas = Areas.find({ 
 				endTime:{$lt: new Date()},
-				admin: chain3js.mc.accounts[0]
+				admin: Session.get('gUserAddress')
 			},{sort: {endTime: -1}}).fetch();
 		}
 		
@@ -81,7 +92,7 @@ Template.area.helpers({
 	},
 	"setGame"(){
 	    let gAreaid = Session.get("gAreaid");
-		console.log(this._id, "g_id:",gAreaid);
+		// console.log(this._id, "g_id:",gAreaid);
 		return this._id == gAreaid;
 	}
 })
@@ -136,19 +147,19 @@ Template.area.events({
 //       console.log(gAreaid)
 //    });
 
-var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
- var AreaInsert = {
-    admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
-    bounds:bound,
-    highestBidding:5,
-    history:[],
-    startTime:new Date(),
-    endTime:new Date(new Date().getTime() + 1000*60*2)
-  }
+// var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
+//  var AreaInsert = {
+//     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
+//     bounds:bound,
+//     highestBidding:5,
+//     history:[],
+//     startTime:new Date(),
+//     endTime:new Date(new Date().getTime() + 1000*60*2)
+//   }
 
 
-  console.log('startTime',AreaInsert.startTime);
-  console.log('endTime',AreaInsert.endTime);
+//   console.log('startTime',AreaInsert.startTime);
+//   console.log('endTime',AreaInsert.endTime);
 
-  insertarea.call(AreaInsert);
+//   insertarea.call(AreaInsert);
 

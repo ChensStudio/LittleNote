@@ -64,6 +64,7 @@ var monitorUserAddress = function() {
   console.log('monitorUserAddress');
   try {
     gUserAddress = chain3js.mc.accounts[0];
+    Session.set('gUserAddress',gUserAddress);
     var dbAccount = loadUserName();
     console.log('dbAccount',dbAccount);
     if (gUserAddress) {
@@ -82,6 +83,7 @@ var monitorUserAddress = function() {
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
         gUserName = '';
+        Session.set('gUserAddress',chain3js.mc.accounts[0]);
         chain3js.mc.getBalance(chain3js.mc.accounts[0],function(e,r){
             if(e){
                 console.log(e);

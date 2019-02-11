@@ -2,6 +2,8 @@ import './notes.js'
 import {Areas} from  '../../../imports/api/areas/areas.js'
 import {newBidding, insertarea} from '../../../imports/api/areas/methods.js';
 import {countDownFormat} from '../../utils.js';
+import MoacConnect from '../../moacconnect.js';
+import { Random } from 'meteor/random';
 
 Meteor.subscribe('areas',function(){
       console.log('areas subscribed');
@@ -118,7 +120,17 @@ Template.area.events({
  				alert("Not enough MOAC in your account")
  			}
  			else{
- 				newBidding.call({areaId:areaid,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
+ 				var bid_id = Random.id(17);
+ 				MoacConnect.AddBid(bid_id, areaid,yourbid,function(e,r){
+ 					if(e){
+ 						console.log("bid error");
+ 						return;
+ 					}
+ 					else{
+ 					newBidding.call({areaId:areaid,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
+ 					}
+ 				})
+ 				
  			}
     		}
     		
@@ -147,19 +159,5 @@ Template.area.events({
 //       console.log(gAreaid)
 //    });
 
-// var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
-//  var AreaInsert = {
-//     admin:"0x4123456e7f12b0ded0f0616202434970103fcb83",
-//     bounds:bound,
-//     highestBidding:5,
-//     history:[],
-//     startTime:new Date(),
-//     endTime:new Date(new Date().getTime() + 1000*60*2)
-//   }
 
-
-//   console.log('startTime',AreaInsert.startTime);
-//   console.log('endTime',AreaInsert.endTime);
-
-//   insertarea.call(AreaInsert);
 

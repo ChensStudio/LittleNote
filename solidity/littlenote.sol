@@ -90,6 +90,7 @@
         function AreaGame(address _founder) public {
             founder = _founder;
             haltFlag = false;
+            admin = _founder;
         }
 
         function SetHalt(bool halt) public {
@@ -104,7 +105,7 @@
         }
 
         function SetAdmin(address newAdmin) public returns (bool) {
-            if (msg.sender != founder || msg.sender != admin) revert();
+            if (msg.sender != founder) revert();
             admin = newAdmin;
             return true;
         }
@@ -130,7 +131,6 @@
             string nickname, 
             string description, 
             address _admin, 
-
             uint256 startTime, 
             uint256 endTime, 
             string question) public payable {
@@ -166,45 +166,41 @@
             games[uid].balance += msg.value;
         }
 
-        function AddArea(
-            string uid, 
-            string nickname, 
-            string description, 
-            address _admin, 
-            uint256 _startBidding, 
+       function AddArea(
+                string uid, 
+                string nickname, 
+                string description, 
+                address _admin, 
+                string posRangeId,
+                uint256 _highestBidding, 
+                uint256 _increaseAmount, 
+                uint256 _startTime, 
+                uint256 _endTime) public payable {
 
-            uint256 _increaseAmount, 
-            uint256 _startTime, 
-            uint256 _endTime) public payable {
+                if (msg.sender != founder && msg.sender != admin) {
+                    revert();
+                }
 
-            if (msg.sender != founder || msg.sender != admin) {
-                revert();
+                areasArray.push(uid);
+                areas[uid].uid = uid;
+                areas[uid].nickname = nickname;
+                areas[uid].description = description;
+                areas[uid].admin = _admin;
+                areas[uid].posRangeId = posRangeId;
+                areas[uid].highestBidding = _highestBidding;
+                areas[uid].increaseAmount = _increaseAmount;
+                areas[uid].startTime = _startTime;
+                areas[uid].endTime = _endTime;
+                areas[uid].activeFlag = 1;
+                areas[uid].balance += msg.value;
             }
+        // function SetAreaPosRange(string areaId, string posRangeId) public {
+        //     areas[areaId].posRangeId = posRangeId;
+        // }
 
-            areasArray.push(uid);
-            areas[uid].uid = uid;
-            areas[uid].nickname = nickname;
-            areas[uid].description = description;
-            areas[uid].admin = _admin;
-            if (_startBidding >= _increaseAmount) {
-                areas[uid].highestBidding = _startBidding - _increaseAmount;
-            } else {
-                areas[uid].highestBidding = 0;
-            }
-            areas[uid].increaseAmount = _increaseAmount;
-            areas[uid].startTime = _startTime;
-            areas[uid].endTime = _endTime;
-            areas[uid].activeFlag = 1;
-            areas[uid].highestBidding = 0;
-            areas[uid].balance += msg.value;
-        }
-
-        function SetAreaPosRange(string areaId, string posRangeId) public {
-            areas[areaId].posRangeId = posRangeId;
-        }
-
-        function GetArea(string uid) public returns (Area) {
-            return areas[uid];
+        function GetArea(string uid) public view returns (string,string,address,string,uint256,uint256,uint256,uint256,uint256 ) {
+            Area area = areas[uid];
+            return (area.nickname, area.description, area.admin, area.posRangeId, area.balance, area.highestBidding, area.increaseAmount,area.startTime,area.endTime);
         }
 
         function AddMoneyToArea(string uid) public payable {
@@ -238,34 +234,17 @@
             areas[areaId].highBidId = _id;
         }
 
-        function RefundBid(string _id) public {
-            if (msg.sender != founder || msg.sender != admin) {
+        function RefundBid(string areaid) public {
+            if (msg.sender != founder && msg.sender != admin) {
                 revert();
             }
 
-            if (bids[_id].price > bids[_id].refund) {
-                bids[_id].bidder.transfer(bids[_id].price-bids[_id].refund);
-                bids[_id].refund = bids[_id].price;
+            Area area = areas[areaid];
+            if (area.admin != founder) {
+                area.admin.transfer(area.highestBidding);
             }
         }
 
-        function TriggerAreaAdmin(string areaId) public {
-            if (msg.sender != founder || msg.sender != admin) {
-                revert();
-            }
-
-            Bid winBid = bids[areas[areaId].highBidId];
-
-            areas[areaId].admin = winBid.bidder;
-            uint256 len = bidHistory[areaId].length;
-            string bidId;
-            for (uint i=0; i<len; i++) {
-                bidId = bidHistory[areaId][i];
-                if (keccak256(bidId) != keccak256(areas[areaId].highBidId)) {
-                    RefundBid(bidId);
-                }
-            }
-        }
 
         function AddGameNote(string gameId, string noteId) public {
             gameNotes[gameId].push(noteId);
@@ -396,7 +375,7 @@
         }
 
         function SetAdmin(address newAdmin) public returns (bool) {
-            if (msg.sender != founder || msg.sender != admin) revert();
+            if (msg.sender != founder) revert();
             admin = newAdmin;
             return true;
         }

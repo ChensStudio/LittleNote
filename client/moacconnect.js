@@ -1,8 +1,13 @@
-import {littleNoteContractAddr, littleNoteContractAbi, httpProvider} from '../imports/api/const';
+import {littleNoteContractAddr, littleNoteContractAbi, areaGameContractAddr,areaGameContractAbi,httpProvider} from '../imports/api/const';
 
 global.gContractAddress = littleNoteContractAddr; 
 global.gContractAbi = littleNoteContractAbi; 
 global.gContractInstance = null;
+
+
+global.gAreaGameContractAddress = areaGameContractAddr; 
+global.gAreaGameContractAbi = areaGameContractAbi; 
+global.gAreaGameContractInstance = null;
 
 export var InitChain3 = function() {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
@@ -17,6 +22,7 @@ export var InitChain3 = function() {
     // console.log("accounts", chain3js.mc.accounts);
 
     GetInstance();
+    GetAreaGameInstance();
     // moacSetupContract();
     // chain3js.mc.sendTransaction({
     //   from: chain3js.mc.accounts[0], 
@@ -50,6 +56,15 @@ export var GetInstance = function() {
   return gContractInstance;
 }
 
+export var GetAreaGameInstance = function() {
+  if (!gAreaGameContractInstance) {
+    var MyContract = chain3js.mc.contract(gAreaGameContractAbi);
+    gAreaGameContractInstance = MyContract.at(gAreaGameContractAddress);
+    return gAreaGameContractInstance;
+  }
+  return gAreaGameContractInstance;
+}
+
 var toStippedHex = function(input) {
   return chain3js.toHex(input).substr(2);
 }
@@ -76,6 +91,7 @@ export var AddUser = function(userName, userAddress, callback) {
 
 export var AddNote = function(inserts, callback) {
   console.log('to be add',inserts);
+  console.log('insert value is',inserts.value);
   var opt =  {
     from: chain3js.mc.accounts[0],
     gas: 5000000,
@@ -100,9 +116,31 @@ export var AddNote = function(inserts, callback) {
   )
 }
 
+export var AddBid = function(_id, _areaId, yourbid,callback){
+  var opt = {
+    from: chain3js.mc.accounts[0],
+    gas: 5000000,
+    value: yourbid*1e18,
+    gasPrice: 20000000000,
+  }
+
+  gAreaGameContractInstance.AddBid.sendTransaction(
+      _id, 
+      _areaId,
+      opt,
+      function (e,c) {
+      console.log('add bid',e, c);
+      if (callback) {
+        callback(e, c);
+      }
+    }
+  )
+}
+
+
 export var HelpAddNote = function(inserts, callback) {
   //TODO: add helper api to create notes for the user.
-
+  
   var opt =  {
     from: chain3js.mc.accounts[0],
     gas: 5000000,
@@ -138,6 +176,8 @@ export var GetNote = function(_id, callback) {
 export var GetJackpot = function(callback) {
   return gContractInstance.potReserve(callback);
 }
+
+
 
 var sendtx = function(src, tgtaddr, amount, strData, callback) {
 

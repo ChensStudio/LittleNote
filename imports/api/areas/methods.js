@@ -10,6 +10,9 @@ import { Areas,locationSchema,historySchema } from './areas.js';
 export const insertarea = new ValidatedMethod({
     name: 'areas.insert',
     validate: new SimpleSchema({
+        _id: {    //onchain
+            type: String,
+            },
         admin:{
             type: String,
         },

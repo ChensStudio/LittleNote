@@ -6,3 +6,8 @@ export const areaGameContractAbi = [{"constant":false,"inputs":[{"name":"gameId"
 
 export const founderAddr = '0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143';
 export const founderKey = '0xa1dcb8850e440b3bf184d8fca0e986410d834d83b96db726b8ea93a3fcac4291';
+
+// export const founderAddr = 'b970f1f71ab96f6f2556e404ed7681900303bf31';
+// export const founderKey = '18851e68e34f564e5b16f7a785e849792f672a8b1341186de8c0e84398eaabbb';
+
+

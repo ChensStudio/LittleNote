@@ -1,8 +1,8 @@
 import './chain3Init';
-import {contractAddr, contractAbi} from '../../api/const';
+import {littleNoteContractAddr, littleNoteContractAbi} from '../../api/const';
 
 export function initAccount(){
-    let contractInstance = chain3.mc.contract(contractAbi).at(contractAddr);
+    let contractInstance = chain3.mc.contract(littleNoteContractAbi).at(littleNoteContractAddr);
     let accountAddr = [];
     let accountData = [];
 

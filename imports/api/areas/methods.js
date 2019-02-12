@@ -44,8 +44,9 @@ export const insertarea = new ValidatedMethod({
             type:Date,
         }
     }).validator(),
-    run({admin,bounds,highestBidding,history,startTime,endTime}) {
+    run({_id,admin,bounds,highestBidding,history,startTime,endTime}) {
         const area={
+            _id:_id,
             admin: admin,
             bounds: bounds,
             highestBidding:highestBidding,

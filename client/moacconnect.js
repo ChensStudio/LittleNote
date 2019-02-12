@@ -117,6 +117,8 @@ export var AddNote = function(inserts, callback) {
 }
 
 export var AddBid = function(_id, _areaId, yourbid,callback){
+  console.log("bid price:",yourbid);
+  console.log("area id:",_areaId);
   var opt = {
     from: chain3js.mc.accounts[0],
     gas: 5000000,

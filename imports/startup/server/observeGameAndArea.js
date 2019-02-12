@@ -15,7 +15,7 @@ var founderInfo = {
   "key": founderKey
 };
 
-function callContractMethod(src, contractAddress, gasValue, inchainID, inByteCode,callback){
+function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){
     var txcount = chain3.mc.getTransactionCount(src["addr"],"pending");
     // console.log('gasvalue',gasValue);
     console.log("Get tx count", txcount)
@@ -27,7 +27,7 @@ function callContractMethod(src, contractAddress, gasValue, inchainID, inByteCod
       nonce: chain3.intToHex(txcount),
       gasPrice: chain3.intToHex(30000000000),
       gasLimit: chain3.intToHex(gasValue),
-      value: '0x', 
+      value: chain3.intToHex(MsgValue), 
       data: inByteCode,
       chainId: chain3.intToHex(inchainID)
     }
@@ -62,20 +62,18 @@ var AreaInsert = {
   highestBidding:5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*2)
+  endTime:new Date(new Date().getTime() + 1000*60*60)
 }
 
 var AddPosData = contractInstance.AddPosRange.getData(Pos_id,bound[0].lat,bound[0].lng,bound[1].lat,bound[1].lng);
-var AddAreaData = contractInstance.AddArea.getData(Area_id, "testArea","this is test area",founderAddr,5*1e18,0.5*1e18,new Date().getTime(),new Date().getTime() + 1000*60*2);
+var AddAreaData = contractInstance.AddArea.getData(Area_id, "testArea","this is test area",founderAddr,Pos_id,5*1e18,5*1e17,Math.round(AreaInsert.startTime.getTime()/1000), Math.round(AreaInsert.endTime.getTime()/1000));
 
    // let AddPosGasEstimate = chain3.mc.estimateGas({data: AddPosData});
-   
    let gasEstimate = 4000000;
 
-
-   callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,networkId,AddPosData,Meteor.bindEnvironment(function(e,r){
+   callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,AddPosData,Meteor.bindEnvironment(function(e,r){
     if(!e){
-      callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,networkId,AddAreaData,Meteor.bindEnvironment(function(e,r){
+      callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,10,networkId,AddAreaData,Meteor.bindEnvironment(function(e,r){
        if(!e){
         insertarea.call(AreaInsert);
       }
@@ -115,21 +113,9 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, "testArea","this is 
   Meteor.setInterval(()=>{ checkAreaStatus() },5000);
 
 
- // areas.observe({
- //  added: function(document){
- //   var toExpired = Meteor.setInterval(
- //  		()=>{ 
- //  			var toEnd = document.endTime - new Date();
- //  			console.log('areaBidding to end', toEnd)
- //  			if(toEnd <= 0){
- //  				console.log('bid',document,'expired')
- //  				Meteor.clearInterval(toExpired);
- //  				/**
- //  				Write into blockchain method
- //  				contractInstance.TriggerAreaAdmin(document._id);
- //  				*/
- //  			}
- //  		},
- //  		5000)
- //  }
- // })
+  Meteor.methods({
+  	RefundBid(areaid){
+  			var RefundBidData = contractInstance.RefundBid.getData(areaid);
+  			callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,RefundBidData);
+  	}
+  })

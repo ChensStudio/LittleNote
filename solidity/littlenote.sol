@@ -47,7 +47,6 @@
             string areaId;
             address bidder;
             uint256 price;
-            uint256 refund;
             uint256 updatedAt;
         }
 
@@ -79,13 +78,15 @@
 
         mapping (string => string[]) private bidHistory;
         mapping (string => Bid) private bids;
-        string[] public bidHistoryArray;
+        // address[] public trackRefund;
 
         mapping (string => Area) private areas;
         string[] public areasArray;
 
         mapping (string => PosRange) private posRanges;
         string[] public posRangesArray;
+
+
 
         function AreaGame(address _founder) public {
             founder = _founder;
@@ -109,6 +110,7 @@
             admin = newAdmin;
             return true;
         }
+
         function AddPosRange(
             string uid,
             uint256 lat0,
@@ -131,6 +133,7 @@
             string nickname, 
             string description, 
             address _admin, 
+            string posRangeId,
             uint256 startTime, 
             uint256 endTime, 
             string question) public payable {
@@ -149,21 +152,20 @@
             games[uid].description = description;
             games[uid].balance += msg.value;
             games[uid].admin = _admin;
+            games[uid].posRangeId = posRangeId;
             games[uid].startTime = startTime;
             games[uid].endTime = endTime;
             games[uid].enabled = enabled;
             games[uid].question = question;
             games[uid].admin = areas[parentAreaId].admin;
+            games[uid].activeFlag = 1;
             // games[uid].updatedAt = now;
         }
 
-        function SetGamePosRange(string gameId, string posRangeId) public {
-            games[gameId].posRangeId = posRangeId;
-        }
-
-        function ActivateGame(string uid, uint256 activeFlag) public {
-            games[uid].activeFlag = activeFlag;
-            games[uid].balance += msg.value;
+        function endGame(string gameid) public {
+            if(games[gameid].endTime < now){
+                games[gameid].activeFlag = 0;
+            }
         }
 
        function AddArea(
@@ -207,14 +209,19 @@
             areas[uid].balance += msg.value;
         }
 
-        function ActivateArea(string uid, uint256 activeFlag) public payable {
-            areas[uid].activeFlag = activeFlag;
-            areas[uid].balance += msg.value;
+        function endBid(string areaid) public {
+            if(areas[areaid].endTime < now){
+                areas[areaid].activeFlag = 0;
+            }
+        }
+
+         function getBidHistory(string areaid) public view returns(string[]) {
+            return bidHistory[areaid];
         }
 
         //When you add a big, the old bids can be refunded.
         function AddBid(string _id, string areaId) public payable {
-            if (areas[areaId].startTime == 0 || areas[areaId].startTime >= now || areas[areaId].endTime < now) {
+            if (areas[areaId].startTime == 0 || areas[areaId].startTime >= now || areas[areaId].endTime < now || areas[areaId].activeFlag == 0) {
                 revert();
             }
 
@@ -227,21 +234,21 @@
             bids[_id].areaId = areaId;
             bids[_id].bidder = msg.sender;
             bids[_id].price = msg.value;
-            bids[_id].refund = 0;
             bids[_id].updatedAt = now;
+            areas[areaId].admin=msg.sender;
             areas[areaId].highestBidding = msg.value;
             areas[areaId].balance += msg.value;
             areas[areaId].highBidId = _id;
         }
 
-        function RefundBid(string areaid) public {
+        function RefundBid(string areaid) public payable{
             if (msg.sender != founder && msg.sender != admin) {
                 revert();
             }
-
             Area area = areas[areaid];
             if (area.admin != founder) {
                 area.admin.transfer(area.highestBidding);
+                // trackRefund.push(area.admin);
             }
         }
 

@@ -128,6 +128,7 @@ Template.area.events({
  					}
  					else{
  					newBidding.call({areaId:areaid,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
+ 					Meteor.call("RefundBid",areaid);
  					}
  				})
  				

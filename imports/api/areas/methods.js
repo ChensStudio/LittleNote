@@ -75,7 +75,7 @@ export const newBidding = new ValidatedMethod({
         if(area.endTime - new Date() < 1000*60) {
             console.log('extend bidding time');
             console.log(area.endTime);
-
+            
             Areas.update(areaId,
                 {
                     $set:{
@@ -83,6 +83,7 @@ export const newBidding = new ValidatedMethod({
                     }
                 });
         }
+        Meteor.call("ExtendBidTime",area._id);
 
          Areas.update(areaId, {
             $set: { 

@@ -44,8 +44,6 @@ Meteor.subscribe('accounts', function(){
   monitorUserAddress();
 });
 
-
-
 var tooltip;
 var error_marker;
 // var chain3js;
@@ -82,6 +80,12 @@ var monitorUserAddress = function() {
     }
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
+        if (gSetGame == true){
+          gSetGame = false;
+          Template.map.exitSetGame();
+          Session.set("gAreaid","");
+        }
+        
         gUserName = '';
         Session.set('gUserAddress',chain3js.mc.accounts[0]);
         chain3js.mc.getBalance(chain3js.mc.accounts[0],function(e,r){
@@ -529,9 +533,12 @@ Template.map.rendered = function() {
           .openOn(map);
 
           $('#submitQuestion').click(function(){
+            let questionId = Random.id(17);
             let content = $('.notetobeposted').val();
             let gAreaid = Session.get("gAreaid");
+
             var question = {
+            _id:questionId,
             admin: chain3js.mc.accounts[0],
             areaid:gAreaid,
             latlng:lg,
@@ -541,16 +548,29 @@ Template.map.rendered = function() {
             endTime:new Date(new Date().getTime() + 1000*60*60)
            }
 
-          insertquestion.call(question);
+          MoacConnect.AddGame(
+            questionId, 
+            gAreaid,
+            chain3js.mc.accounts[0],
+            lg.lat,
+            lg.lng,
+            Math.round(question.startTime.getTime()/1000),
+            Math.round(question.endTime.getTime()/1000),
+            content,
+            function(e,r){
+              if(e){
+                alert('fail to write game to chain');
+              }
+              else{
+                insertquestion.call(question);
+              }
+            });
+          
           gSetGame = false;
-          $(".exiticon").css('visibility','hidden');
           Template.map.exitSetGame();
           Session.set("gAreaid","");
           map.closePopup();
-    
           });
-          
-          
         }
         else {
           alert("Please set game in your Area");
@@ -756,8 +776,6 @@ game.observe({
         }).on('mouseout',function(e){
           this.closePopup();
         });
-
-        
   }
 })
 };
@@ -814,12 +832,10 @@ Template.map.flyToBiddingArea = function(bounds){
     map.removeLayer(BidArea);
   }
    BidArea = L.rectangle(bound, {color: "black",weight: 0.2}).addTo(map);
-    
    BidArea.bringToBack();
    BidArea.on("mouseover",function(event){
      gInArea = true;
    });
-
 
    BidArea.on("mouseout",function(event){
      gInArea = false;

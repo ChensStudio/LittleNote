@@ -10,6 +10,9 @@ import { Questions,locationSchema,answersSchema } from './questions.js';
 export const insertquestion = new ValidatedMethod({
     name: 'questions.insert',
     validate: new SimpleSchema({
+        _id:{
+          type:String,
+        },
         admin:{
             type: String,
         },

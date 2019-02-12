@@ -116,28 +116,6 @@ export var AddNote = function(inserts, callback) {
   )
 }
 
-export var AddBid = function(_id, _areaId, yourbid,callback){
-  console.log("bid price:",yourbid);
-  console.log("area id:",_areaId);
-  var opt = {
-    from: chain3js.mc.accounts[0],
-    gas: 5000000,
-    value: yourbid*1e18,
-    gasPrice: 20000000000,
-  }
-
-  gAreaGameContractInstance.AddBid.sendTransaction(
-      _id, 
-      _areaId,
-      opt,
-      function (e,c) {
-      console.log('add bid',e, c);
-      if (callback) {
-        callback(e, c);
-      }
-    }
-  )
-}
 
 
 export var HelpAddNote = function(inserts, callback) {
@@ -166,6 +144,58 @@ export var HelpAddNote = function(inserts, callback) {
     }
   )
 }
+
+
+export var AddBid = function(_id, _areaId, yourbid,callback){
+  console.log("bid price:",yourbid);
+  console.log("area id:",_areaId);
+  var opt = {
+    from: chain3js.mc.accounts[0],
+    gas: 5000000,
+    value: yourbid*1e18,
+    gasPrice: 20000000000,
+  }
+
+  gAreaGameContractInstance.AddBid.sendTransaction(
+      _id, 
+      _areaId,
+      opt,
+      function (e,c) {
+      console.log('add bid',e, c);
+      if (callback) {
+        callback(e, c);
+      }
+    }
+  )
+}
+
+
+export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, question,callback){
+  var opt = {
+    from: chain3js.mc.accounts[0],
+    gas: 5000000,
+    gasPrice: 20000000000,
+  }
+
+  gAreaGameContractInstance.AddGame.sendTransaction(
+      _id, 
+      _areaId,
+      admin,
+      lat,
+      lng,
+      startTime,
+      endTime,
+      question,
+      opt,
+      function (e,c) {
+      console.log('add Game',e, c);
+      if (callback) {
+        callback(e, c);
+      }
+    }
+  )
+}
+
 
 export var GetAccount = function(userAddress, callback) {
   return gContractInstance.getAccount(userAddress, callback);

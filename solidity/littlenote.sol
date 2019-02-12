@@ -28,10 +28,6 @@
             uint256 balance;
             string highBidId;
             string posRangeId;
-
-            // uint256 startBidding;
-            // address adminCan;
-            // uint256 createdAt;
         }
 
         struct PosRange {
@@ -61,18 +57,28 @@
             uint256 endTime;
             uint256 enabled;
             string question;
+            string answerSet;
             address admin;
             
             uint256 proposing;
             uint256 activeFlag;
             uint256 updatedAt;
-            string posRangeId;
+            uint256 lat;
+            uint256 lng;
+        }
 
+        struct Answer {
+            string _id;
+            address participant;
+            string content;
         }
 
         mapping (string => Game) private games;
         mapping (string => string[]) private areaGames;
         string[] public gamesArray;
+
+        mapping (string => string[]) private answerSet; //area id => answer array id;
+        mapping (string => Answer) private answer; // answer array id => Answer object
 
         mapping (string => string[]) private gameNotes;
 
@@ -85,8 +91,6 @@
 
         mapping (string => PosRange) private posRanges;
         string[] public posRangesArray;
-
-
 
         function AreaGame(address _founder) public {
             founder = _founder;
@@ -116,8 +120,7 @@
             uint256 lat0,
             uint256 lng0,
             uint256 lat1,
-            uint256 lng1
-            ) public {
+            uint256 lng1) public {
             if (posRanges[uid].lat0 == 0) {
                 posRanges[uid].lat0 = lat0;
                 posRanges[uid].lng0 = lng0;
@@ -127,13 +130,17 @@
             }
         }
 
+        function getPosRange(string pos_id) public view returns(uint256,uint256,uint256,uint256) {
+            PosRange pos = posRanges[pos_id];
+            return (pos.lat0, pos.lng0, pos.lat1,pos.lng1);
+        }
+
         function AddGame(
             string uid, 
             string parentAreaId,
-            string nickname, 
-            string description, 
             address _admin, 
-            string posRangeId,
+            uint256 _lat,
+            uint256 _lng,
             uint256 startTime, 
             uint256 endTime, 
             string question) public payable {
@@ -145,14 +152,15 @@
                 enabled = 0;
             }
 
+            // require (parentAreaId].activeFlag == 0);
+            
             gamesArray.push(uid);
             games[uid]._id = uid;
             games[uid].parentAreaId = parentAreaId;
-            games[uid].nickname = nickname;
-            games[uid].description = description;
             games[uid].balance += msg.value;
             games[uid].admin = _admin;
-            games[uid].posRangeId = posRangeId;
+            games[uid].lat = _lat;
+            games[uid].lng = _lng;
             games[uid].startTime = startTime;
             games[uid].endTime = endTime;
             games[uid].enabled = enabled;
@@ -160,6 +168,25 @@
             games[uid].admin = areas[parentAreaId].admin;
             games[uid].activeFlag = 1;
             // games[uid].updatedAt = now;
+        }
+
+        function getGame(string gameid) public view returns(string,address,uint256,uint256,string){
+            Game game = games[gameid];
+            return (game.parentAreaId, game.admin, game.lat,game.lng, game.question);
+        }
+
+        function GetGame(string gameId) public returns (Game) {
+            return games[gameId];
+        }
+
+        function addAnswer(string _gameid, string _answerid, string _content) public {
+
+            require (games[_gameid].activeFlag == 1);
+            
+            answerSet[_gameid].push(_answerid);
+            answer[_answerid]._id = _answerid;
+            answer[_answerid].participant = msg.sender;
+            answer[_answerid].content = _content;
         }
 
         function endGame(string gameid) public {
@@ -200,9 +227,9 @@
         //     areas[areaId].posRangeId = posRangeId;
         // }
 
-        function GetArea(string uid) public view returns (string,string,address,string,uint256,uint256,uint256,uint256,uint256 ) {
+        function GetArea(string uid) public view returns (string,string,address,string,uint256,uint256,uint256,uint256,uint256,uint256 ) {
             Area area = areas[uid];
-            return (area.nickname, area.description, area.admin, area.posRangeId, area.balance, area.highestBidding, area.increaseAmount,area.startTime,area.endTime);
+            return (area.nickname, area.description, area.admin, area.posRangeId, area.balance, area.highestBidding, area.increaseAmount,area.startTime,area.endTime,area.activeFlag);
         }
 
         function AddMoneyToArea(string uid) public payable {
@@ -242,14 +269,26 @@
         }
 
         function RefundBid(string areaid) public payable{
+            require(areas[areaid].activeFlag == 1);
+
             if (msg.sender != founder && msg.sender != admin) {
                 revert();
             }
+
             Area area = areas[areaid];
             if (area.admin != founder) {
                 area.admin.transfer(area.highestBidding);
                 // trackRefund.push(area.admin);
             }
+        }
+
+        function ExtendBidTime(string areaid) public{
+            require(areas[areaid].activeFlag == 1);
+            if (msg.sender != founder && msg.sender != admin) {
+                revert();
+            }
+            Area area = areas[areaid];
+            area.endTime = area.endTime + 60;
         }
 
 
@@ -265,10 +304,6 @@
             return gameNotes[gameId].length;
         }
 
-        function GetGame(string gameId) public returns (Game) {
-            return games[gameId];
-        }
-
         function ManualTransfer(uint256 amount, address to) public payable {
             if (msg.sender != founder) revert();
 
@@ -280,9 +315,7 @@
 
             founder.transfer(amount);
         }
-
-        function () public payable {
-        }
+        
     }
 
     contract LittleNote {

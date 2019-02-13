@@ -69,6 +69,7 @@
 
         struct Answer {
             string _id;
+            string gameid;
             address participant;
             string content;
         }
@@ -79,6 +80,7 @@
 
         mapping (string => string[]) private answerSet; //area id => answer array id;
         mapping (string => Answer) private answer; // answer array id => Answer object
+
 
         mapping (string => string[]) private gameNotes;
 
@@ -91,6 +93,8 @@
 
         mapping (string => PosRange) private posRanges;
         string[] public posRangesArray;
+
+        mapping(string => mapping(address => bool)) hasAnswered;
 
         function AreaGame(address _founder) public {
             founder = _founder;
@@ -143,7 +147,7 @@
             uint256 _lng,
             uint256 startTime, 
             uint256 endTime, 
-            string question) public payable {
+            string question) public {
 
             uint256 proposing = 0;
             uint256 enabled = 1;
@@ -152,7 +156,7 @@
                 enabled = 0;
             }
 
-            // require (parentAreaId].activeFlag == 0);
+            require (games[parentAreaId].activeFlag == 0);
             
             gamesArray.push(uid);
             games[uid]._id = uid;
@@ -170,9 +174,9 @@
             // games[uid].updatedAt = now;
         }
 
-        function getGame(string gameid) public view returns(string,address,uint256,uint256,string){
+        function getGame(string gameid) public view returns(string,address,uint256,uint256,string,uint256){
             Game game = games[gameid];
-            return (game.parentAreaId, game.admin, game.lat,game.lng, game.question);
+            return (game.parentAreaId, game.admin, game.lat,game.lng, game.question,game.activeFlag);
         }
 
         function GetGame(string gameId) public returns (Game) {
@@ -182,11 +186,26 @@
         function addAnswer(string _gameid, string _answerid, string _content) public {
 
             require (games[_gameid].activeFlag == 1);
-            
+            require (!hasAnswered[_gameid][msg.sender]);
+            hasAnswered[_gameid][msg.sender] = true;
             answerSet[_gameid].push(_answerid);
             answer[_answerid]._id = _answerid;
+            answer[_answerid].gameid = _gameid;
             answer[_answerid].participant = msg.sender;
             answer[_answerid].content = _content;
+        }
+
+        function answersForQuestion (string _gameid) public view returns(string[]){
+           return answerSet[_gameid];
+        }
+
+        function showAnswer (string _answerid) public view returns(string, string, address, string){
+            Answer awr = answer[_answerid];
+            return (awr._id, awr.gameid, awr.participant, awr.content);
+        }
+
+        function ifAnswered (string _gameid, address participant) public view returns (bool){
+            return hasAnswered[_gameid][participant];
         }
 
         function endGame(string gameid) public {

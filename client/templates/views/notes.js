@@ -6,8 +6,6 @@ import MoacConnect from '../../moacconnect.js';
 import { type } from 'os';
 // import '../../client.js';
 
-var myContract;
-
 var notesLoaded = false;
 var accountsLoaded = false;
 var hide = false;
@@ -211,11 +209,6 @@ Template.note.helpers({
 });
 
 Template.note.events({
-    // 'click .forsell': function(e) {
-    //     myContract = $(e.target).data('contract');
-    //     // myContract = e.target.dataset.contract;
-    //     Modal.show('qrModal');
-    // },
     'click .notecoordinates': function(e) {
         var lat = parseFloat($(e.target).data('lat'));
         var lng = parseFloat($(e.target).data('lng'));
@@ -240,7 +233,6 @@ Template.note.events({
     //     console.log('click .notecontainer', lat, lng, noteid);
     //     Template.map.move(lat, lng, noteid);
     // }
-
  });
 
 Template.header.onCreated(function(){

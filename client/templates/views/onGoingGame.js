@@ -2,8 +2,9 @@ import './notes.js'
 import {Questions} from  '../../../imports/api/questions/questions.js'
 import {latestAnswer, insertquestion} from '../../../imports/api/questions/methods.js';
 import {countDownFormat} from '../../utils.js';
-import {Areas} from  '../../../imports/api/areas/areas.js'
-
+import {Areas} from  '../../../imports/api/areas/areas.js';
+import MoacConnect from '../../moacconnect.js';
+import { Random } from 'meteor/random';
 
 var getCountDown = function(countdown,endTime){
 		if (endTime > new Date()){
@@ -60,7 +61,6 @@ Template.answerModal.onCreated(function(){
 	console.log(this);
 })
 
-
 Template.answerModal.helpers({
 	'totalAnswers'(){
 		return Questions.findOne({_id:this.questionId}).answers.length;
@@ -103,6 +103,8 @@ Template.answerModal.helpers({
 Template.answerModal.events({
 	'click #submitAnswer'(){
 		var content = $('#answerArea').val();
+		var answerId = Random.id(17);
+		console.log("answerId", answerId);
 
 		var answers = {
             questionId : this.questionId,
@@ -111,6 +113,14 @@ Template.answerModal.events({
                 content: content
             }
           }
-          latestAnswer.call(answers);
+
+		MoacConnect.addAnswer(this.questionId,answerId,content,function(e,r){
+			if(e){
+				alert('write answer to chain error!');
+			}
+			else{
+				latestAnswer.call(answers);
+			}
+		})  
 	}
 })

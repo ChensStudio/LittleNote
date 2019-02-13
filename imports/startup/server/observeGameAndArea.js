@@ -61,38 +61,36 @@ var AreaInsert = {
   highestBidding:5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*10)
+  endTime:new Date(new Date().getTime() + 1000*60*4)
 }
 
-var AddPosData = contractInstance.AddPosRange.getData(Pos_id,bound[0].lat,bound[0].lng,bound[1].lat,bound[1].lng);
+var AddPosData = contractInstance.AddPosRange.getData(Pos_id,bound[0].lat*1e15,bound[0].lng*1e15,bound[1].lat*1e15,bound[1].lng*1e15);
 var AddAreaData = contractInstance.AddArea.getData(Area_id, "testArea","this is test area",founderAddr,Pos_id,5*1e18,5*1e17,Math.round(AreaInsert.startTime.getTime()/1000), Math.round(AreaInsert.endTime.getTime()/1000));
 
    // let AddPosGasEstimate = chain3.mc.estimateGas({data: AddPosData});
    let gasEstimate = 4000000;
    callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,AddPosData);
   
-    Meteor.setTimeout(
-           function(){
-      callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,10,networkId,AddAreaData,Meteor.bindEnvironment(function(e,r){
-       if(!e){
-        // console.log("TransactionHash ",r);
-        // chain3.mc.getTransaction(r,function(e,r){
-        //         console.log('transaction index',r.transactionIndex);
-        //  })  
-         // Meteor.setTimeout(
-         //   function(){
-                insertarea.call(AreaInsert);
-          // },1000*60);
-      }
-    }))},10000);
-   
-
+  Meteor.setTimeout(
+    function(){
+     callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,10,networkId,AddAreaData,Meteor.bindEnvironment(function(e,r){
+      if(!e){
+      // console.log("TransactionHash ",r);
+      // chain3.mc.getTransaction(r,function(e,r){
+      //         console.log('transaction index',r.transactionIndex);
+      //  })  
+       Meteor.setTimeout(
+         function(){
+              insertarea.call(AreaInsert);
+        },20000);
+    }
+  }))},10000);
 
   var checkAreaStatus = function(){
     var areas = Areas.find({endTime:{$gte: new Date()}}).fetch();
     _.each(areas, (area)=>{
       var toEnd = area.endTime - new Date();
-      if (toEnd > 5) {
+      if (toEnd > 5000) {
         console.log('bid to expired',toEnd);
       }
       else{

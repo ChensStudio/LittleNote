@@ -4,7 +4,6 @@ global.gContractAddress = littleNoteContractAddr;
 global.gContractAbi = littleNoteContractAbi; 
 global.gContractInstance = null;
 
-
 global.gAreaGameContractAddress = areaGameContractAddr; 
 global.gAreaGameContractAbi = areaGameContractAbi; 
 global.gAreaGameContractInstance = null;
@@ -100,8 +99,8 @@ export var AddNote = function(inserts, callback) {
   };
   gContractInstance.AddNote.sendTransaction(
     inserts.noteText,
-    inserts.lat,
-    inserts.lng,
+    inserts.lat*1e15,
+    inserts.lng*1e15,
     inserts._id,
     inserts.forSell,
     inserts.referral,
@@ -116,11 +115,8 @@ export var AddNote = function(inserts, callback) {
   )
 }
 
-
-
 export var HelpAddNote = function(inserts, callback) {
   //TODO: add helper api to create notes for the user.
-  
   var opt =  {
     from: chain3js.mc.accounts[0],
     gas: 5000000,
@@ -145,7 +141,6 @@ export var HelpAddNote = function(inserts, callback) {
   )
 }
 
-
 export var AddBid = function(_id, _areaId, yourbid,callback){
   console.log("bid price:",yourbid);
   console.log("area id:",_areaId);
@@ -169,7 +164,6 @@ export var AddBid = function(_id, _areaId, yourbid,callback){
   )
 }
 
-
 export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, question,callback){
   var opt = {
     from: chain3js.mc.accounts[0],
@@ -181,14 +175,14 @@ export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, 
       _id, 
       _areaId,
       admin,
-      lat,
-      lng,
+      lat*1e15,
+      lng*1e15,
       startTime,
       endTime,
       question,
       opt,
       function (e,c) {
-      console.log('add Game',e, c);
+      console.log('Add Game',e, c);
       if (callback) {
         callback(e, c);
       }
@@ -196,6 +190,26 @@ export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, 
   )
 }
 
+export var addAnswer = function(_gameid, _answerid, content,callback){
+  var opt = {
+      from: chain3js.mc.accounts[0],
+      gas: 5000000,
+      gasPrice: 20000000000,
+    }
+
+    gAreaGameContractInstance.addAnswer.sendTransaction(
+      _gameid, 
+      _answerid,
+      content,
+      opt,
+      function (e,c) {
+      console.log('Add Answer',e, c);
+      if (callback) {
+        callback(e, c);
+      }
+    }
+  )
+}
 
 export var GetAccount = function(userAddress, callback) {
   return gContractInstance.getAccount(userAddress, callback);
@@ -209,10 +223,7 @@ export var GetJackpot = function(callback) {
   return gContractInstance.potReserve(callback);
 }
 
-
-
 var sendtx = function(src, tgtaddr, amount, strData, callback) {
-
   chain3js.mc.sendTransaction(
     {
       from: src,
@@ -224,7 +235,6 @@ var sendtx = function(src, tgtaddr, amount, strData, callback) {
     },
     callback);
   console.log('sending from:' +   src + ' to:' + tgtaddr  + ' with data:' + strData);
-
 }
 
 

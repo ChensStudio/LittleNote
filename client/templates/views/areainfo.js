@@ -121,14 +121,17 @@ Template.area.events({
  			}
  			else{
  				var bid_id = Random.id(17);
+ 				var currentAdmin = this.admin;
+ 				console.log('currentAdmin',currentAdmin);
  				MoacConnect.AddBid(bid_id, areaid,yourbid,function(e,r){
  					if(e){
  						console.log("bid error");
  						return;
  					}
  					else{
- 					Meteor.call("RefundBid",areaid);
+ 					Meteor.call("RefundBid",areaid,currentAdmin);
  					newBidding.call({areaId:areaid,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
+
  					}
  				})
  				

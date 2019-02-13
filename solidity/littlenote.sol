@@ -287,16 +287,15 @@
             areas[areaId].highBidId = _id;
         }
 
-        function RefundBid(string areaid) public payable{
+        function RefundBid(string areaid,address _admin) public payable{
             require(areas[areaid].activeFlag == 1);
 
             if (msg.sender != founder && msg.sender != admin) {
                 revert();
             }
 
-            Area area = areas[areaid];
-            if (area.admin != founder) {
-                area.admin.transfer(area.highestBidding);
+            if (_admin != founder) {
+                _admin.transfer(areas[areaid].highestBidding);
                 // trackRefund.push(area.admin);
             }
         }

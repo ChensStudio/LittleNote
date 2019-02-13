@@ -120,8 +120,8 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, "testArea","this is 
   Meteor.setInterval(()=>{ checkAreaStatus() },5000);
 
   Meteor.methods({
-  	RefundBid(areaid){
-  			var RefundBidData = contractInstance.RefundBid.getData(areaid);
+  	RefundBid(areaid,admin){
+  			var RefundBidData = contractInstance.RefundBid.getData(areaid,admin);
   			callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,RefundBidData);
   	},
     ExtendBidTime(areaid){

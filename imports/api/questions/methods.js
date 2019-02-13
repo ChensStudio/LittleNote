@@ -43,8 +43,9 @@ export const insertquestion = new ValidatedMethod({
             type:Date,
         }
     }).validator(),
-    run({admin,areaid,latlng,noteText,answers,startTime,endTime}) {
+    run({_id,admin,areaid,latlng,noteText,answers,startTime,endTime}) {
         const question={
+            _id:_id,
             admin: admin,
             areaid:areaid,
             latlng:latlng,

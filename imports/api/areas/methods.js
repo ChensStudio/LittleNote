@@ -82,9 +82,11 @@ export const newBidding = new ValidatedMethod({
                         endTime: new Date(area.endTime.getTime() + 1000*60)
                     }
                 });
+            
+             Meteor.call("ExtendBidTime",area._id);
         }
-        Meteor.call("ExtendBidTime",area._id);
 
+            
          Areas.update(areaId, {
             $set: { 
                 admin:bidder,

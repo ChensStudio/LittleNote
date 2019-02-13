@@ -105,7 +105,8 @@ Template.answerModal.events({
 		var content = $('#answerArea').val();
 		var answerId = Random.id(17);
 		console.log("answerId", answerId);
-
+        console.log("gameID", this.questionId);
+        
 		var answers = {
             questionId : this.questionId,
              newAnswer: {

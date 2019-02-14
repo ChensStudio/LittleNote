@@ -122,6 +122,6 @@ export function initGame(){
     console.log("run init game");
      let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
      var arr = [];
-     arr = contractInstance.getBidHistory("XgskZPizujr9xPMgn");
+     arr = contractInstance.getBidHistory("YdZFXWJEuLT5vkfuS");
      console.log(arr);
 };

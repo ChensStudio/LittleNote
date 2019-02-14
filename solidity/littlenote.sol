@@ -11,6 +11,7 @@
         bool public haltFlag;
         address public founder;
         address public admin;
+        // string[] private tmp;
 
         struct Area {
             string uid;
@@ -246,7 +247,7 @@
         //     areas[areaId].posRangeId = posRangeId;
         // }
 
-        function GetArea(string uid) public view returns (string,string,string,address,string,uint256,uint256,uint256,uint256,uint256,uint256 ) {
+        function GetArea(string uid) public view returns (string,string,address,string,uint256,uint256,uint256,uint256,uint256,uint256 ) {
             Area area = areas[uid];
             return (area.nickname, area.description, area.admin, area.posRangeId, area.balance, area.highestBidding, area.increaseAmount,area.startTime,area.endTime,area.activeFlag);
         }
@@ -258,11 +259,17 @@
         function endBid(string areaid) public {
             if(areas[areaid].endTime < now){
                 areas[areaid].activeFlag = 0;
+                bidHistory[areaid].push("endMark");
             }
         }
 
          function getBidHistory(string areaid) public view returns(string[]) {
             return bidHistory[areaid];
+        }
+
+        function getBid(string bidId) public view returns(string,string,address,uint256){
+            Bid bd = bids[bidId];
+            return(bd._id, bd.areaId, bd.bidder, bd.price);
         }
 
         //When you add a big, the old bids can be refunded.
@@ -274,6 +281,10 @@
             if (areas[areaId].highestBidding + areas[areaId].increaseAmount > msg.value) {
                 revert();
             }
+
+            // if(!bidHistory[areaId]) {
+            //     bidHistory[areaId] = tmp;
+            // }
 
             bidHistory[areaId].push(_id);
             bids[_id]._id = _id;

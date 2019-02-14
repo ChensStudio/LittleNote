@@ -66,6 +66,7 @@ export const newBidding = new ValidatedMethod({
     name: 'areas.newBidding',
     validate: new SimpleSchema({
         areaId: Areas.simpleSchema().schema('_id'),
+        bidId:{type:String},
         newBidding: Areas.simpleSchema().schema('highestBidding'),
         bidder:Areas.simpleSchema().schema('admin'),
     }).validator({ clean: true, filter: false }),

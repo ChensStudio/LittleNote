@@ -246,7 +246,7 @@
         //     areas[areaId].posRangeId = posRangeId;
         // }
 
-        function GetArea(string uid) public view returns (string,string,address,string,uint256,uint256,uint256,uint256,uint256,uint256 ) {
+        function GetArea(string uid) public view returns (string,string,string,address,string,uint256,uint256,uint256,uint256,uint256,uint256 ) {
             Area area = areas[uid];
             return (area.nickname, area.description, area.admin, area.posRangeId, area.balance, area.highestBidding, area.increaseAmount,area.startTime,area.endTime,area.activeFlag);
         }
@@ -308,7 +308,7 @@
             Area area = areas[areaid];
             area.endTime = area.endTime + 60;
         }
-
+ 
 
         function AddGameNote(string gameId, string noteId) public {
             gameNotes[gameId].push(noteId);

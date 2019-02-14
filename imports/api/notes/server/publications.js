@@ -21,7 +21,7 @@ Meteor.publishComposite('notesWithAccountName', function notes() {
         },
         children: [{
             find: function(account) {
-            console.log("Children: Get log account.address :", account.address);
+            // console.log("Children: Get log account.address :", account.address);
             return Accounts.find({"address": account.address}, {
                 fields: Accounts.publicFields,
             });

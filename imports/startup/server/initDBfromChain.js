@@ -1,5 +1,5 @@
 import './chain3Init';
-import {littleNoteContractAddr, littleNoteContractAbi} from '../../api/const';
+import {littleNoteContractAddr, littleNoteContractAbi,areaGameContractAddr,areaGameContractAbi} from '../../api/const';
 
 export function initAccount(){
     let contractInstance = chain3.mc.contract(littleNoteContractAbi).at(littleNoteContractAddr);
@@ -77,4 +77,51 @@ export function initNote(){
 
     // console.log('noteData',noteData);
     return noteData;
+};
+
+export function initArea(){
+    let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
+    var areaIDs =[];
+    var areaObjects = [];
+
+     if(contractInstance){
+        for(let i = 0; ; i++){
+            try{
+                var areaId = contractInstance.areasArray(i);
+
+                if(addr != '0x')
+                    areaIDs.push(areaID);
+                else
+                    break;
+            }   
+            catch(e){
+                break;
+            } 
+        }
+
+        console.log('area id array', areaIDs);
+
+         for(let i=0; i<areaIDs.length; i++){
+            let item = contractInstance.GetArea(areaIDs[i]);
+            let history =[];
+
+            areaObjects.push({
+                 _id:Area_id,
+                 admin:founderAddr,
+                 bounds:bound,
+                 highestBidding:5,
+                 history:[],
+                 startTime:new Date(),
+                 endTime:new Date()
+            });
+        }
+};
+}
+
+export function initGame(){
+    console.log("run init game");
+     let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
+     var arr = [];
+     arr = contractInstance.getBidHistory("XgskZPizujr9xPMgn");
+     console.log(arr);
 };

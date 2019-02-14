@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import {initAccount, initNote} from './initDBfromChain';
+import {initAccount, initNote,initGame} from './initDBfromChain';
 import { Notes } from '../../api/notes/notes.js';
 import { Accounts } from '../../api/accounts/accounts.js';
 import {Areas} from  '../../api/areas/areas.js'
@@ -12,6 +12,7 @@ Meteor.startup(() => {
 
   import './observeGameAndArea.js'
   
+  initGame();
   if (Accounts.find().count() === 0) {
     var timestamp = (new Date()).getTime();
     let accountsData = initAccount();

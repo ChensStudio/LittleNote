@@ -69,7 +69,7 @@ export const newBidding = new ValidatedMethod({
         newBidding: Areas.simpleSchema().schema('highestBidding'),
         bidder:Areas.simpleSchema().schema('admin'),
     }).validator({ clean: true, filter: false }),
-    run({ areaId, newBidding, bidder }) {
+    run({ areaId, bidId, newBidding, bidder }) {
         const area = Areas.findOne(areaId);
         var updateDate = new Date();
         if(area.endTime - new Date() < 1000*60) {
@@ -95,7 +95,7 @@ export const newBidding = new ValidatedMethod({
                 },
             $push: {
                  history:{
-                        _id:areaId,
+                        _id:bidId,
                         bidder: bidder,
                         price:newBidding,
                         updatedAt:updateDate

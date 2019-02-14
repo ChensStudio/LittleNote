@@ -84,8 +84,8 @@
 
         mapping (string => string[]) private gameNotes;
 
-        mapping (string => string[]) private bidHistory;
-        mapping (string => Bid) private bids;
+        mapping (string => string[]) private bidHistory; //['','id'] bidhistroy['id'].push('xid')
+        mapping (string => Bid) private bids;         //'c' => Bid
         // address[] public trackRefund;
 
         mapping (string => Area) private areas;
@@ -147,7 +147,7 @@
             uint256 _lng,
             uint256 startTime, 
             uint256 endTime, 
-            string question) public {
+            string question) public payable{
 
             uint256 proposing = 0;
             uint256 enabled = 1;
@@ -500,8 +500,6 @@
                 }
             }
         }
-
-
 
 
         function AddAccount(string userName, address userAddress) public returns (bool) {

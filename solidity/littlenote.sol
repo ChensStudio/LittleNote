@@ -53,7 +53,7 @@
             string nickname;
             string description;
             uint256 balance;
-            uint256 chargeAnswer;
+            // uint256 chargeAnswer;
 
             uint256 startTime;
             uint256 endTime;
@@ -68,7 +68,7 @@
             uint256 lat;
             uint256 lng;
 
-            bool distributed = false;
+            bool distributed;
         }
 
         struct Answer {
@@ -165,7 +165,6 @@
             gamesArray.push(uid);
             games[uid]._id = uid;
             games[uid].parentAreaId = parentAreaId;
-            games[uid].balance += msg.value;
             games[uid].admin = _admin;
             games[uid].lat = _lat;
             games[uid].lng = _lng;
@@ -175,12 +174,18 @@
             games[uid].question = question;
             games[uid].admin = areas[parentAreaId].admin;
             games[uid].activeFlag = 1;
+            games[uid].distributed = false;
             // games[uid].updatedAt = now;
+            uint256 myBalance = areas[parentAreaId].balance;
+            games[uid].balance += msg.value;
+            games[uid].balance += myBalance;
+            areas[parentAreaId].balance -= myBalance;
+            
         }
 
-        function getGame(string gameid) public view returns(string,address,uint256,uint256,string,uint256){
+        function getGame(string gameid) public view returns(string,address,uint256,uint256,string,uint256,bool){
             Game game = games[gameid];
-            return (game.parentAreaId, game.admin, game.lat,game.lng, game.question,game.activeFlag);
+            return (game.parentAreaId, game.admin, game.lat,game.lng, game.question,game.activeFlag,game.distributed);
         }
 
         function GetGame(string gameId) public returns (Game) {
@@ -197,9 +202,17 @@
             answer[_answerid].gameid = _gameid;
             answer[_answerid].participant = msg.sender;
             answer[_answerid].content = _content;
+
+            games[_gameid].balance+=msg.value;
         }
 
+        function getGameBalance(string _gameid) public view returns(uint256){
+            return games[_gameid].balance;
+        }
 
+        function getAreaBalance(string _areaid) public view returns(uint256){
+            return areas[_areaid].balance;
+        }
 
         function answersForQuestion (string _gameid) public view returns(string[]){
            return answerSet[_gameid];
@@ -230,32 +243,34 @@
             address winner5
             ) public payable {
 
-            require(games[_gameid].activeFlag == 0);
+            require(games[_gameid].activeFlag == 0 && !games[_gameid].distributed);
 
             uint256 balance = games[_gameid].balance;
             if (winner1 != address(0)){
-                winner1.transfer(balance*0.5);
-                balance -= balance*0.5;
+                winner1.transfer(balance/2);
+                balance -= balance/2;
             }
             if (winner2 != address(0)){
-                winner1.transfer(balance*0.25);
-                 balance -= balance*0.25;
+                winner1.transfer(balance/4);
+                 balance -= balance/4;
             }
             if (winner3 != address(0)){
-                winner1.transfer(balance*0.125);
-                 balance -= balance*0.125;
+                winner1.transfer(balance/8);
+                 balance -= balance/8;
             }
             if (winner4 != address(0)){
-                winner1.transfer(balance*0.0625);
-                 balance -= balance*0.0625;
+                winner1.transfer(balance/16);
+                 balance -= balance/16;
             }
             if (winner5 != address(0)){
-                winner1.transfer(balance*0.03125);
-                balance -= balance*0.03125;
+                winner1.transfer(balance/32);
+                balance -= balance/32;
             }
 
-            games[_gameid].balance -= balance;
+            games[_gameid].balance = 0;
             areas[_areaid].balance += balance;
+
+            games[_gameid].distributed = true;
 
         }
 
@@ -349,9 +364,10 @@
                 revert();
             }
 
+            uint256 refundAmount = areas[areaid].highestBidding;
             if (_admin != founder) {
-                _admin.transfer(areas[areaid].highestBidding);
-                areas[areaid]-=areas[areaid].highestBidding;
+                 areas[areaid].balance -= refundAmount;
+                _admin.transfer(refundAmount);
                 // trackRefund.push(area.admin);
             }
         }

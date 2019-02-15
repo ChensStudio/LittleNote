@@ -193,6 +193,7 @@ export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, 
 export var addAnswer = function(_gameid, _answerid, content,callback){
   var opt = {
       from: chain3js.mc.accounts[0],
+      value:1e17,
       gas: 5000000,
       gasPrice: 20000000000,
     }
@@ -211,6 +212,30 @@ export var addAnswer = function(_gameid, _answerid, content,callback){
   )
 }
 
+export var distributeForGame = function(_gameid,_areaId,winner1,winner2,winner3,winner4,winner5,callback){
+    var opt = {
+      from: chain3js.mc.accounts[0],
+      gas: 5000000,
+      gasPrice: 20000000000,  
+    }
+    gAreaGameContractInstance.distributeForGame.sendTransaction(
+      _gameid,
+      _areaId,
+      winner1,
+      winner2,
+      winner3,
+      winner4,
+      winner5,
+      opt,
+      function (e,c) {
+      console.log('Distribute Reward',e, c);
+      if (callback) {
+        callback(e, c);
+      }
+    }
+  )
+}
+
 export var GetAccount = function(userAddress, callback) {
   return gContractInstance.getAccount(userAddress, callback);
 }
@@ -221,6 +246,14 @@ export var GetNote = function(_id, callback) {
 
 export var GetJackpot = function(callback) {
   return gContractInstance.potReserve(callback);
+}
+
+export var getGameBalance = function(_gameId) {
+  return gAreaGameContractInstance.getGameBalance(_gameId);
+}
+
+export var getAreaBalance = function(_areaId) {
+  return gAreaGameContractInstance.getAreaBalance(_areaId);
 }
 
 var sendtx = function(src, tgtaddr, amount, strData, callback) {

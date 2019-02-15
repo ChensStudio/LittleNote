@@ -58,12 +58,17 @@
                     <span style="color: grey; font-style: italic;font-size: 12px">{{totalAnswers}} Answers</span>
                     {{#if expired}}
                         {{#if isadmin}}
-                            <span class="distribute" style="color:white" >Distrubute</span>
-                          {{else}}
-                            <span class="modal-countdown" style="background-color: red">Expired</span>
+                            {{#unless isDistributed}}
+                                <span class="distribute">Distrubute</span>
+                            {{else}}
+                                <span class="distributed" >Distrubuted</span>
+                            {{/unless}}
+                        {{else}}
+                        <span class="modal-countdown" style="background-color: red">Expired</span>
                         {{/if}}
                     {{else}}
-                             <span class="modal-countdown" style="background-color: white">{{countdown}}</span>
+                            <span class="modal-countdown" style="background-color: white">{{countdown}}
+                            </span>
                     {{/if}}
                      </div>                      
                 </div>
@@ -71,7 +76,7 @@
                 <div class="modal-body" style="background-color: #EBEBEB">
                     {{#if isadmin}}
                         {{#if totalAnswers}}
-                            {{#each answers}}
+                            {{#each answers }}
                                 {{> toDistribute}}
                              {{/each}}
                         {{else}}
@@ -140,7 +145,9 @@
 <template name="toDistribute">
     <div class="answerList">
         <div class="bidderaddress" style="font-size: 10px; display: flex;">
+        {{#unless ../distributed}}
             <input type="checkbox" class="prizeWinner" id={{address}}>
+        {{/unless}}    
             <span style="margin-top: 4px;margin-left: 4px;">{{address}}</span>
         </div>
          {{{distributeRate}}}

@@ -84,4 +84,21 @@ export const latestAnswer = new ValidatedMethod({
   },
 });
 
+export const updateDistributeStatus = new ValidatedMethod({
+    name: 'questions.updateDistributeStatus',
+    validate: new SimpleSchema({
+        questionId: {type: String}
+    }).validator({ clean: true, filter: false }),
+    run({ questionId }) {
+        const question = Questions.findOne(questionId);
+
+        Questions.update(questionId, {
+            $set: {
+                distributed: true
+            }
+    });
+
+  },
+});
+
 

@@ -545,7 +545,7 @@ Template.map.rendered = function() {
             noteText:content,
             answers:[],
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*5)
+            endTime:new Date(new Date().getTime() + 1000*60*4)
            }
 
           MoacConnect.AddGame(
@@ -742,20 +742,20 @@ Template.map.rendered = function() {
 var game = games.find();
 game.observe({
   added: function(document){
-    
+    console.log(document);  
     var myIcon = L.icon({
         iconUrl:'question.png',
         iconSize: [15, 15],
         })
 
-    circle_drop = L.circle(document.latlng,
+      circle_drop = L.circle(document.latlng,
            {color:'#13EDDB',
             fillColor:'#13EDDB',
             fillOpacity:0.5,
             weight:0.1,
             radius:rad}).addTo(map);
 
- circle_drop.on('mouseover',function(event){
+      circle_drop.on('mouseover',function(event){
         overlap = true;
       })      
 
@@ -770,7 +770,8 @@ game.observe({
             question:document.noteText,
             questionId:document._id, 
             areaid:document.areaid,
-            address: chain3js.mc.accounts[0]
+            address: chain3js.mc.accounts[0],
+            distributed:document.distributed
           }); 
         }).on('mouseover',function(e){
           this.openPopup();

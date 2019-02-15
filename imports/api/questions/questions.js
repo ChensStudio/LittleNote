@@ -83,6 +83,10 @@ Questions.schema = new SimpleSchema({
   endTime:{
     type:Date,
   },
+  distributed:{
+    type:Boolean,
+    defaultValue:false
+  },
   createdAt: { 
     type: Date,
     defaultValue:new Date()
@@ -106,7 +110,8 @@ Questions.publicFields = {
     latlng:1,
     noteText:1,
     answers:1,
-    endTime: 1
+    endTime: 1,
+    distributed:1
 };
 
 

@@ -1,6 +1,6 @@
 import './notes.js'
 import {Questions} from  '../../../imports/api/questions/questions.js'
-import {latestAnswer, insertquestion} from '../../../imports/api/questions/methods.js';
+import {latestAnswer, insertquestion, updateDistributeStatus} from '../../../imports/api/questions/methods.js';
 import {countDownFormat} from '../../utils.js';
 import {Areas} from  '../../../imports/api/areas/areas.js';
 import MoacConnect from '../../moacconnect.js';
@@ -64,6 +64,8 @@ var distributeLimit = 5;
 
 Template.answerModal.onCreated(function(){
 	console.log('create answerModal');
+	console.log(this);
+	TemplateVar.set("distributeStatus",this.distributed);
 	distributes =[];
 })
 
@@ -103,8 +105,10 @@ Template.answerModal.helpers({
 		var countdown = question._id;
 		getCountDown(countdown,question.endTime);
 		return Session.get(countdown);
+	},
+	"isDistributed"(){
+		return this.distributed;
 	}
-	
 })
 
 Template.answerModal.events({
@@ -133,14 +137,31 @@ Template.answerModal.events({
 	},
 	
 	"click .distribute"(){
-		// MoacConnect.distributeForGame(
-		// this.questionId,this.areaid,distributes[0],distributes[1],distributes[2],distributes[3],distributes[4]
-		// );
+		var questionId = this.questionId;
+		MoacConnect.distributeForGame(
+		questionId,
+		this.areaid,
+		distributes[0],
+		null,
+		null,
+		null,
+		null,
+		function(e,r){
+			if(e){
+				alert("error occurred when distribute reward");
+			}
+			else{
+				console.log("distriubte for question:",questionId);
+				updateDistributeStatus.call({questionId:questionId});
+			}
+		}
+		);
 	}
 })
 
 Template.toDistribute.onCreated(function(){
 	Session.set('winners',[]);
+	console.log('answer',this);
 })
 
 Template.toDistribute.events({

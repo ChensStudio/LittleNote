@@ -6,6 +6,8 @@ import {Areas} from  '../../../imports/api/areas/areas.js';
 import MoacConnect from '../../moacconnect.js';
 import { Random } from 'meteor/random';
 
+
+
 var getCountDown = function(countdown,endTime){
 		if (endTime > new Date()){
 		 	Meteor.setTimeout(()=>{Session.set(countdown,countDownFormat(endTime))},1000);
@@ -57,8 +59,12 @@ Template.game.events({
 	}
 })
 
+var distributes =[];
+var distributeLimit = 5;
+
 Template.answerModal.onCreated(function(){
-	console.log(this);
+	console.log('create answerModal');
+	distributes =[];
 })
 
 Template.answerModal.helpers({
@@ -98,6 +104,7 @@ Template.answerModal.helpers({
 		getCountDown(countdown,question.endTime);
 		return Session.get(countdown);
 	}
+	
 })
 
 Template.answerModal.events({
@@ -123,5 +130,57 @@ Template.answerModal.events({
 				latestAnswer.call(answers);
 			}
 		})  
+	},
+	
+	"click .distribute"(){
+		// MoacConnect.distributeForGame(
+		// this.questionId,this.areaid,distributes[0],distributes[1],distributes[2],distributes[3],distributes[4]
+		// );
 	}
+})
+
+Template.toDistribute.onCreated(function(){
+	Session.set('winners',[]);
+})
+
+Template.toDistribute.events({
+"click .prizeWinner"(e){
+		if(distributes.length == 5){
+			event.preventDefault();
+			alert("At most 5 prize winner can be distributed");
+			return;
+		}
+
+		if(e.target.checked == true) {
+			distributes.push(e.target.id);
+			Session.set("winners",distributes);
+		}
+		else {
+			var idx = distributes.indexOf(e.target.id);
+			distributes.splice(idx,1);
+			Session.set("winners",distributes);
+		}
+
+		console.log(distributes);
+
+		// console.log(e.target.checked,e.target.id);
+	}
+})
+
+Template.toDistribute.helpers({
+	
+	'distributeRate'(){
+		let dstbt = Session.get("winners");
+		var answer = Template.instance().data;
+		var address = answer.address;
+		var idx = dstbt.indexOf(address);
+		var rate = 50;
+		if(idx == -1){
+			return;
+		}
+		return "<div style='margin-left: 29px;color:#0CCA07;font-size: 12px'>Distribute <span style='color:red;font-weight:bolder;'>" 
+		+ rate/(Math.pow(2,idx)).toString() 
+		+ "%</span> of total reward to this answer</div>";
+	}
+	
 })

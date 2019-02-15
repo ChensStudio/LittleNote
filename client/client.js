@@ -545,7 +545,7 @@ Template.map.rendered = function() {
             noteText:content,
             answers:[],
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*60)
+            endTime:new Date(new Date().getTime() + 1000*60*5)
            }
 
           MoacConnect.AddGame(
@@ -769,6 +769,7 @@ game.observe({
           Modal.show('answerModal',{
             question:document.noteText,
             questionId:document._id, 
+            areaid:document.areaid,
             address: chain3js.mc.accounts[0]
           }); 
         }).on('mouseover',function(e){

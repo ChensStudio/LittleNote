@@ -72,10 +72,7 @@
                     {{#if isadmin}}
                         {{#if totalAnswers}}
                             {{#each answers}}
-                             <div class="answerList">
-                                <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
-                                <div style="margin-left: 12px;">{{content}}</div>
-                             </div>
+                                {{> toDistribute}}
                              {{/each}}
                         {{else}}
                             <span>No Answers Yet...</span>
@@ -87,7 +84,7 @@
                         {{#each answers}}
                              <div class="answerList">
                                 <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
-                                <div style="margin-left: 12px;">{{content}}</div>
+                                <div style="margin-left: 12px; word-wrap:break-word;">{{content}}</div>
                              </div>
                              {{/each}}
                             <textarea autofocus id="answerArea"></textarea>
@@ -101,7 +98,7 @@
                             {{#each answers}}
                              <div class="answerList">
                                 <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
-                                <div style="margin-left: 12px;">{{content}}</div>
+                                <div style="margin-left: 12px; word-wrap:break-word;">{{content}}</div>
                              </div>
                              {{/each}}
                         {{else}}
@@ -112,7 +109,7 @@
                         {{#each answers}}
                         <div class="answerList">
                             <div class="bidderaddress" style="font-size: 10px">{{address}}</div>
-                            <div style="margin-left: 12px;">{{content}}</div>
+                            <div style="margin-left: 12px; word-wrap:break-word;">{{content}}</div>
                          </div>   
                         {{/each}}
                     {{/unless}}
@@ -138,4 +135,18 @@
         </div>
     </div>    
     
+</template>
+
+<template name="toDistribute">
+    <div class="answerList">
+        <div class="bidderaddress" style="font-size: 10px; display: flex;">
+            <input type="checkbox" class="prizeWinner" id={{address}}>
+            <span style="margin-top: 4px;margin-left: 4px;">{{address}}</span>
+        </div>
+         {{{distributeRate}}}
+        <div style="margin-left: 29px; word-wrap:break-word;">
+            {{content}}
+        </div>
+         
+    </div>
 </template>

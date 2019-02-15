@@ -53,6 +53,7 @@
             string nickname;
             string description;
             uint256 balance;
+            uint256 chargeAnswer;
 
             uint256 startTime;
             uint256 endTime;
@@ -66,6 +67,8 @@
             uint256 updatedAt;
             uint256 lat;
             uint256 lng;
+
+            bool distributed = false;
         }
 
         struct Answer {
@@ -184,10 +187,10 @@
             return games[gameId];
         }
 
-        function addAnswer(string _gameid, string _answerid, string _content) public {
-
+        function addAnswer(string _gameid, string _answerid, string _content) public payable{
             require (games[_gameid].activeFlag == 1);
             require (!hasAnswered[_gameid][msg.sender]);
+
             hasAnswered[_gameid][msg.sender] = true;
             answerSet[_gameid].push(_answerid);
             answer[_answerid]._id = _answerid;
@@ -195,6 +198,8 @@
             answer[_answerid].participant = msg.sender;
             answer[_answerid].content = _content;
         }
+
+
 
         function answersForQuestion (string _gameid) public view returns(string[]){
            return answerSet[_gameid];
@@ -213,6 +218,45 @@
             if(games[gameid].endTime < now){
                 games[gameid].activeFlag = 0;
             }
+            answerSet[gameid].push("End Game Mark");
+        }
+
+        function distributeForGame(string _gameid, 
+            string _areaid,
+            address winner1, 
+            address winner2,
+            address winner3,
+            address winner4,
+            address winner5
+            ) public payable {
+
+            require(games[_gameid].activeFlag == 0);
+
+            uint256 balance = games[_gameid].balance;
+            if (winner1 != address(0)){
+                winner1.transfer(balance*0.5);
+                balance -= balance*0.5;
+            }
+            if (winner2 != address(0)){
+                winner1.transfer(balance*0.25);
+                 balance -= balance*0.25;
+            }
+            if (winner3 != address(0)){
+                winner1.transfer(balance*0.125);
+                 balance -= balance*0.125;
+            }
+            if (winner4 != address(0)){
+                winner1.transfer(balance*0.0625);
+                 balance -= balance*0.0625;
+            }
+            if (winner5 != address(0)){
+                winner1.transfer(balance*0.03125);
+                balance -= balance*0.03125;
+            }
+
+            games[_gameid].balance -= balance;
+            areas[_areaid].balance += balance;
+
         }
 
        function AddArea(
@@ -259,7 +303,7 @@
         function endBid(string areaid) public {
             if(areas[areaid].endTime < now){
                 areas[areaid].activeFlag = 0;
-                bidHistory[areaid].push("endMark");
+                bidHistory[areaid].push("End Bid Mark");
             }
         }
 
@@ -307,6 +351,7 @@
 
             if (_admin != founder) {
                 _admin.transfer(areas[areaid].highestBidding);
+                areas[areaid]-=areas[areaid].highestBidding;
                 // trackRefund.push(area.admin);
             }
         }

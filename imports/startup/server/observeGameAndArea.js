@@ -69,21 +69,21 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, "Shanghai","this is 
 
    // let AddPosGasEstimate = chain3.mc.estimateGas({data: AddPosData});
    let gasEstimate = 4000000;
-   callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,AddPosData);
-  Meteor.setTimeout(
-    function(){
-     callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,10,networkId,AddAreaData,Meteor.bindEnvironment(function(e,r){
-      if(!e){
-      // console.log("TransactionHash ",r);
-      // chain3.mc.getTransaction(r,function(e,r){
-      //         console.log('transaction index',r.transactionIndex);
-      //  })  
-       Meteor.setTimeout(
-         function(){
-              insertarea.call(AreaInsert);
-        },20000);
-    }
-  }))},10000);
+  //  callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,AddPosData);
+  // Meteor.setTimeout(
+  //   function(){
+  //    callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,10,networkId,AddAreaData,Meteor.bindEnvironment(function(e,r){
+  //     if(!e){
+  //     // console.log("TransactionHash ",r);
+  //     // chain3.mc.getTransaction(r,function(e,r){
+  //     //         console.log('transaction index',r.transactionIndex);
+  //     //  })  
+  //      Meteor.setTimeout(
+  //        function(){
+  //             insertarea.call(AreaInsert);
+  //       },20000);
+  //   }
+  // }))},10000);
 
   var checkAreaStatus = function(){
     var areas = Areas.find({endTime:{$gte: new Date()}}).fetch();
@@ -106,9 +106,11 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, "Shanghai","this is 
      var toExpired = Meteor.setInterval(
       ()=>{ 
        var toEnd = document.endTime - new Date();
-  			// console.log('game to end', toEnd)
+  			console.log('game to end', toEnd)
   			if(toEnd <= 0){
   				console.log('game',document,'expired')
+          var EndGameData = contractInstance.endGame.getData(document._id);
+          callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,EndGameData);
   				Meteor.clearInterval(toExpired);
   			}
   		},

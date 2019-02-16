@@ -1,3 +1,4 @@
+
     <template name="game">
         <div class="bidcontainer"  data-areaid={{_id}}>
             <div class="notevalue"  data-areaid={{_id}}>
@@ -58,7 +59,7 @@
                     <span style="color: grey; font-style: italic;font-size: 12px">{{totalAnswers}} Answers</span>
                     {{#if expired}}
                         {{#if isadmin}}
-                            {{#unless isDistributed}}
+                            {{#unless TemplateVar.get "distributeStatus"}}
                                 <span class="distribute">Distrubute</span>
                             {{else}}
                                 <span class="distributed" >Distrubuted</span>
@@ -76,7 +77,7 @@
                 <div class="modal-body" style="background-color: #EBEBEB">
                     {{#if isadmin}}
                         {{#if totalAnswers}}
-                            {{#each answers }}
+                            {{#each answers}}
                                 {{> toDistribute}}
                              {{/each}}
                         {{else}}
@@ -144,8 +145,9 @@
 
 <template name="toDistribute">
     <div class="answerList">
+       
         <div class="bidderaddress" style="font-size: 10px; display: flex;">
-        {{#unless ../distributed}}
+        {{#unless   TemplateVar.get "distributeStatus"}}
             <input type="checkbox" class="prizeWinner" id={{address}}>
         {{/unless}}    
             <span style="margin-top: 4px;margin-left: 4px;">{{address}}</span>

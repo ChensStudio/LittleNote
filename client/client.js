@@ -545,7 +545,7 @@ Template.map.rendered = function() {
             noteText:content,
             answers:[],
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*4)
+            endTime:new Date(new Date().getTime() + 1000*60*3)
            }
 
           MoacConnect.AddGame(
@@ -762,7 +762,7 @@ game.observe({
       circle_drop.on('mouseout',function(event){
         overlap = false;
       })    
-
+    // console.log("add game distribute:",document.distributed);
     L.marker(document.latlng,{icon: myIcon}).addTo(map)
     .bindPopup(document.noteText)
     .on('click', function(event) {
@@ -770,8 +770,7 @@ game.observe({
             question:document.noteText,
             questionId:document._id, 
             areaid:document.areaid,
-            address: chain3js.mc.accounts[0],
-            distributed:document.distributed
+            address: chain3js.mc.accounts[0]
           }); 
         }).on('mouseover',function(e){
           this.openPopup();

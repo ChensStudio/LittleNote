@@ -64,8 +64,8 @@ var distributeLimit = 5;
 
 Template.answerModal.onCreated(function(){
 	console.log('create answerModal');
-	console.log(this);
-	TemplateVar.set("distributeStatus",this.distributed);
+	var dstbt = Questions.findOne({_id:this.data.questionId}).distributed;
+	TemplateVar.set("distributeStatus",dstbt);
 	distributes =[];
 })
 
@@ -105,9 +105,6 @@ Template.answerModal.helpers({
 		var countdown = question._id;
 		getCountDown(countdown,question.endTime);
 		return Session.get(countdown);
-	},
-	"isDistributed"(){
-		return this.distributed;
 	}
 })
 
@@ -137,15 +134,22 @@ Template.answerModal.events({
 	},
 	
 	"click .distribute"(){
+		var template = Template.instance();
+		var winnersNum = distributes.length;
+		if(winnersNum<5){
+			for(let i = winnersNum-1; i < 5; i++){
+				distributes[i] = null;
+			}
+		}
 		var questionId = this.questionId;
 		MoacConnect.distributeForGame(
 		questionId,
 		this.areaid,
 		distributes[0],
-		null,
-		null,
-		null,
-		null,
+		distributes[1],
+		distributes[2],
+		distributes[3],
+		distributes[4],
 		function(e,r){
 			if(e){
 				alert("error occurred when distribute reward");
@@ -153,19 +157,31 @@ Template.answerModal.events({
 			else{
 				console.log("distriubte for question:",questionId);
 				updateDistributeStatus.call({questionId:questionId});
+				TemplateVar.set(template,"distributeStatus",true);
 			}
 		}
 		);
 	}
 })
 
+
 Template.toDistribute.onCreated(function(){
 	Session.set('winners',[]);
 	console.log('answer',this);
+	var questionId = Template.parentData().questionId;
+	
+this.autorun(function(){
+	TemplateVar.set("distributeStatus",
+		Questions.findOne({_id:questionId}).distributed
+		);
+	})
+
 })
 
+var num = 0;
 Template.toDistribute.events({
 "click .prizeWinner"(e){
+		TemplateVar.set("check",num++);
 		if(distributes.length == 5){
 			event.preventDefault();
 			alert("At most 5 prize winner can be distributed");
@@ -196,7 +212,7 @@ Template.toDistribute.helpers({
 		var address = answer.address;
 		var idx = dstbt.indexOf(address);
 		var rate = 50;
-		if(idx == -1){
+		if(idx == -1 || TemplateVar.get("distributeStatus")){
 			return;
 		}
 		return "<div style='margin-left: 29px;color:#0CCA07;font-size: 12px'>Distribute <span style='color:red;font-weight:bolder;'>" 

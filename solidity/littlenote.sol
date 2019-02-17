@@ -143,6 +143,8 @@
             return (pos.lat0, pos.lng0, pos.lat1,pos.lng1);
         }
 
+        event AddGameEvent(string uid);
+
         function AddGame(
             string uid, 
             string parentAreaId,
@@ -180,6 +182,8 @@
             games[uid].balance += msg.value;
             games[uid].balance += myBalance;
             areas[parentAreaId].balance -= myBalance;
+
+            AddGameEvent(uid);
             
         }
 
@@ -191,6 +195,8 @@
         function GetGame(string gameId) public returns (Game) {
             return games[gameId];
         }
+
+        event addAnswerEvent(string _answerid);
 
         function addAnswer(string _gameid, string _answerid, string _content) public payable{
             require (games[_gameid].activeFlag == 1);
@@ -204,6 +210,8 @@
             answer[_answerid].content = _content;
 
             games[_gameid].balance+=msg.value;
+
+            addAnswerEvent(_answerid);
         }
 
         function getGameBalance(string _gameid) public view returns(uint256){
@@ -233,6 +241,8 @@
             }
             answerSet[gameid].push("End Game Mark");
         }
+
+        event distributeForGameEvent(string _gameid);
 
         function distributeForGame(string _gameid, 
             string _areaid,
@@ -272,7 +282,10 @@
 
             games[_gameid].distributed = true;
 
+            distributeForGameEvent(_gameid);
         }
+
+        event AddAreaEvent(string uid);
 
        function AddArea(
                 string uid, 
@@ -301,6 +314,8 @@
                 areas[uid].endTime = _endTime;
                 areas[uid].activeFlag = 1;
                 areas[uid].balance += msg.value;
+
+                AddAreaEvent(uid);
             }
         // function SetAreaPosRange(string areaId, string posRangeId) public {
         //     areas[areaId].posRangeId = posRangeId;
@@ -332,6 +347,7 @@
         }
 
         //When you add a big, the old bids can be refunded.
+        event AddBidEvent(address indexed _from, uint256 indexed value);
         function AddBid(string _id, string areaId) public payable {
             if (areas[areaId].startTime == 0 || areas[areaId].startTime >= now || areas[areaId].endTime < now || areas[areaId].activeFlag == 0) {
                 revert();
@@ -355,8 +371,11 @@
             areas[areaId].highestBidding = msg.value;
             areas[areaId].balance += msg.value;
             areas[areaId].highBidId = _id;
+
+            AddBidEvent(msg.sender,msg.value);
         }
 
+        event RefundBidEvent(address reciever, uint256 value);
         function RefundBid(string areaid,address _admin) public payable{
             require(areas[areaid].activeFlag == 1);
 
@@ -369,6 +388,7 @@
                  areas[areaid].balance -= refundAmount;
                 _admin.transfer(refundAmount);
                 // trackRefund.push(area.admin);
+                RefundBidEvent(_admin,refundAmount);
             }
         }
 

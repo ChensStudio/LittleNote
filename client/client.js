@@ -562,7 +562,25 @@ Template.map.rendered = function() {
                 alert('fail to write game to chain');
               }
               else{
-                insertquestion.call(question);
+                var errorMsg = Meteor.setTimeout(
+                  function(){
+                    AddGameEvent.stopWatching();
+                    alert("Fail to write Game to chain, Please try again later")
+                  },1000*60*3);
+
+                $('div.loaderBack').show();
+                var AddGameEvent = gAreaGameContractInstance.AddGameEvent(function(error,result){
+                  if(error){
+                    console.log("error on write area info to chain:",error);
+                   }
+                  else{
+                    console.log("Game insert with id:",result.args);
+                    $('div.loaderBack').hide();
+                    insertquestion.call(question);
+                    AddGameEvent.stopWatching();
+                    Meteor.clearTimeout(errorMsg);
+                    }
+                })
               }
             });
           

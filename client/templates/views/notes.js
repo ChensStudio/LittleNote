@@ -16,6 +16,25 @@ Meteor.startup(function() {
     MoacConnect.InitChain3();
 });
 
+
+// Template.body.onCreated(function(){
+//     Meteor.setInterval(function()
+//     {
+//         Meteor.setTimeout(function(){
+//             $('spot_1').css("opacity","0");
+//         },1000);
+//         Meteor.setTimeout(function(){
+//             $('spot_1').css("opacity","1");
+//         },2000);
+        
+//         // $('spot_2').hide(1000);
+//         // $('spot_3').hide(800);
+//         // $('spot_4').hide(600);
+//         // $('spot_5').hide(400);
+//     },2500)
+    
+// })
+
 Template.body.events({
 'click #drawer'(){
    $('#notes').toggle(700);
@@ -36,11 +55,12 @@ Template.body.events({
     
    }
 },
+})
 
-// 'click #zoom'(){
-
-// }
-
+Template.body.helpers({
+    "loadContent"(){
+        return Session.get("loadContent");
+    }
 })
 
 Template.notesbody.helpers({
@@ -71,9 +91,6 @@ Template.notesbody.helpers({
     //     }
     // ],
     'notes': function() {
-        // var topLeft = {latlng: {lng: -120, lat: 60}};
-        // var bottomRight = {latlng: {lng: -110, lat: 50}};
-        // var query = Notes.findByBoundary(topLeft, bottomRight);
         template = Template.instance();
         
         var myNotesSort = TemplateVar.get(template, 'myNotesSort');
@@ -105,8 +122,6 @@ Template.notesbody.helpers({
                 return b.price-a.price;
             });
         }
-
-        // console.log('getNotes', notes);
         return notes;
     },
     'isMicroMessage': function () {

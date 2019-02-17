@@ -77,10 +77,20 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, "Shanghai","this is 
   //     // chain3.mc.getTransaction(r,function(e,r){
   //     //         console.log('transaction index',r.transactionIndex);
   //     //  })  
-  //      Meteor.setTimeout(
-  //        function(){
-  //             insertarea.call(AreaInsert);
-  //       },20000);
+  //      var AddAreaEvent = contractInstance.AddAreaEvent(Meteor.bindEnvironment(function(error,result){
+  //       if(error){
+  //         console.log("error on write area info to chain:",error);
+  //       }
+  //       else{
+  //         console.log("area insert with id:",result.args);
+  //         insertarea.call(AreaInsert);
+  //         AddAreaEvent.stopWatching();
+  //       }
+  //      }))
+  //      // Meteor.setTimeout(
+  //      //   function(){
+  //      //        insertarea.call(AreaInsert);
+  //      //  },20000);
   //   }
   // }))},10000);
 

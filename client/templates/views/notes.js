@@ -14,26 +14,55 @@ Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
 
 Meteor.startup(function() {
     MoacConnect.InitChain3();
+    var filter = chain3js.mc.filter("pending");
+    filter.watch(function(e,r){
+     if(e){
+        console.log("error",e);
+        }
+     else{
+        console.log("new pending",r);
+     }
+})
 });
 
 
-// Template.body.onCreated(function(){
-//     Meteor.setInterval(function()
-//     {
-//         Meteor.setTimeout(function(){
-//             $('spot_1').css("opacity","0");
-//         },1000);
-//         Meteor.setTimeout(function(){
-//             $('spot_1').css("opacity","1");
-//         },2000);
-        
-//         // $('spot_2').hide(1000);
-//         // $('spot_3').hide(800);
-//         // $('spot_4').hide(600);
-//         // $('spot_5').hide(400);
-//     },2500)
+Template.body.onRendered(function(){
+    Meteor.setInterval(function()
+    {
+        Meteor.setTimeout(function(){
+            $('.spot_1').css("opacity","0");
+        },0);
+        Meteor.setTimeout(function(){
+            $('.spot_1').css("opacity","1");
+        },800);
+        Meteor.setTimeout(function(){
+            $('.spot_2').css("opacity","0");
+        },200);
+        Meteor.setTimeout(function(){
+            $('.spot_2').css("opacity","1");
+        },1000);
+        Meteor.setTimeout(function(){
+            $('.spot_3').css("opacity","0");
+        },400);
+        Meteor.setTimeout(function(){
+            $('.spot_3').css("opacity","1");
+        },1200);
+        Meteor.setTimeout(function(){
+            $('.spot_4').css("opacity","0");
+        },600);
+        Meteor.setTimeout(function(){
+            $('.spot_4').css("opacity","1");
+        },1400);
+        Meteor.setTimeout(function(){
+            $('.spot_5').css("opacity","0");
+        },800);
+        Meteor.setTimeout(function(){
+            $('.spot_5').css("opacity","1");
+        },1600);
+    },2000)
     
-// })
+    
+})
 
 Template.body.events({
 'click #drawer'(){

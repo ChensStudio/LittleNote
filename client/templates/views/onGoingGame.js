@@ -131,23 +131,23 @@ Template.answerModal.events({
 				var errorMsg = Meteor.setTimeout(
                   function(){
                     addAnswerEvent.stopWatching();
-                    alert("Fail to write Answer to chain, Please try again later")
+                    alert("Timeout, Please try again later")
                   },1000*60*3);
 
+				Session.set("loadContent","Deploying your answer to chain, please wait");
 				$('div.loaderBack').show();
                 var addAnswerEvent = gAreaGameContractInstance.addAnswerEvent(function(error,result){
                   if(error){
                     console.log("error on write area info to chain:",error);
                    }
                   else{
-                    console.log("Game insert with id:",result.args);
+                    console.log("Answer insert with id:",result.args);
                     $('div.loaderBack').hide();
                     latestAnswer.call(answers);
                     addAnswerEvent.stopWatching();
                     // Meteor.clearTimeout(errorMsg);
                     }
                 });
-
 				
 			}
 		})  
@@ -176,8 +176,21 @@ Template.answerModal.events({
 			}
 			else{
 				console.log("distriubte for question:",questionId);
-				updateDistributeStatus.call({questionId:questionId});
-				TemplateVar.set(template,"distributeStatus",true);
+				Session.set("loadContent","Distributing Reward, please wait for next block");
+				$('div.loaderBack').show();
+                var distributeForGameEvent = gAreaGameContractInstance.distributeForGameEvent(function(error,result){
+                  if(error){
+                    console.log("error on write area info to chain:",error);
+                   }
+                  else{
+                    console.log("Game with id has been distributed:",result.args);
+                    $('div.loaderBack').hide();
+                    updateDistributeStatus.call({questionId:questionId});
+					TemplateVar.set(template,"distributeStatus",true);
+                    distributeForGameEvent.stopWatching();
+                    // Meteor.clearTimeout(errorMsg);
+                    }
+                });
 			}
 		}
 		);

@@ -37,7 +37,7 @@ export function initAccount(){
 };
 
 export function initNote(){
-    let contractInstance = chain3.mc.contract(contractAbi).at(contractAddr);
+    let contractInstance = chain3.mc.contract(littleNoteContractAbi).at(littleNoteContractAddr);
     let noteID = [];
     let noteData = [];
 

@@ -23,22 +23,28 @@
 
   .loader {
     position: fixed;
-    font-size: 20px;
+    font-family:Comic Sans MS;
     top: 45%;
     left: 35%;
     color:black;
     background-color: white;
     opacity:1;
     transition: all 0.8s ease 0s;
-    padding:1% 1%;
-    border-radius: 30px;
+    padding:15px 20px;
+    border-radius: 35px;
+  }
+
+  .contentscript{
+    font-size: 16px;
+    margin-right: 5px;
   }
 
   .loadcontent {
      display: flex;
      border:1px solid #27FF06;
-     padding:2% 25%;
-     border-radius: 20px;
+     padding:13px 50px;
+     border-radius: 25px;
+     white-space: nowrap;
   }
   
   .spot_1,.spot_2,.spot_3,.spot_4,.spot_5 {
@@ -47,7 +53,8 @@
       height: 11px;
       background-color: #27FF06;
       margin-left: 8px;
-      margin-top: 10px;
+      margin-top: 6px;
+      transition: all 0.8s ease 0s;
   }
 
 

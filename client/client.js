@@ -545,7 +545,7 @@ Template.map.rendered = function() {
             noteText:content,
             answers:[],
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*20)
+            endTime:new Date(new Date().getTime() + 1000*60*7)
            }
 
           MoacConnect.AddGame(
@@ -567,7 +567,7 @@ Template.map.rendered = function() {
                     AddGameEvent.stopWatching();
                     alert("Fail to write Game to chain, Please try again later")
                   },1000*60*3);
-
+                Session.set("loadContent","Deploying Game to chain, please wait");
                 $('div.loaderBack').show();
                 var AddGameEvent = gAreaGameContractInstance.AddGameEvent(function(error,result){
                   if(error){

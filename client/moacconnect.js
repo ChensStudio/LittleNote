@@ -64,6 +64,7 @@ export var GetAreaGameInstance = function() {
   return gAreaGameContractInstance;
 }
 
+
 var toStippedHex = function(input) {
   return chain3js.toHex(input).substr(2);
 }

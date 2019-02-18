@@ -128,7 +128,27 @@ Template.answerModal.events({
 				alert('write answer to chain error!');
 			}
 			else{
-				latestAnswer.call(answers);
+				var errorMsg = Meteor.setTimeout(
+                  function(){
+                    addAnswerEvent.stopWatching();
+                    alert("Fail to write Answer to chain, Please try again later")
+                  },1000*60*3);
+
+				$('div.loaderBack').show();
+                var addAnswerEvent = gAreaGameContractInstance.addAnswerEvent(function(error,result){
+                  if(error){
+                    console.log("error on write area info to chain:",error);
+                   }
+                  else{
+                    console.log("Game insert with id:",result.args);
+                    $('div.loaderBack').hide();
+                    latestAnswer.call(answers);
+                    addAnswerEvent.stopWatching();
+                    // Meteor.clearTimeout(errorMsg);
+                    }
+                });
+
+				
 			}
 		})  
 	},

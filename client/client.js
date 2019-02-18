@@ -545,7 +545,7 @@ Template.map.rendered = function() {
             noteText:content,
             answers:[],
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*3)
+            endTime:new Date(new Date().getTime() + 1000*60*20)
            }
 
           MoacConnect.AddGame(
@@ -580,7 +580,7 @@ Template.map.rendered = function() {
                     AddGameEvent.stopWatching();
                     Meteor.clearTimeout(errorMsg);
                     }
-                })
+                });
               }
             });
           

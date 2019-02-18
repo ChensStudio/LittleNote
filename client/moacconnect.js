@@ -249,12 +249,12 @@ export var GetJackpot = function(callback) {
   return gContractInstance.potReserve(callback);
 }
 
-export var getGameBalance = function(_gameId) {
-  return gAreaGameContractInstance.getGameBalance(_gameId);
+export var getGameBalance = function(_gameId,callback) {
+  return gAreaGameContractInstance.getGameBalance(_gameId,callback);
 }
 
-export var getAreaBalance = function(_areaId) {
-  return gAreaGameContractInstance.getAreaBalance(_areaId);
+export var getAreaBalance = function(_areaId,callback) {
+  return gAreaGameContractInstance.getAreaBalance(_areaId,callback);
 }
 
 var sendtx = function(src, tgtaddr, amount, strData, callback) {

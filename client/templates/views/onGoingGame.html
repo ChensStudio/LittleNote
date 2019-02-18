@@ -51,9 +51,11 @@
 
                 <div class="modal-header" style="text-align: left">
                     <h3 class="modal-title" style="font-family: impact">{{question}}</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                     </button>
+                     </button> -->
+                    <div class="metaInfo">
+                    <div>
                     <span style="color: grey; font-style: italic;font-size: 14px">{{admin}}</span>
                     <div style="margin-top: 5px">
                     <span style="color: grey; font-style: italic;font-size: 12px">{{totalAnswers}} Answers</span>
@@ -71,7 +73,21 @@
                             <span class="modal-countdown" style="background-color: white">{{countdown}}
                             </span>
                     {{/if}}
-                     </div>                      
+                     </div> 
+                     </div>
+                     
+                     <div class="costInfo">
+                     <span class="reward">
+                        Reward
+                        <div style="text-align: center;">{{TemplateVar.get "Reward"}} MC</div>
+                     </span>
+                     <span class="answerCharge">
+                        answer cost
+                        <div style="text-align: center;">0.1 MC</div>
+                     </span>
+                     </div>
+
+                     </div>                    
                 </div>
 
                 <div class="modal-body" style="background-color: #EBEBEB">
@@ -126,7 +142,7 @@
                     {{#unless expired}}
                         {{#unless answered}}
                             {{#unless isadmin}}
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="submitAnswer">Submit</button>
+                            <button type="button" class="btn btn-default" id="submitAnswer">Submit</button>
                             {{else}}
                             <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
                              {{/unless}}

@@ -66,6 +66,12 @@ Template.answerModal.onCreated(function(){
 	console.log('create answerModal');
 	var dstbt = Questions.findOne({_id:this.data.questionId}).distributed;
 	TemplateVar.set("distributeStatus",dstbt);
+	var template =this;
+
+    MoacConnect.getGameBalance(this.data.questionId,function(e,r){
+		TemplateVar.set(template,"Reward",r/1e18.toFixed(3));
+    });
+	
 	distributes =[];
 })
 
@@ -112,27 +118,29 @@ Template.answerModal.events({
 	'click #submitAnswer'(){
 		var content = $('#answerArea').val();
 		var answerId = Random.id(17);
+		var questionId = this.questionId;
+		var template = Template.instance();
 		console.log("answerId", answerId);
-        console.log("gameID", this.questionId);
+        console.log("gameID", questionId);
         
 		var answers = {
-            questionId : this.questionId,
+            questionId : questionId,
              newAnswer: {
                 address:this.address,
                 content: content
             }
           }
 
-		MoacConnect.addAnswer(this.questionId,answerId,content,function(e,r){
+		MoacConnect.addAnswer(questionId,answerId,content,function(e,r){
 			if(e){
 				alert('write answer to chain error!');
 			}
 			else{
-				var errorMsg = Meteor.setTimeout(
-                  function(){
-                    addAnswerEvent.stopWatching();
-                    alert("Timeout, Please try again later")
-                  },1000*60*3);
+				// var errorMsg = Meteor.setTimeout(
+    //               function(){
+    //                 addAnswerEvent.stopWatching();
+    //                 alert("Timeout, Please try again later")
+    //               },1000*60*3);
 
 				Session.set("loadContent","Deploying your answer to chain, please wait");
 				$('div.loaderBack').show();
@@ -143,7 +151,11 @@ Template.answerModal.events({
                   else{
                     console.log("Answer insert with id:",result.args);
                     $('div.loaderBack').hide();
+ 					console.log("addAnswer");
                     latestAnswer.call(answers);
+                     MoacConnect.getGameBalance(questionId,function(e,r){
+					TemplateVar.set(template,"Reward",r/1e18.toFixed(3));
+    				});
                     addAnswerEvent.stopWatching();
                     // Meteor.clearTimeout(errorMsg);
                     }
@@ -176,7 +188,7 @@ Template.answerModal.events({
 			}
 			else{
 				console.log("distriubte for question:",questionId);
-				Session.set("loadContent","Distributing Reward, please wait for next block");
+				Session.set("loadContent","Distributing Reward, please wait");
 				$('div.loaderBack').show();
                 var distributeForGameEvent = gAreaGameContractInstance.distributeForGameEvent(function(error,result){
                   if(error){
@@ -185,6 +197,9 @@ Template.answerModal.events({
                   else{
                     console.log("Game with id has been distributed:",result.args);
                     $('div.loaderBack').hide();
+                    MoacConnect.getGameBalance(questionId,function(e,r){
+					TemplateVar.set(template,"Reward",r/1e18.toFixed(3));
+    				});
                     updateDistributeStatus.call({questionId:questionId});
 					TemplateVar.set(template,"distributeStatus",true);
                     distributeForGameEvent.stopWatching();

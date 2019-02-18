@@ -54,15 +54,13 @@
             string description;
             uint256 balance;
             // uint256 chargeAnswer;
-
             uint256 startTime;
             uint256 endTime;
-            uint256 enabled;
+            
             string question;
             string answerSet;
             address admin;
             
-            uint256 proposing;
             uint256 activeFlag;
             uint256 updatedAt;
             uint256 lat;
@@ -155,14 +153,7 @@
             uint256 endTime, 
             string question) public payable{
 
-            uint256 proposing = 0;
-            uint256 enabled = 1;
-            if (msg.sender != areas[parentAreaId].admin) {
-                proposing = 1;
-                enabled = 0;
-            }
-
-            require (games[parentAreaId].activeFlag == 0);
+            require (games[parentAreaId].activeFlag == 0 && msg.sender == areas[parentAreaId].admin);
             
             gamesArray.push(uid);
             games[uid]._id = uid;
@@ -253,7 +244,7 @@
             address winner5
             ) public payable {
 
-            require(games[_gameid].activeFlag == 0 && !games[_gameid].distributed);
+            require(games[_gameid].activeFlag == 0 && !games[_gameid].distributed && games[_gameid].admin == msg.sender);
 
             uint256 balance = games[_gameid].balance;
             if (winner1 != address(0)){

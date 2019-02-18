@@ -24,6 +24,12 @@ export const insertarea = new ValidatedMethod({
         },
         'bounds.$.lat': {type: Number, decimal: true},
         'bounds.$.lng': {type: Number, decimal: true},
+         nickname:{
+             type:String
+         },
+         description:{
+                type:String
+        },
         highestBidding:{
             type:Number,
         },
@@ -44,11 +50,13 @@ export const insertarea = new ValidatedMethod({
             type:Date,
         }
     }).validator(),
-    run({_id,admin,bounds,highestBidding,history,startTime,endTime}) {
+    run({_id,admin,bounds,nickname,description,highestBidding,history,startTime,endTime}) {
         const area={
             _id:_id,
             admin: admin,
             bounds: bounds,
+            nickname:nickname,
+            description:description,
             highestBidding:highestBidding,
             history:history,
             startTime:startTime,

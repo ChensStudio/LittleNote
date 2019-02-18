@@ -73,6 +73,12 @@ Areas.schema = new SimpleSchema({
   'bounds.$': {
     type: locationSchema
   },
+  nickname:{
+    type:String
+  },
+  description:{
+    type:String
+  },
   highestBidding:{
     type:Number
   },
@@ -108,6 +114,8 @@ Areas.publicFields = {
     _id:1,
     admin: 1,
     bounds: 1,
+    nickname:1,
+    description:1,
     highestBidding: 1,
     endTime: 1
 };

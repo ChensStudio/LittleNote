@@ -24,7 +24,7 @@
   .loader {
     position: fixed;
     font-family:Comic Sans MS;
-    top: 45%;
+    top: 30%;
     left: 35%;
     color:black;
     background-color: white;
@@ -387,6 +387,36 @@
     border-radius: 10px;
     font-family: Impact;
     cursor: pointer;
+}
+
+.metaInfo {
+  display: flex;
+}
+
+.costInfo {
+  display: flex;
+  font-family: impact;
+  margin: 0 auto;
+}
+
+.reward {
+  height: 100%;
+  border: 1px solid rgba(0,0,0,.2);
+  margin-left:20px;
+  padding:5px 10px;
+  border-radius: 5px;
+  color:rgba(0,0,0,.7);
+  font-size: 12px;
+}
+
+.answerCharge {
+  height: 100%;
+  border: 1px solid rgba(0,0,0,.2);
+  margin-left: 10px;
+  padding:5px 10px;
+  border-radius: 5px;
+  color:rgba(0,0,0,.7);
+  font-size: 12px;
 }
 
 .distribute {

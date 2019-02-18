@@ -12,7 +12,7 @@ Meteor.startup(() => {
 
   import './observeGameAndArea.js'
   
-  initGame();
+  // initGame();
   if (Accounts.find().count() === 0) {
     var timestamp = (new Date()).getTime();
     let accountsData = initAccount();

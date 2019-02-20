@@ -28,10 +28,11 @@ export const insertarea = new ValidatedMethod({
              type:String
          },
          description:{
-                type:String
+             type:String
         },
         highestBidding:{
             type:Number,
+            decimal:true
         },
         history:{
             type:Array
@@ -65,7 +66,7 @@ export const insertarea = new ValidatedMethod({
             updatedAt: new Date(),
         };
         console.log(area);
-        console.log('server time',new Date())
+        // console.log('server time',new Date())
         return Areas.insert(area);
     },
 });

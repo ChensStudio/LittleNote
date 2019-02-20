@@ -52,6 +52,7 @@ var Pos_id =  Random.id(17);
 
 console.log('position ID:',Pos_id);
 console.log('area ID:',Area_id);
+// console.log('tonumber:',typeof 2.5);
 
 var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
 var AreaInsert = {
@@ -60,13 +61,13 @@ var AreaInsert = {
   bounds:bound,
   nickname:"Shanghai",
   description:"metropolitan city",
-  highestBidding:5,
+  highestBidding:2.5,
   history:[],
   startTime:new Date(),
   endTime:new Date(new Date().getTime() + 1000*60*4)
 }
 var AddPosData = contractInstance.AddPosRange.getData(Pos_id,bound[0].lat*1e15,bound[0].lng*1e15,bound[1].lat*1e15,bound[1].lng*1e15);
-var AddAreaData = contractInstance.AddArea.getData(Area_id, AreaInsert.nickname,AreaInsert.description,founderAddr,Pos_id,5*1e18,5*1e17,Math.round(AreaInsert.startTime.getTime()/1000), Math.round(AreaInsert.endTime.getTime()/1000));
+var AddAreaData = contractInstance.AddArea.getData(Area_id, AreaInsert.nickname,AreaInsert.description,founderAddr,Pos_id,AreaInsert.highestBidding*1e18,5*1e17,Math.round(AreaInsert.startTime.getTime()/1000), Math.round(AreaInsert.endTime.getTime()/1000));
 
    // let AddPosGasEstimate = chain3.mc.estimateGas({data: AddPosData});
    let gasEstimate = 4000000;
@@ -88,16 +89,16 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, AreaInsert.nickname,
   //         console.log("area insert with id:",result.args);
   //         insertarea.call(AreaInsert);
   //         AddAreaEvent.stopWatching();
-          
+
   //       }
   //      }))
-  //      // Meteor.setTimeout(
-  //      //   function(){
-  //      //        insertarea.call(AreaInsert);
-  //      //  },20000);
-  //       }
-  //   }))
-  //  },10000);
+       // Meteor.setTimeout(
+       //   function(){
+       //        insertarea.call(AreaInsert);
+       //  },20000);
+   //      }
+   //  }))
+   // },10000);
 
   var checkAreaStatus = function(){
     var areas = Areas.find({endTime:{$gte: new Date()}}).fetch();

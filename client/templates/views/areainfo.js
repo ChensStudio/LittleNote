@@ -69,6 +69,14 @@ Template.areainfobody.events({
      	
 })
 
+Template.area.onCreated(function(){
+	  var template =this;
+
+	  MoacConnect.getAreaBalance(this.data._id,function(e,r){
+		 TemplateVar.set(template,"deposit",r/1e18.toFixed(3));
+      });
+})
+
 Template.area.helpers({
 	'forsale'(){
 		return ( this.endTime - new Date() ) > 0;
@@ -132,7 +140,6 @@ Template.area.events({
  					else{
  					Meteor.call("RefundBid",areaid,currentAdmin);
  					newBidding.call({areaId:areaid,bidId:bid_id,newBidding:yourbid,bidder:chain3js.mc.accounts[0]});
-
  					}
  				})
  				

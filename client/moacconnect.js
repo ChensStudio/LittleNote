@@ -165,7 +165,7 @@ export var AddBid = function(_id, _areaId, yourbid,callback){
   )
 }
 
-export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, question,callback){
+export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, question,answerCost,callback){
   var opt = {
     from: chain3js.mc.accounts[0],
     gas: 5000000,
@@ -181,6 +181,7 @@ export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, 
       startTime,
       endTime,
       question,
+      answerCost,
       opt,
       function (e,c) {
       console.log('Add Game',e, c);
@@ -192,25 +193,30 @@ export var AddGame = function(_id, _areaId, admin, lat,lng, startTime, endTime, 
 }
 
 export var addAnswer = function(_gameid, _answerid, content,callback){
-  var opt = {
-      from: chain3js.mc.accounts[0],
-      value:1e17,
-      gas: 5000000,
-      gasPrice: 20000000000,
-    }
-
-    gAreaGameContractInstance.addAnswer.sendTransaction(
-      _gameid, 
-      _answerid,
-      content,
-      opt,
-      function (e,c) {
-      console.log('Add Answer',e, c);
-      if (callback) {
-        callback(e, c);
+  
+  getAnswerCost(_gameid,function(e,cost){
+      if(!e){
+        var opt = {
+        from: chain3js.mc.accounts[0],
+        value:cost,
+        gas: 5000000,
+        gasPrice: 20000000000,
       }
-    }
-  )
+
+      gAreaGameContractInstance.addAnswer.sendTransaction(
+        _gameid, 
+        _answerid,
+        content,
+        opt,
+        function (e,c) {
+        console.log('Add Answer',e, c);
+        if (callback) {
+          callback(e, c);
+          }
+        }
+        )
+      }
+  })
 }
 
 export var distributeForGame = function(_gameid,_areaId,winner1,winner2,winner3,winner4,winner5,callback){
@@ -251,6 +257,10 @@ export var GetJackpot = function(callback) {
 
 export var getGameBalance = function(_gameId,callback) {
   return gAreaGameContractInstance.getGameBalance(_gameId,callback);
+}
+
+export var getAnswerCost = function(_gameId,callback) {
+  return gAreaGameContractInstance.getAnswerCost(_gameId,callback);
 }
 
 export var getAreaBalance = function(_areaId,callback) {

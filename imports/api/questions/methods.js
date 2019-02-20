@@ -30,11 +30,15 @@ export const insertquestion = new ValidatedMethod({
         answers:{
             type:Array
         },
+        // answerCost:{
+        //     type:SimpleSchema.Integer
+        // },
         'answers.$':{
             type:answersSchema
         },
         'answers.$.address': {type: String},
         'answers.$.content': {type: String},
+        'answers.$.bonus': {type: Number, decimal:true},
         // 'answers.$.vote': {type: Number},
         startTime:{
             type:Date,
@@ -51,6 +55,7 @@ export const insertquestion = new ValidatedMethod({
             latlng:latlng,
             noteText: noteText,
             answers:answers,
+            // answerCost:answerCost,
             startTime:startTime,
             endTime:endTime,
             createdAt: new Date(),
@@ -68,6 +73,7 @@ export const latestAnswer = new ValidatedMethod({
         newAnswer: {type:answersSchema},
         'newAnswer.address':{type:String},
         'newAnswer.content':{type:String},
+        'newAnswer.bonus':{type:String,decimal:true}
     }).validator({ clean: true, filter: false }),
     run({ questionId, newAnswer }) {
         const question = Questions.findOne(questionId);
@@ -97,6 +103,19 @@ export const updateDistributeStatus = new ValidatedMethod({
                 distributed: true
             }
     });
+
+  },
+});
+
+export const updateWinnerBonus = new ValidatedMethod({
+    name: 'questions.updateWinnerBonus',
+    validate: new SimpleSchema({
+        questionId: {type: String},
+        address: {type: String},
+        bonus:{type:Number, decimal:true}
+    }).validator({ clean: true, filter: false }),
+    run({questionId, address, bonus}) {
+        const question = Questions.findOne(questionId);
 
   },
 });

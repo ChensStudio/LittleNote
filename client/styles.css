@@ -474,9 +474,8 @@
     height: 100%;
     font-family: impact;
     color:rgba(0,0,0,.6);
-    margin-top: 10px;
     position: relative;
-
+    text-align: center; 
   }
   }
 
@@ -505,10 +504,9 @@
     color:rgba(0,0,0,.6);
     margin-top: 10px;
     position: relative;
-
+    text-align: center; 
   }
-  }
-
+}
   .placegame{
     border: 1px solid rgba(0,0,0,.4);
     border-radius: 20px;
@@ -530,11 +528,15 @@
 
 
   .bidprice{
-    margin-left: 6px;
     overflow: scroll;
     white-space: nowrap;
     border-bottom: 1px solid rgba(0,0,0,.4);
+    cursor:pointer;
 
+  }
+
+  .deposit{
+    cursor:pointer;
   }
 
   .yourbid{

@@ -536,6 +536,7 @@ Template.map.rendered = function() {
             let questionId = Random.id(17);
             let content = $('.notetobeposted').val();
             let gAreaid = Session.get("gAreaid");
+            let answerCost = 0.1;
 
             var question = {
             _id:questionId,
@@ -544,8 +545,9 @@ Template.map.rendered = function() {
             latlng:lg,
             noteText:content,
             answers:[],
+            // answerCost:answerCost,
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*7)
+            endTime:new Date(new Date().getTime() + 1000*60*4)
            }
 
           MoacConnect.AddGame(
@@ -557,16 +559,17 @@ Template.map.rendered = function() {
             Math.round(question.startTime.getTime()/1000),
             Math.round(question.endTime.getTime()/1000),
             content,
+            answerCost*1e18,
             function(e,r){
               if(e){
                 alert('fail to write game to chain');
               }
               else{
-                var errorMsg = Meteor.setTimeout(
-                  function(){
-                    AddGameEvent.stopWatching();
-                    alert("Fail to write Game to chain, Please try again later")
-                  },1000*60*3);
+                // var errorMsg = Meteor.setTimeout(
+                //   function(){
+                //     AddGameEvent.stopWatching();
+                //     alert("Fail to write Game to chain, Please try again later")
+                //   },1000*60*3);
                 Session.set("loadContent","Deploying Game to chain, please wait");
                 $('div.loaderBack').show();
                 var AddGameEvent = gAreaGameContractInstance.AddGameEvent(function(error,result){
@@ -578,7 +581,7 @@ Template.map.rendered = function() {
                     $('div.loaderBack').hide();
                     insertquestion.call(question);
                     AddGameEvent.stopWatching();
-                    Meteor.clearTimeout(errorMsg);
+                    // Meteor.clearTimeout(errorMsg);
                     }
                 });
               }

@@ -53,7 +53,7 @@
             string nickname;
             string description;
             uint256 balance;
-            // uint256 chargeAnswer;
+            uint256 answerCost;
             uint256 startTime;
             uint256 endTime;
             
@@ -151,7 +151,8 @@
             uint256 _lng,
             uint256 startTime, 
             uint256 endTime, 
-            string question) public payable{
+            string question,
+            uint256 answerCost) public payable{
 
             require (games[parentAreaId].activeFlag == 0 && msg.sender == areas[parentAreaId].admin);
             
@@ -163,8 +164,8 @@
             games[uid].lng = _lng;
             games[uid].startTime = startTime;
             games[uid].endTime = endTime;
-            games[uid].enabled = enabled;
             games[uid].question = question;
+            games[uid].answerCost = answerCost;
             games[uid].admin = areas[parentAreaId].admin;
             games[uid].activeFlag = 1;
             games[uid].distributed = false;
@@ -208,6 +209,11 @@
         function getGameBalance(string _gameid) public view returns(uint256){
             return games[_gameid].balance;
         }
+
+        function getAnswerCost(string _gameid) public view returns(uint256){
+            return games[_gameid].answerCost;
+        }
+
 
         function getAreaBalance(string _areaid) public view returns(uint256){
             return areas[_areaid].balance;

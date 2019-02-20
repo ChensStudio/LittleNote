@@ -71,6 +71,10 @@ Template.answerModal.onCreated(function(){
     MoacConnect.getGameBalance(this.data.questionId,function(e,r){
 		TemplateVar.set(template,"Reward",r/1e18.toFixed(3));
     });
+
+    MoacConnect.getAnswerCost(this.data.questionId,function(e,r){
+		TemplateVar.set(template,"AnswerCost",r/1e18.toFixed(3));
+    });
 	
 	distributes =[];
 })
@@ -169,7 +173,7 @@ Template.answerModal.events({
 		var template = Template.instance();
 		var winnersNum = distributes.length;
 		if(winnersNum<5){
-			for(let i = winnersNum-1; i < 5; i++){
+			for(let i = winnersNum; i < 5; i++){
 				distributes[i] = null;
 			}
 		}

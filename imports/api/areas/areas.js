@@ -80,7 +80,7 @@ Areas.schema = new SimpleSchema({
     type:String
   },
   highestBidding:{
-    type:Number
+    type:Number,
   },
   history:{
     type:Array

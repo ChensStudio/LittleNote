@@ -28,13 +28,18 @@
                     
                 {{/if}} 
                 
-                <div class="highestBidding">
-               <span class="bidprice"> Price:{{highestBidding}} MOAC</span>
+              <div class="highestBidding">
+              
                {{#if forsale}}
-               <span class="yourbid" style="margin-top: 10px">
+                <span class="bidprice"> Price:{{highestBidding}} MOAC</span>
+                <span class="yourbid" style="margin-top: 10px">
                 <input class='bidinput' id={{_id}} placeholder={{baseprice}} value={{baseprice}} type="number" title="Minimum bidding price is: {{baseprice}}">
                 MOAC
                </span>
+               {{else}}
+                <span class="bidprice" title={{description}}> {{nickname}}</span>
+                <br>
+                <span class="deposit"> {{TemplateVar.get "deposit"}} MC</span>
                 {{/if}}
                 <br>
                 <div class="bidbtn btn btn-default" data-areaid={{_id}}>

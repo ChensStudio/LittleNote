@@ -42,6 +42,10 @@ const answersSchema = new SimpleSchema({
     content:{
       type:String
     },
+    bonus:{
+      type:Number,
+      defaultValue:0
+    }
     //  vote: { 
     //   type: Number,
     // }
@@ -77,6 +81,9 @@ Questions.schema = new SimpleSchema({
   'answers.$':{
     type:answersSchema
   },
+  // answerCost:{
+  //    type:SimpleSchema.Integer
+  // },
   startTime:{
     type:Date,
   },

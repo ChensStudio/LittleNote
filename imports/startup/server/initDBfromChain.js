@@ -61,8 +61,8 @@ export function initNote(){
                 _id:item[0],
                 address: item[1],
                 latlng: {
-                    lat: item[3].toNumber(),
-                    lng: item[4].toNumber()
+                    lat: item[3].toNumber()/1e15,
+                    lng: item[4].toNumber()/1e15
                 },
                 grid: item[5].toNumber(),
                 grid10: item[6].toNumber(),

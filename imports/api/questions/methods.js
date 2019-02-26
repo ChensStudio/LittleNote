@@ -116,7 +116,7 @@ export const updateWinnerBonus = new ValidatedMethod({
     }).validator({ clean: true, filter: false }),
     run({questionId, address, bonus}) {
         const question = Questions.findOne(questionId);
-
+        
   },
 });
 

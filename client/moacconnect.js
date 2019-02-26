@@ -95,7 +95,7 @@ export var AddNote = function(inserts, callback) {
   var opt =  {
     from: chain3js.mc.accounts[0],
     gas: 5000000,
-    value: inserts.value,
+    value: inserts.value*1e18,
     gasPrice: 20000000000,
   };
   gContractInstance.AddNote.sendTransaction(

@@ -99,7 +99,6 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, AreaInsert.nickname,
    //      }
    //  }))
    // },10000);
-
   var checkAreaStatus = function(){
     var areas = Areas.find({endTime:{$gte: new Date()}}).fetch();
     _.each(areas, (area)=>{

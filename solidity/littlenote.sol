@@ -461,11 +461,11 @@
             string parentId;
             address userAddress;
             string note;
-            uint256 lat;
+            int256 lat;
 
-            uint256 lng;
-            uint256 grid;
-            uint256 grid10;
+            int256 lng;
+            int256 grid;
+            int256 grid10;
             bool forSell;
             uint256 purchasePrice;
             
@@ -488,8 +488,8 @@
         mapping (string => Note) private notes;
         string[] public notesArray;
         uint256[] public notesArrayByTime;
-        mapping (uint256 => uint256) private notesCountByGrid10;
-        mapping (uint256 => string[]) private notesIdByGrid10;
+        mapping (int256 => uint256) private notesCountByGrid10;
+        mapping (int256 => string[]) private notesIdByGrid10;
         string[] public potNotesId;
 
         mapping (uint256 => uint256) private hourlyPotReserves;
@@ -499,14 +499,14 @@
         address[] public investorsArray; 
         uint256 totalInvestment = 0;
 
-        address public AreaGameAddress;
-        AreaGame public AreaGameContract;
+        // address public AreaGameAddress;
+        // AreaGame public AreaGameContract;
 
-        function LittleNote(address _founder, address _areaGameAddress) public {
+        function LittleNote(address _founder) public {
             founder = _founder;
             haltFlag = false;
-            AreaGameAddress = _areaGameAddress;
-            AreaGameContract = AreaGame(AreaGameAddress);
+            // AreaGameAddress = _areaGameAddress;
+            // AreaGameContract = AreaGame(AreaGameAddress);
             initPriceTable();
         }
 
@@ -527,70 +527,70 @@
             return true;
         }
 
-        function AddGameNote(
-            string gameId, 
-            string noteText, 
-            uint256 lat, 
-            uint256 lng, 
-            string _id, 
-            bool forSell, 
-            address referral, 
-            bool mediaFlag
-            ) public payable {
-            if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt >= 0) {
-                revert();
-            }
-            uint256 grid10 = getGrid10(lat, lng);
-            bool freeFlag = true;
-            if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
-                freeFlag = false;
-            }
-            bool newFlag = true;
-            uint256 price = getPrice(freeFlag, newFlag, grid10, mediaFlag);
-            if (!freeFlag && msg.value < price) {
-                revert();
-            } else {
-                distributePayment(referral, grid10, 0, 0);
-            }
-            uint256 grid = getGrid(lat, lng);
-            notesArray.push(_id);
-            notes[_id]._id = _id;
-            notes[_id].parentId = gameId;
-            notes[_id].userAddress = msg.sender;
-            notes[_id].note = noteText;
-            notes[_id].lat = lat;
-            notes[_id].lng = lng;
-            notes[_id].grid = grid;
-            notes[_id].grid10 = grid10;
-            notes[_id].forSell = forSell;
-            notes[_id].referral = referral;
-            notes[_id].mediaFlag = mediaFlag;
-            notes[_id].createdAt = now;
-            lastPurchaseTime = now;
-            notesCountByGrid10[grid10]++;
-            string[] notesId = notesIdByGrid10[grid10];
-            notesId.push(_id);
-            notesIdByGrid10[grid10] = notesId;
-            potNotesId.push(_id);
-            notesArrayByTime.push(lastPurchaseTime);
+        // function AddGameNote(
+        //     string gameId, 
+        //     string noteText, 
+        //     uint256 lat, 
+        //     uint256 lng, 
+        //     string _id, 
+        //     bool forSell, 
+        //     address referral, 
+        //     bool mediaFlag
+        //     ) public payable {
+        //     if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt >= 0) {
+        //         revert();
+        //     }
+        //     uint256 grid10 = getGrid10(lat, lng);
+        //     bool freeFlag = true;
+        //     if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
+        //         freeFlag = false;
+        //     }
+        //     bool newFlag = true;
+        //     uint256 price = getPrice(freeFlag, newFlag, grid10, mediaFlag);
+        //     if (!freeFlag && msg.value < price) {
+        //         revert();
+        //     } else {
+        //         distributePayment(referral, grid10, 0, 0);
+        //     }
+        //     uint256 grid = getGrid(lat, lng);
+        //     notesArray.push(_id);
+        //     notes[_id]._id = _id;
+        //     notes[_id].parentId = gameId;
+        //     notes[_id].userAddress = msg.sender;
+        //     notes[_id].note = noteText;
+        //     notes[_id].lat = lat;
+        //     notes[_id].lng = lng;
+        //     notes[_id].grid = grid;
+        //     notes[_id].grid10 = grid10;
+        //     notes[_id].forSell = forSell;
+        //     notes[_id].referral = referral;
+        //     notes[_id].mediaFlag = mediaFlag;
+        //     notes[_id].createdAt = now;
+        //     lastPurchaseTime = now;
+        //     notesCountByGrid10[grid10]++;
+        //     string[] notesId = notesIdByGrid10[grid10];
+        //     notesId.push(_id);
+        //     notesIdByGrid10[grid10] = notesId;
+        //     potNotesId.push(_id);
+        //     notesArrayByTime.push(lastPurchaseTime);
 
-            AreaGameContract.AddGameNote(gameId, _id);
-            // gameNotes[gameId].push(_id);
-        }
+        //     AreaGameContract.AddGameNote(gameId, _id);
+        //     // gameNotes[gameId].push(_id);
+        // }
 
-        function DistributeForGame(string gameId, string noteId, uint256 amount) public {
-            if (AreaGameContract.GetGame(gameId).balance >= amount) {
-                uint len = AreaGameContract.GetGameNoteLength(gameId);
-                for (uint i=0; i<len; i++) {
-                    if (keccak256(AreaGameContract.GetGameNote(gameId, i)) == keccak256(noteId)) {
-                        notes[noteId].userAddress.transfer(amount);
-                        return;
-                    }
-                }
-            }
-        }
+        // function DistributeForGame(string gameId, string noteId, uint256 amount) public {
+        //     if (AreaGameContract.GetGame(gameId).balance >= amount) {
+        //         uint len = AreaGameContract.GetGameNoteLength(gameId);
+        //         for (uint i=0; i<len; i++) {
+        //             if (keccak256(AreaGameContract.GetGameNote(gameId, i)) == keccak256(noteId)) {
+        //                 notes[noteId].userAddress.transfer(amount);
+        //                 return;
+        //             }
+        //         }
+        //     }
+        // }
 
-
+        event AddAccountEvent(address userAddress);
         function AddAccount(string userName, address userAddress) public returns (bool) {
             if (bytes(userName).length > MaxUserNameLength) {
                 revert();
@@ -598,12 +598,13 @@
             if (msg.sender != userAddress && (msg.sender != founder && !anybodyAddOtherUser)) {
                 revert();
             }
-            if (accounts[userAddress].userAddress == 0 && accountsByUserName[userName] == 0) {
+            if (accounts[userAddress].noteNumber == 0) {
                 accounts[userAddress].userAddress = userAddress;
                 accounts[userAddress].userName = userName;
                 accounts[userAddress].noteNumber = 0;
                 uint256 length = accountsArray.push(userAddress);
                 accountsByUserName[userName] = length; //length is (index + 1)
+                AddAccountEvent(userAddress);
                 return true;
             } else {
                 return false;
@@ -624,11 +625,12 @@
             }
         }
 
-        function AddNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
-            if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt >= 0) {
+        event AddNoteEvent(string _id);
+        function AddNote(string noteText, int256 lat, int256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
+            if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt > 0) {
                 revert();
             }
-            uint256 grid10 = getGrid10(lat, lng);
+            int256 grid10 = getGrid10(lat, lng);
             bool freeFlag = true;
             if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
                 freeFlag = false;
@@ -640,7 +642,7 @@
             } else {
                 distributePayment(referral, grid10, 0, 0);
             }
-            uint256 grid = getGrid(lat, lng);
+            int256 grid = getGrid(lat, lng);
             notesArray.push(_id);
             notes[_id]._id = _id;
             notes[_id].userAddress = msg.sender;
@@ -660,13 +662,15 @@
             notesIdByGrid10[grid10] = notesId;
             potNotesId.push(_id);
             notesArrayByTime.push(lastPurchaseTime);
+            accounts[msg.sender].noteNumber++;
+            AddNoteEvent(_id);
         }
 
-        function BuyNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
+        function BuyNote(string noteText, int256 lat, int256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
             if (notes[_id].createdAt == 0 || !notes[_id].forSell || accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength) {
                 revert();
             }
-            uint256 grid10 = getGrid10(lat, lng);
+            int256 grid10 = getGrid10(lat, lng);
             bool freeFlag = true;
             if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
                 freeFlag = false;
@@ -678,7 +682,7 @@
             } else {
                 distributePayment(referral, grid10, notes[_id].userAddress, notes[_id].purchasePrice);
             }
-            uint256 grid = getGrid(lat, lng);
+            int256 grid = getGrid(lat, lng);
             notes[_id]._id = _id;
             notes[_id].userAddress = msg.sender;
             notes[_id].note = noteText;
@@ -715,17 +719,17 @@
             notes[_id].createdAt = now;
         }
 
-        function getGrid10(uint256 lat, uint256 lng) public returns (uint256) {
-            uint256 grid10 = lat/100000000000000*100000 + lng/100000000000000;
+        function getGrid10(int256 lat, int256 lng) public returns (int256) {
+            int256 grid10 = lat/100000000000000*100000 + lng/100000000000000;
             return grid10;
         }
 
-        function getGrid(uint256 lat, uint256 lng) public returns (uint256) {
-            uint256 grid = lat/10000000000000*1000000 + lng/10000000000000;
+        function getGrid(int256 lat, int256 lng) public returns (int256) {
+            int256 grid = lat/10000000000000*1000000 + lng/10000000000000;
             return grid;
         }
 
-        function getPrice(bool freeFlag, bool newFlag, uint grid10, bool mediaFlag) public view returns (uint256) {
+        function getPrice(bool freeFlag, bool newFlag, int grid10, bool mediaFlag) public view returns (uint256) {
             uint256 count = notesCountByGrid10[grid10];
 
             if (newFlag) {
@@ -801,16 +805,16 @@
             return accountsByUserName[name];
         }
 
-        function getNote(string _id) public view returns (string, address, string, uint256, uint256, uint256, uint256, bool, uint256, address, uint256) {
+        function getNote(string _id) public view returns (string, address, string, int256, int256, int256, int256, bool, uint256, address, uint256) {
             Note note = notes[_id];
             return (note._id, note.userAddress, note.note, note.lat, note.lng, note.grid, note.grid10, note.forSell, note.purchasePrice, note.referral, note.createdAt);
         }
 
-        function getNotesCountByGrid10(uint256 grid10) public view returns (uint256) {
+        function getNotesCountByGrid10(int256 grid10) public view returns (uint256) {
             return notesCountByGrid10[grid10];
         }
 
-        function getNotesIdByGrid10(uint256 grid10, uint256 index) public view returns (string) {
+        function getNotesIdByGrid10(int256 grid10, uint256 index) public view returns (string) {
             return notesIdByGrid10[grid10][index];
         }
 
@@ -839,11 +843,11 @@
                 sellerTake = availableMoney;
             }
             availableMoney -= sellerTake;
-            seller.send(sellerTake);
+            seller.transfer(sellerTake);
             return availableMoney;
         }
 
-        function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public payable returns (uint256) {
+        function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, int256 grid10) public payable returns (uint256) {
             //1) 20% patron bonus
             // 1.1) 20% to patrons in this grid10
             if (notesIdByGrid10[grid10].length != 0 ) {
@@ -858,7 +862,7 @@
                     }
                     availableMoney -= grid10Bonus;
                     if (notes[_id].userAddress != 0) {
-                        notes[_id].userAddress.send(grid10Bonus);
+                        notes[_id].userAddress.transfer(grid10Bonus);
                     }
                 }
             }
@@ -878,7 +882,7 @@
                         patronBonus = availableMoney;
                     }
                     availableMoney -= patronBonus;
-                    notes[notesArray[i]].userAddress.send(patronBonus);
+                    notes[notesArray[i]].userAddress.transfer(patronBonus);
                 }
             }
 
@@ -903,7 +907,7 @@
                 referralReward = availableMoney;
             }
             availableMoney -= referralReward;
-            referral.send(referralReward);
+            referral.transfer(referralReward);
             return availableMoney;
         }
 
@@ -930,7 +934,7 @@
             for (uint256 i=0; i<len; i++) {
                 address investor = investorsArray[i];
                 uint256 amount = investors[investor] * uintShare;
-                investor.send(amount);
+                investor.transfer(amount);
                 if (availableMoney < amount) {
                     amount = availableMoney;
                 }
@@ -945,7 +949,7 @@
             return 0;
         }
 
-        function distributePayment(address referral, uint256 grid10, address seller, uint256 sellerCost) public payable {
+        function distributePayment(address referral, int256 grid10, address seller, uint256 sellerCost) public payable {
             uint256 totalMoney = msg.value;
             uint256 availableMoney = totalMoney;
 
@@ -987,7 +991,7 @@
         //         for (uint256 i = 0; i<lastNotesCount; i++) {
         //             string _id = notesArray[len - i - 1];
         //             address userAddress = notes[_id].userAddress;
-        //             userAddress.send(distributeAmount);
+        //             userAddress.transfer(distributeAmount);
         //         }
         //     }
         // }

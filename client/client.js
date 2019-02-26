@@ -175,25 +175,15 @@ var createNewUserName = function(address, userName, callback) {
 
     MoacConnect.AddUser(userName, address, function(e, c){
       if (!e){
-      console.log('add user submit');
+      Session.set("loadContent","Deploying your profile to chain, please wait");
+      $('div.loaderBack').show();
       console.log('MoacConnect.AddUser callback', e, c);
 
-      var totalTry = 600;
-      var tryCount = 0;
-      var addUserInterval = setInterval(function() {
-        tryCount++;
-        if (tryCount >= totalTry) {
-          clearInterval(addUserInterval);
-        }
-        MoacConnect.GetAccount(address, function(e, c) {
-          if (e) {
-            console.log('MoacConnect.GetAccount error', e);
-            return;
-          }
-          console.log('get account',c);
-          if (!c || (c[1] !== '' && c[1] === userName)) {
-
-             accountinsert.call({
+      var AddUserEvent = gContractInstance.AddAccountEvent(function(error,result){
+        if(!error){
+          $('div.loaderBack').hide();
+          AddUserEvent.stopWatching();
+          accountinsert.call({
                   name: userName,
                   address: address
                   }, (err, _id)=>{
@@ -204,7 +194,6 @@ var createNewUserName = function(address, userName, callback) {
                       return;
                     }
                     else{
-                        
                         gUserName = userName;
                         callback(e, c);
                    //      setOnChainFlag.call({
@@ -212,14 +201,10 @@ var createNewUserName = function(address, userName, callback) {
                    //      onChainFlag: true
                    // });
                     }
-              })
-             clearInterval(addUserInterval);
-            
-          } else {
-            console.log('Inconsistent userName', c[1], userName);
-          }
-        });
-      }, 5000);
+            });
+        }
+      })
+        
       }
       
     });
@@ -295,7 +280,7 @@ var isFromChina = function(callback) {
   });
 }
 
-var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
+var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
   var latlng4 = getLatLng4(latlng);
   var grid = getGrid(latlng4);
   var grid10 = getGrid10(latlng4);
@@ -306,7 +291,7 @@ var toCreateNote = function(latlng, noteText, forSell, priceLimit, freeFlag) {
     lat: latlng4.lat,
     lng: latlng4.lng,
     grid: grid,
-                                                                            grid10,
+    grid10: grid10,
     noteText: noteText,
     forSell: forSell,
     value: priceLimit,
@@ -372,13 +357,23 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
           return;
         }
         else{
-            createNoteInDatabase(mongoInserts, function(err, _id) {
-              console.log('createNoteInDatabase called', mongoInserts, err, _id);
-              if (err) {
-              console.log('createNoteInDatabase err', err);
-              return;
-          }
-              });
+           Session.set("loadContent","Deploying your note to chain, please wait");
+           $('div.loaderBack').show();
+          var AddNoteEvent = gContractInstance.AddNoteEvent(function(error,result){
+            if(!error){
+               $('div.loaderBack').hide();
+               createNoteInDatabase(mongoInserts, function(err, _id) {
+                  console.log('createNoteInDatabase called', mongoInserts, err, _id);
+                  if (err) {
+                   console.log('createNoteInDatabase err', err);
+                  return;
+                  }
+                  });
+               AddNoteEvent.stopWatching();
+               map.closePopup();
+            }
+          })
+           
         }
         //TODO: update onChainFlag
       });
@@ -438,7 +433,9 @@ Template.map.rendered = function() {
           toCreateNote(latlng, noteText);
         })
       } else {
-        toCreateNote(latlng, noteText);
+        var grid10 = getGrid10(latlng);
+        var price = getPrice(grid10,false, false)
+        toCreateNote(latlng, noteText,price);
       }
     });
   }
@@ -618,7 +615,7 @@ Template.map.rendered = function() {
      
       // alert(noteText);
       createNoteModal(popup, event.latlng, noteText, userName);
-      map.closePopup();
+      
     });
 
     //create user

@@ -100,8 +100,8 @@ export var AddNote = function(inserts, callback) {
   };
   gContractInstance.AddNote.sendTransaction(
     inserts.noteText,
-    inserts.lat*1e15,
-    inserts.lng*1e15,
+    inserts.lat*1e15 + 360*1e15,
+    inserts.lng*1e15 + 360*1e15,
     inserts._id,
     inserts.forSell,
     inserts.referral,

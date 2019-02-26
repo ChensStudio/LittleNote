@@ -461,11 +461,11 @@
             string parentId;
             address userAddress;
             string note;
-            int256 lat;
+            uint256 lat;
 
-            int256 lng;
-            int256 grid;
-            int256 grid10;
+            uint256 lng;
+            uint256 grid;
+            uint256 grid10;
             bool forSell;
             uint256 purchasePrice;
             
@@ -488,8 +488,8 @@
         mapping (string => Note) private notes;
         string[] public notesArray;
         uint256[] public notesArrayByTime;
-        mapping (int256 => uint256) private notesCountByGrid10;
-        mapping (int256 => string[]) private notesIdByGrid10;
+        mapping (uint256 => uint256) private notesCountByGrid10;
+        mapping (uint256 => string[]) private notesIdByGrid10;
         string[] public potNotesId;
 
         mapping (uint256 => uint256) private hourlyPotReserves;
@@ -626,11 +626,11 @@
         }
 
         event AddNoteEvent(string _id);
-        function AddNote(string noteText, int256 lat, int256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
+        function AddNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
             if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt > 0) {
                 revert();
             }
-            int256 grid10 = getGrid10(lat, lng);
+            uint256 grid10 = getGrid10(lat, lng);
             bool freeFlag = true;
             if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
                 freeFlag = false;
@@ -639,10 +639,8 @@
             uint256 price = getPrice(freeFlag, newFlag, grid10, mediaFlag);
             if (!freeFlag && msg.value < price) {
                 revert();
-            } else {
-                distributePayment(referral, grid10, 0, 0);
             }
-            int256 grid = getGrid(lat, lng);
+            uint256 grid = getGrid(lat, lng);
             notesArray.push(_id);
             notes[_id]._id = _id;
             notes[_id].userAddress = msg.sender;
@@ -666,11 +664,11 @@
             AddNoteEvent(_id);
         }
 
-        function BuyNote(string noteText, int256 lat, int256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
+        function BuyNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
             if (notes[_id].createdAt == 0 || !notes[_id].forSell || accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength) {
                 revert();
             }
-            int256 grid10 = getGrid10(lat, lng);
+            uint256 grid10 = getGrid10(lat, lng);
             bool freeFlag = true;
             if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
                 freeFlag = false;
@@ -682,7 +680,7 @@
             } else {
                 distributePayment(referral, grid10, notes[_id].userAddress, notes[_id].purchasePrice);
             }
-            int256 grid = getGrid(lat, lng);
+            uint256 grid = getGrid(lat, lng);
             notes[_id]._id = _id;
             notes[_id].userAddress = msg.sender;
             notes[_id].note = noteText;
@@ -719,17 +717,17 @@
             notes[_id].createdAt = now;
         }
 
-        function getGrid10(int256 lat, int256 lng) public returns (int256) {
-            int256 grid10 = lat/100000000000000*100000 + lng/100000000000000;
-            return grid10;
+        function getGrid10(uint256 lat, uint256 lng) public returns (uint256) {
+            uint256 grid10 = lat/100000000000000*100000 + lng/100000000000000;
+            return grid10; 
         }
 
-        function getGrid(int256 lat, int256 lng) public returns (int256) {
-            int256 grid = lat/10000000000000*1000000 + lng/10000000000000;
+        function getGrid(uint256 lat, uint256 lng) public returns (uint256) {
+            uint256 grid = lat/10000000000000*1000000 + lng/10000000000000;
             return grid;
         }
 
-        function getPrice(bool freeFlag, bool newFlag, int grid10, bool mediaFlag) public view returns (uint256) {
+        function getPrice(bool freeFlag, bool newFlag, uint256 grid10, bool mediaFlag) public view returns (uint256) {
             uint256 count = notesCountByGrid10[grid10];
 
             if (newFlag) {
@@ -805,16 +803,16 @@
             return accountsByUserName[name];
         }
 
-        function getNote(string _id) public view returns (string, address, string, int256, int256, int256, int256, bool, uint256, address, uint256) {
+        function getNote(string _id) public view returns (string, address, string, uint256, uint256, uint256, uint256, bool, uint256, address, uint256) {
             Note note = notes[_id];
             return (note._id, note.userAddress, note.note, note.lat, note.lng, note.grid, note.grid10, note.forSell, note.purchasePrice, note.referral, note.createdAt);
         }
 
-        function getNotesCountByGrid10(int256 grid10) public view returns (uint256) {
+        function getNotesCountByGrid10(uint256 grid10) public view returns (uint256) {
             return notesCountByGrid10[grid10];
         }
 
-        function getNotesIdByGrid10(int256 grid10, uint256 index) public view returns (string) {
+        function getNotesIdByGrid10(uint256 grid10, uint256 index) public view returns (string) {
             return notesIdByGrid10[grid10][index];
         }
 
@@ -847,7 +845,7 @@
             return availableMoney;
         }
 
-        function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, int256 grid10) public payable returns (uint256) {
+        function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public payable returns (uint256) {
             //1) 20% patron bonus
             // 1.1) 20% to patrons in this grid10
             if (notesIdByGrid10[grid10].length != 0 ) {
@@ -949,7 +947,7 @@
             return 0;
         }
 
-        function distributePayment(address referral, int256 grid10, address seller, uint256 sellerCost) public payable {
+        function distributePayment(address referral, uint256 grid10, address seller, uint256 sellerCost) public payable {
             uint256 totalMoney = msg.value;
             uint256 availableMoney = totalMoney;
 

@@ -1,4 +1,4 @@
-import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates} from './utils.js';
+import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates,openedArea} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
@@ -9,10 +9,12 @@ import MoacConnect from './moacconnect.js';
 import { Random } from 'meteor/random';
 import {insertquestion,latestAnswer} from '../imports/api/questions/methods.js';
 import {Questions} from '../imports/api/questions/questions.js';
+import {Areas} from  '../imports/api/areas/areas.js'
 
 
 // import {encode, decode} from 'rlp';
-// import { statesData } from './statesData'
+import { OpenedAreaData } from './OpenedAreaData';
+import { AreaInfo } from './AreaInfo';
 // $(document).width() = document.width()*2;
 
 // console.log("random Id",Random.id(17));
@@ -28,9 +30,18 @@ var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
 
+var poly_center = [null,null];
+var uncharted;
+var allAreas;
+var polygon;
+var circle_move;
+
 global.gSetGame = false;
 global.gInArea = false;
 Session.set("gAreaid", "");
+Session.set("gUncharted",true);
+Session.set("unchartedArea",OpenedAreaData);
+Session.set("AreaInfo",AreaInfo);
 
 // $(window).resize(function(){
 //   console.log('browser width',$(window).width())
@@ -47,6 +58,7 @@ Meteor.subscribe('accounts', function(){
 var tooltip;
 var error_marker;
 // var chain3js;
+
 
 // on startup run resizing event
 Meteor.startup(function() {
@@ -395,6 +407,7 @@ Template.map.rendered = function() {
     }
   }
 
+
   var updateTooltip = function(evt) {
     var grid10 = getGrid10(evt.latlng);
     // console.log('updateTooltip');
@@ -409,6 +422,7 @@ Template.map.rendered = function() {
     tooltip
       .setContent(content)
       .updatePosition(evt.layerPoint);
+
     tooltip.show();
   }
 
@@ -451,8 +465,12 @@ Template.map.rendered = function() {
     minZoom: 1,
     maxZoom: 19
   }).addTo(map);
+ $(".leaflet-container").css("cursor","pointer");
 
-  // L.geoJson(statesData).addTo(map);
+  
+  // var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
+  // OpenedAreaData.geometry.coordinates.push(openedArea(bound));
+  // uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style}).addTo(map);
   
 
   map.addControl(L.control.locate({
@@ -465,7 +483,25 @@ Template.map.rendered = function() {
   var popup = L.popup();
   var container = L.DomUtil.create('div','popup_container');
 
+this.autorun(function(){
   
+  uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style}).addTo(map);
+  // allAreas = L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature});
+  // console.log(uncharted);
+  uncharted.on('mouseover',function(event){
+         Session.set("gUncharted",true);
+         if(polygon && circle_move && tooltip){
+          map.removeLayer(polygon);
+          map.removeLayer(circle_move);
+          tooltip.hide();
+         } 
+      })      
+
+  uncharted.on('mouseout',function(event){
+        Session.set("gUncharted",false);
+         poly_center = [null,null];
+      })
+
   map.on('click', function(event) {
     if (event.originalEvent && event.originalEvent.key == "Enter") {
       return;
@@ -473,7 +509,6 @@ Template.map.rendered = function() {
 
     var coordinates = displayCoordinates(event.latlng);
     var grid10 = getGrid10(event.latlng);
-    console.log("map on click");
     var price = getPrice(grid10, false, true);
     if (price != 'FREE') {
       price += ' MOAC';
@@ -496,7 +531,7 @@ Template.map.rendered = function() {
     container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
     
-    if (overlap === false && gSetGame === false){ //set regular note if not under setgame model
+    if (overlap === false && gSetGame === false && !Session.get("gUncharted")){ //set regular note if not under setgame model
     popup
       .setLatLng(event.latlng)
       .setContent(container)
@@ -590,9 +625,13 @@ Template.map.rendered = function() {
           map.closePopup();
           });
         }
-        else {
-          alert("Please set game in your Area");
+        else if(Session.get("gUncharted")){
+          alert("This area is not open");
         }
+        else{
+           alert("Please set game in your Area");
+        }
+
     }
    
       if (!gUserName) {
@@ -646,32 +685,30 @@ Template.map.rendered = function() {
     })
   });
 
-
   var bounds = map.getBounds().pad(0.25); // slightly out of screen
+  
   tooltip = L.tooltip({
     position: 'bottom',
     noWrap: true
   })
     .addTo(map)
-    .setContent('Start drawing to see tooltip change')
+    .setContent()
     .setLatLng(new L.LatLng(bounds.getNorth(), bounds.getCenter().lng));
-
-  var polygon;
-  var circle_move;
+  
+  tooltip.hide();
+  
   var circle_drop;
-  var circle_pending;
   var cx = null;
   var cy = null;
-  var poly_center = [cx,cy];
-  
-
   map.on('mousemove', function(event) {
+   if (!Session.get("gUncharted")){
     var latFloor = Math.floor(event.latlng.lat * 10)/10;
     var latCeil = Math.ceil(event.latlng.lat * 10)/10;
     var lngFloor = Math.floor(event.latlng.lng * 10)/10;
     var lngCeil = Math.ceil(event.latlng.lng * 10)/10;
     cx = (latFloor + latCeil)/2;
     cy = (lngFloor + lngCeil)/2;
+  
     if (tooltip) {
       updateTooltip(event);
     }
@@ -684,9 +721,11 @@ Template.map.rendered = function() {
        poly_center = [cx,cy];
        polygon.bringToBack();
     }
+  }
   });
 
   map.on('mousemove', function(event) {
+    if (!Session.get("gUncharted")){
     if(error_marker){
       map.removeLayer(error_marker);
     }
@@ -705,9 +744,10 @@ Template.map.rendered = function() {
       if(overlap === true){
         circle_move.setStyle({color:'red',fillColor:'red'});
       }
-
+    }
   })
 
+});
   // add clustermarkers
   var markers = L.markerClusterGroup(/*{maxClusterRadius:80}*/);
   map.addLayer(markers);
@@ -723,7 +763,7 @@ Template.map.rendered = function() {
             fillOpacity:0.5,
             weight:0.1,
             radius:rad}).addTo(map);
-
+       circle_drop.bringToFront();
       circle_drop.on('mouseover',function(event){
         overlap = true;
       })      
@@ -799,6 +839,31 @@ game.observe({
 })
 };
 
+var areas = Areas.find({});
+areas.observe({
+  added: function(document){
+     map.removeLayer(uncharted);
+     OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
+     Session.set("unchartedArea",OpenedAreaData);
+
+     // var AreaObj =  {
+     //    "type":"Feature",
+     //     "properties":{
+     //        "admin":document.admin,
+     //        "nickname":document.nickname,
+     //        "description":document.description
+     //      },
+     //     "geometry":{
+     //    "type":"Polygon",
+     //    "coordinates":[
+     //      openedArea(document.bounds)
+     //    ]
+     //    }};
+     //  AreaInfo.features.push(AreaObj);
+     //  Session.set("AreaInfo",AreaInfo);  
+
+  }
+})
 
 Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   var n = Notes.find({_id: noteid}).fetch();
@@ -850,10 +915,11 @@ Template.map.flyToBiddingArea = function(bounds){
   if (BidArea){
     map.removeLayer(BidArea);
   }
-   BidArea = L.rectangle(bound, {color: "black",weight: 0.2}).addTo(map);
+   BidArea = L.rectangle(bound, {color: "white",weight: 0.5,fillColor:"blue",fillOpacity:"0.1"}).addTo(map);
    BidArea.bringToBack();
    BidArea.on("mouseover",function(event){
      gInArea = true;
+    
    });
 
    BidArea.on("mouseout",function(event){

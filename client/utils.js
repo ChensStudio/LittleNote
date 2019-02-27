@@ -144,3 +144,35 @@ export const displayCoordinates = function(latlng) {
   return lat + ', ' + lng;
 }
 
+
+export const openedArea = function(bounds){
+
+    let lu = [bounds[0].lng,bounds[0].lat];
+    let ru = [bounds[0].lng,bounds[1].lat];
+    let rd = [bounds[1].lng,bounds[1].lat];
+    let ld = [bounds[1].lng,bounds[0].lat];
+       
+    return [lu,ru,rd,ld];
+}
+
+// export const highlightFeature = function(e) {
+//     var layer = e.target;
+
+//     layer.setStyle({
+//         weight: 5,
+//         color: '#666',
+//         dashArray: '',
+//         fillOpacity: 0.7
+//     });
+// }
+
+// export const resetHighlight = function (e) {
+//     geojson.resetStyle(e.target);
+// }
+
+// export const onEachFeature = function (feature, layer) {
+//     layer.on({
+//         mouseover: highlightFeature,
+//         mouseout: resetHighlight,
+//     });
+// }

@@ -7,7 +7,6 @@ import MoacConnect from '../../moacconnect.js';
 import { Random } from 'meteor/random';
 
 
-
 var getCountDown = function(countdown,endTime){
 		if (endTime > new Date()){
 		 	Meteor.setTimeout(()=>{Session.set(countdown,countDownFormat(endTime))},1000);
@@ -227,7 +226,6 @@ this.autorun(function(){
 		Questions.findOne({_id:questionId}).distributed
 		);
 	})
-
 })
 
 var num = 0;

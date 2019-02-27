@@ -1,10 +1,141 @@
 export const httpProvider = 'http://gateway.moac.io/testnet';
-export const littleNoteContractAddr = '0xa38b80947c3b622ab8e8fc46d38cfa544eeb1d03';
-export const littleNoteContractAbi =[
+export const littleNoteContractAddr = '0x9b58e5ccb4a77ac4392bbda5b01617dcfc869029';
+export const littleNoteContractAbi = [
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "MaxFreeNoteCount",
+		"constant": false,
+		"inputs": [
+			{
+				"name": "userName",
+				"type": "string"
+			},
+			{
+				"name": "userAddress",
+				"type": "address"
+			}
+		],
+		"name": "AddAccount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "noteText",
+				"type": "string"
+			},
+			{
+				"name": "lat",
+				"type": "uint256"
+			},
+			{
+				"name": "lng",
+				"type": "uint256"
+			},
+			{
+				"name": "_id",
+				"type": "string"
+			},
+			{
+				"name": "forSell",
+				"type": "bool"
+			},
+			{
+				"name": "referral",
+				"type": "address"
+			},
+			{
+				"name": "mediaFlag",
+				"type": "bool"
+			}
+		],
+		"name": "AddNote",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			}
+		],
+		"name": "allPatronDistribution",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "noteText",
+				"type": "string"
+			},
+			{
+				"name": "lat",
+				"type": "uint256"
+			},
+			{
+				"name": "lng",
+				"type": "uint256"
+			},
+			{
+				"name": "_id",
+				"type": "string"
+			},
+			{
+				"name": "forSell",
+				"type": "bool"
+			},
+			{
+				"name": "referral",
+				"type": "address"
+			},
+			{
+				"name": "mediaFlag",
+				"type": "bool"
+			}
+		],
+		"name": "BuyNote",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			}
+		],
+		"name": "devTeamDistribution",
 		"outputs": [
 			{
 				"name": "",
@@ -12,7 +143,214 @@ export const littleNoteContractAbi =[
 			}
 		],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "referral",
+				"type": "address"
+			},
+			{
+				"name": "grid10",
+				"type": "uint256"
+			},
+			{
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"name": "sellerCost",
+				"type": "uint256"
+			}
+		],
+		"name": "distributePayment",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "referral",
+				"type": "address"
+			}
+		],
+		"name": "distributeReferral",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "noteText",
+				"type": "string"
+			},
+			{
+				"name": "lat",
+				"type": "uint256"
+			},
+			{
+				"name": "lng",
+				"type": "uint256"
+			},
+			{
+				"name": "_id",
+				"type": "string"
+			},
+			{
+				"name": "forSell",
+				"type": "bool"
+			}
+		],
+		"name": "EditNote",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			}
+		],
+		"name": "feesAndCharityReserve",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "grid10",
+				"type": "uint256"
+			}
+		],
+		"name": "gridPatronDistribution",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "initPriceTable",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "Invest",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			}
+		],
+		"name": "investorDistribution",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "ManualTransfer",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "input",
+				"type": "uint256"
+			}
+		],
+		"name": "multiplyByRatio",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -27,6 +365,554 @@ export const littleNoteContractAbi =[
 		"outputs": [],
 		"payable": true,
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "sellerCost",
+				"type": "uint256"
+			},
+			{
+				"name": "seller",
+				"type": "address"
+			}
+		],
+		"name": "sellerDistribution",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "SetAdmin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "newFounder",
+				"type": "address"
+			}
+		],
+		"name": "SetFounder",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "halt",
+				"type": "bool"
+			}
+		],
+		"name": "SetHalt",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "string"
+			},
+			{
+				"name": "forSell",
+				"type": "bool"
+			}
+		],
+		"name": "ToggleSell",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "totalMoney",
+				"type": "uint256"
+			},
+			{
+				"name": "availableMoney",
+				"type": "uint256"
+			}
+		],
+		"name": "updatePotReserves",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_founder",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "userAddress",
+				"type": "address"
+			}
+		],
+		"name": "AddAccountEvent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_id",
+				"type": "string"
+			}
+		],
+		"name": "AddNoteEvent",
+		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "accountsArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "anybodyAddOtherUser",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "canDistributePotReserve",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "developerAmount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "feesAndCharity",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "founder",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "accountAddress",
+				"type": "address"
+			}
+		],
+		"name": "getAccount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "getAccountByName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "n",
+				"type": "uint256"
+			}
+		],
+		"name": "getBigPrice",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "lat",
+				"type": "uint256"
+			},
+			{
+				"name": "lng",
+				"type": "uint256"
+			}
+		],
+		"name": "getGrid",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "lat",
+				"type": "uint256"
+			},
+			{
+				"name": "lng",
+				"type": "uint256"
+			}
+		],
+		"name": "getGrid10",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "hourNumber",
+				"type": "uint256"
+			}
+		],
+		"name": "getHourlyPotReserves",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "investor",
+				"type": "address"
+			}
+		],
+		"name": "getInvestor",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "string"
+			}
+		],
+		"name": "getNote",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "bool"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "grid10",
+				"type": "uint256"
+			}
+		],
+		"name": "getNotesCountByGrid10",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "grid10",
+				"type": "uint256"
+			},
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "getNotesIdByGrid10",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "freeFlag",
+				"type": "bool"
+			},
+			{
+				"name": "newFlag",
+				"type": "bool"
+			},
+			{
+				"name": "grid10",
+				"type": "uint256"
+			},
+			{
+				"name": "mediaFlag",
+				"type": "bool"
+			}
+		],
+		"name": "getPrice",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -70,146 +956,6 @@ export const littleNoteContractAbi =[
 				"type": "uint256"
 			}
 		],
-		"name": "potNotesId",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "string"
-			},
-			{
-				"name": "forSell",
-				"type": "bool"
-			}
-		],
-		"name": "ToggleSell",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "investorDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "notesArrayByTime",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "lat",
-				"type": "int256"
-			},
-			{
-				"name": "lng",
-				"type": "int256"
-			}
-		],
-		"name": "getGrid",
-		"outputs": [
-			{
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "noteText",
-				"type": "string"
-			},
-			{
-				"name": "lat",
-				"type": "int256"
-			},
-			{
-				"name": "lng",
-				"type": "int256"
-			},
-			{
-				"name": "_id",
-				"type": "string"
-			},
-			{
-				"name": "forSell",
-				"type": "bool"
-			},
-			{
-				"name": "referral",
-				"type": "address"
-			},
-			{
-				"name": "mediaFlag",
-				"type": "bool"
-			}
-		],
-		"name": "AddNote",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"name": "investorsArray",
 		"outputs": [
 			{
@@ -223,72 +969,8 @@ export const littleNoteContractAbi =[
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "string"
-			}
-		],
-		"name": "getNote",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "int256"
-			},
-			{
-				"name": "",
-				"type": "int256"
-			},
-			{
-				"name": "",
-				"type": "int256"
-			},
-			{
-				"name": "",
-				"type": "int256"
-			},
-			{
-				"name": "",
-				"type": "bool"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "PriceTable",
+		"inputs": [],
+		"name": "last24HourBasisPoint",
 		"outputs": [
 			{
 				"name": "",
@@ -302,7 +984,7 @@ export const littleNoteContractAbi =[
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "threshold",
+		"name": "last24HourCount",
 		"outputs": [
 			{
 				"name": "",
@@ -316,11 +998,11 @@ export const littleNoteContractAbi =[
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "canDistributePotReserve",
+		"name": "lastPurchaseTime",
 		"outputs": [
 			{
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -328,26 +1010,17 @@ export const littleNoteContractAbi =[
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "lat",
-				"type": "int256"
-			},
-			{
-				"name": "lng",
-				"type": "int256"
-			}
-		],
-		"name": "getGrid10",
+		"constant": true,
+		"inputs": [],
+		"name": "MaxFreeNoteCount",
 		"outputs": [
 			{
 				"name": "",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -367,21 +1040,7 @@ export const littleNoteContractAbi =[
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "founder",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "MinPrice",
+		"name": "MaxPresetPricePower",
 		"outputs": [
 			{
 				"name": "",
@@ -394,25 +1053,36 @@ export const littleNoteContractAbi =[
 	},
 	{
 		"constant": true,
-		"inputs": [
+		"inputs": [],
+		"name": "MaxPrice",
+		"outputs": [
 			{
-				"name": "freeFlag",
-				"type": "bool"
-			},
-			{
-				"name": "newFlag",
-				"type": "bool"
-			},
-			{
-				"name": "grid10",
-				"type": "int256"
-			},
-			{
-				"name": "mediaFlag",
-				"type": "bool"
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "getPrice",
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "MaxUserNameLength",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "mediaRate",
 		"outputs": [
 			{
 				"name": "",
@@ -426,185 +1096,7 @@ export const littleNoteContractAbi =[
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "potReserve",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "newAdmin",
-				"type": "address"
-			}
-		],
-		"name": "SetAdmin",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "noteText",
-				"type": "string"
-			},
-			{
-				"name": "lat",
-				"type": "int256"
-			},
-			{
-				"name": "lng",
-				"type": "int256"
-			},
-			{
-				"name": "_id",
-				"type": "string"
-			},
-			{
-				"name": "forSell",
-				"type": "bool"
-			},
-			{
-				"name": "referral",
-				"type": "address"
-			},
-			{
-				"name": "mediaFlag",
-				"type": "bool"
-			}
-		],
-		"name": "BuyNote",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "noteText",
-				"type": "string"
-			},
-			{
-				"name": "lat",
-				"type": "uint256"
-			},
-			{
-				"name": "lng",
-				"type": "uint256"
-			},
-			{
-				"name": "_id",
-				"type": "string"
-			},
-			{
-				"name": "forSell",
-				"type": "bool"
-			}
-		],
-		"name": "EditNote",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "referral",
-				"type": "address"
-			},
-			{
-				"name": "grid10",
-				"type": "int256"
-			},
-			{
-				"name": "seller",
-				"type": "address"
-			},
-			{
-				"name": "sellerCost",
-				"type": "uint256"
-			}
-		],
-		"name": "distributePayment",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "potDistCountLimit",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "ratio",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "grid10",
-				"type": "int256"
-			},
-			{
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "getNotesIdByGrid10",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalPurchase",
+		"name": "MinPrice",
 		"outputs": [
 			{
 				"name": "",
@@ -638,11 +1130,11 @@ export const littleNoteContractAbi =[
 		"constant": true,
 		"inputs": [
 			{
-				"name": "grid10",
-				"type": "int256"
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "getNotesCountByGrid10",
+		"name": "notesArrayByTime",
 		"outputs": [
 			{
 				"name": "",
@@ -651,480 +1143,6 @@ export const littleNoteContractAbi =[
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "updatePotReserves",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "investor",
-				"type": "address"
-			}
-		],
-		"name": "getInvestor",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "accountsArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "developerAmount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "userName",
-				"type": "string"
-			},
-			{
-				"name": "userAddress",
-				"type": "address"
-			}
-		],
-		"name": "AddAccount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "n",
-				"type": "uint256"
-			}
-		],
-		"name": "getBigPrice",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "feesAndCharity",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "allPatronDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "referral",
-				"type": "address"
-			}
-		],
-		"name": "distributeReferral",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "input",
-				"type": "uint256"
-			}
-		],
-		"name": "multiplyByRatio",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "MaxPrice",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "hourNumber",
-				"type": "uint256"
-			}
-		],
-		"name": "getHourlyPotReserves",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "MaxUserNameLength",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "feesAndCharityReserve",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "Invest",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "lastPurchaseTime",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "newFounder",
-				"type": "address"
-			}
-		],
-		"name": "SetFounder",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"name": "to",
-				"type": "address"
-			}
-		],
-		"name": "ManualTransfer",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "last24HourCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "MaxPresetPricePower",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "halt",
-				"type": "bool"
-			}
-		],
-		"name": "SetHalt",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "initPriceTable",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "getAccountByName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "last24HourBasisPoint",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "mediaRate",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "devTeamDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "grid10",
-				"type": "int256"
-			}
-		],
-		"name": "gridPatronDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -1144,11 +1162,11 @@ export const littleNoteContractAbi =[
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "admin",
+		"name": "potDistCountLimit",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -1156,54 +1174,48 @@ export const littleNoteContractAbi =[
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
-				"name": "totalMoney",
+				"name": "",
 				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "sellerCost",
-				"type": "uint256"
-			},
-			{
-				"name": "seller",
-				"type": "address"
 			}
 		],
-		"name": "sellerDistribution",
+		"name": "potNotesId",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "potReserve",
 		"outputs": [
 			{
 				"name": "",
 				"type": "uint256"
 			}
 		],
-		"payable": true,
-		"stateMutability": "payable",
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": true,
 		"inputs": [
 			{
-				"name": "accountAddress",
-				"type": "address"
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "getAccount",
+		"name": "PriceTable",
 		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
 			{
 				"name": "",
 				"type": "uint256"
@@ -1216,11 +1228,11 @@ export const littleNoteContractAbi =[
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "anybodyAddOtherUser",
+		"name": "ratio",
 		"outputs": [
 			{
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -1228,44 +1240,32 @@ export const littleNoteContractAbi =[
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"constant": true,
+		"inputs": [],
+		"name": "threshold",
+		"outputs": [
 			{
-				"name": "_founder",
-				"type": "address"
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "fallback"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
+		"constant": true,
+		"inputs": [],
+		"name": "totalPurchase",
+		"outputs": [
 			{
-				"indexed": false,
-				"name": "userAddress",
-				"type": "address"
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "AddAccountEvent",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_id",
-				"type": "string"
-			}
-		],
-		"name": "AddNoteEvent",
-		"type": "event"
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ];
 // export const areaGameContractAddr = '0x4e3506a73C2fEE70d28286392868B85a5D690664';

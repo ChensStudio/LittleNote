@@ -54,7 +54,7 @@ console.log('position ID:',Pos_id);
 console.log('area ID:',Area_id);
 // console.log('tonumber:',typeof 2.5);
 
-var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
+var bound = [{lat:67.08342,lng:26.76727},{lat:67.5125,lng:26.2381}];
 var AreaInsert = {
   _id:Area_id,
   admin:founderAddr,
@@ -92,13 +92,13 @@ var AddAreaData = contractInstance.AddArea.getData(Area_id, AreaInsert.nickname,
 
   //       }
   //      }))
-       // Meteor.setTimeout(
-       //   function(){
-       //        insertarea.call(AreaInsert);
-       //  },20000);
-   //      }
-   //  }))
-   // },10000);
+  //      Meteor.setTimeout(
+  //        function(){
+  //             insertarea.call(AreaInsert);
+  //       },20000);
+  //       }
+  //   }))
+  //  },10000);
   var checkAreaStatus = function(){
     var areas = Areas.find({endTime:{$gte: new Date()}}).fetch();
     _.each(areas, (area)=>{

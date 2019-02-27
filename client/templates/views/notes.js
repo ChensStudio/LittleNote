@@ -14,13 +14,13 @@ Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
 
 Meteor.startup(function() {
     MoacConnect.InitChain3();
-    var filter = chain3js.mc.filter("pending");
+    var filter = chain3js.mc.filter("latest");
     filter.watch(function(e,r){
      if(e){
         console.log("error",e);
         }
      else{
-        console.log("new pending",r);
+        console.log("latest block",r);
      }
 })
 });

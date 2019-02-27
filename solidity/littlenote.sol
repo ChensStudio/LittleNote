@@ -640,6 +640,9 @@
             if (!freeFlag && msg.value < price) {
                 revert();
             }
+            else {
+                Invest();
+            }
             uint256 grid = getGrid(lat, lng);
             notesArray.push(_id);
             notes[_id]._id = _id;
@@ -717,12 +720,12 @@
             notes[_id].createdAt = now;
         }
 
-        function getGrid10(uint256 lat, uint256 lng) public returns (uint256) {
+        function getGrid10(uint256 lat, uint256 lng) public view returns (uint256) {
             uint256 grid10 = lat/100000000000000*100000 + lng/100000000000000;
             return grid10; 
         }
 
-        function getGrid(uint256 lat, uint256 lng) public returns (uint256) {
+        function getGrid(uint256 lat, uint256 lng) public view returns (uint256) {
             uint256 grid = lat/10000000000000*1000000 + lng/10000000000000;
             return grid;
         }

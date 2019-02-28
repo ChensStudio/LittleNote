@@ -64,7 +64,7 @@ Template.areainfobody.events({
     	 TemplateVar.set('ownedAsset', true);
 	},
 	'click .notecoordinates': function(e) {
-    	Template.map.flyToBiddingArea(this.bounds);
+    	Template.map.flyToOpenedArea(this.bounds);
     }
      	
 })

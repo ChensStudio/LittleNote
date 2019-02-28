@@ -155,22 +155,48 @@ export const openedArea = function(bounds){
     return [lu,ru,rd,ld];
 }
 
+export var info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+info.update = function (props) {
+    this._div.innerHTML = '<h4>Area Information</h4>' +  (props ?
+
+        '<div class="AreaInfoContent">ADMIN: ' +props.admin + '<br />REGION: ' + props.nickname + '<br />DESCRIPTION: ' + props.description +'</div>'
+        : 'Hover over a area');
+};
+
 export const highlightFeature = function(e) {
     var layer = e.target;
 
     layer.setStyle({
-        weight: 3,
-        color: '#666',
-        dashArray: '',
-        fillColor:"white",
-        fillOpacity: 1
+        weight:2,
+        color:"black",
+        fillOpacity:0,
+        opacity:1
     });
+
+    info.update(layer.feature.properties);
 }
 
-var geojson = L.geoJson();
+// var geojson = L.geoJson();
 
 export const resetHighlight = function (e) {
-    geojson.resetStyle(e.target);
+    var layer = e.target;
+    layer.setStyle({
+        weight: 2,
+        opacity: 0,
+        color: 'white',
+        dashArray: 8,
+        fillColor:"white",
+        fillOpacity:0
+    });
+
+     info.update();
 }
 
 export const onEachFeature = function (feature, layer) {

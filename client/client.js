@@ -1,4 +1,4 @@
-import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates,openedArea,highlightFeature,resetHighlight,onEachFeature} from './utils.js';
+import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates,openedArea,highlightFeature,resetHighlight,onEachFeature,info} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
@@ -460,7 +460,7 @@ Template.map.rendered = function() {
     maxZoom: 19
   }).addTo(map);
  $(".leaflet-container").css("cursor","pointer");
-  
+ info.addTo(map);
 
   map.addControl(L.control.locate({
     locateOptions: {
@@ -473,11 +473,11 @@ Template.map.rendered = function() {
   var container = L.DomUtil.create('div','popup_container');
 
 this.autorun(function(){
-  console.log(Session.get("AreaInfo"));
+  // console.log(Session.get("AreaInfo"));
   uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style}).addTo(map);
-  L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature});
-  // console.log("areas",allAreas);
-  // allAreas.bringToBack();
+  allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style}).addTo(map);
+  console.log("areas",allAreas);
+  allAreas.bringToBack();
   console.log("uncharted",uncharted);
   uncharted.on('mouseover',function(event){
          Session.set("gUncharted",true);
@@ -706,10 +706,11 @@ this.autorun(function(){
     }
     if(poly_center[0]!=cx || poly_center[1]!=cy){
        if(polygon){
-        map.removeLayer(polygon);
+        $(".fade-polygon").fadeOut(200);
+         // map.removeLayer(polygon);
        }
        var latlngs = [[latFloor, lngFloor],[latFloor, lngCeil],[latCeil, lngCeil],[latCeil, lngFloor]];
-       polygon = L.polygon(latlngs, {color: '#0AE0CE',weight: 0.5}).addTo(map);
+       polygon = L.polygon(latlngs, {color: '#0AE0CE',weight: 0.1,className:"fade-polygon"}).addTo(map);
        poly_center = [cx,cy];
        polygon.bringToBack();
     }
@@ -826,7 +827,7 @@ game.observe({
           this.openPopup();
         }).on('mouseout',function(e){
           this.closePopup();
-        });
+        }).setZIndexOffset(1000);
   }
 })
 };
@@ -834,28 +835,29 @@ game.observe({
 var areas = Areas.find({});
 areas.observe({
   added: function(document){
-     map.removeLayer(uncharted);
+     if(uncharted){map.removeLayer(uncharted);}
      // if(allAreas){ map.removeLayer(allAreas);}
      OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
      Session.set("unchartedArea",OpenedAreaData);
      console.log(openedArea(document.bounds))
 
-     // var AreaObj =  {
-     //    "type":"Feature",
-     //     "properties":{
-     //        "admin":document.admin,
-     //        "nickname":document.nickname,
-     //        "description":document.description
-     //      },
-     //     "geometry":{
-     //    "type":"Polygon",
-     //    "coordinates":[
-     //      openedArea(document.bounds)
-     //    ]
-     //    }};
-     //    console.log(AreaObj);
-     //  AreaInfo.features.push(AreaObj);
-     //  Session.set("AreaInfo",AreaInfo);  
+     var AreaObj =  {
+        "type":"Feature",
+         "properties":{
+            "id":document._id,
+            "admin":document.admin,
+            "nickname":document.nickname,
+            "description":document.description
+          },
+         "geometry":{
+        "type":"Polygon",
+        "coordinates":[
+          openedArea(document.bounds)
+        ]
+        }};
+        console.log(AreaObj);
+      AreaInfo.features.push(AreaObj);
+      Session.set("AreaInfo",AreaInfo);  
 
   }
 })
@@ -922,6 +924,13 @@ Template.map.flyToBiddingArea = function(bounds){
    });
   
    map.flyTo([lat, lng], 13,{duration:2});
+}
+
+Template.map.flyToOpenedArea = function(bounds){
+  var bound = [[bounds[0].lat,bounds[0].lng],[bounds[1].lat,bounds[1].lng]];
+  var lat = parseFloat((bounds[0].lat + bounds[1].lat))/2;
+  var lng= parseFloat((bounds[0].lng + bounds[1].lng))/2;
+  map.flyTo([lat, lng], 13,{duration:2});
 }
 
 Template.map.joinGame = function(lat,lng){

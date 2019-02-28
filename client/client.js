@@ -1,4 +1,4 @@
-import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates,openedArea} from './utils.js';
+import {dateFormat, getGrid, getGrid10, getPrice, getLatLng4, displayCoordinates,openedArea,highlightFeature,resetHighlight,onEachFeature} from './utils.js';
 import {Notes} from '../imports/api/notes/notes.js';
 import {insert} from '../imports/api/notes/methods.js';
 import {Accounts} from '../imports/api/accounts/accounts.js';
@@ -11,12 +11,10 @@ import {insertquestion,latestAnswer} from '../imports/api/questions/methods.js';
 import {Questions} from '../imports/api/questions/questions.js';
 import {Areas} from  '../imports/api/areas/areas.js'
 
-
 // import {encode, decode} from 'rlp';
 import { OpenedAreaData } from './OpenedAreaData';
 import { AreaInfo } from './AreaInfo';
 // $(document).width() = document.width()*2;
-
 // console.log("random Id",Random.id(17));
 var Markers = Notes;
 var games = Questions;
@@ -47,7 +45,6 @@ Session.set("AreaInfo",AreaInfo);
 //   console.log('browser width',$(window).width())
 // })
 
-
 Meteor.subscribe('notesWithAccountName', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ 
   console.log('meteor subscribe accounts');
@@ -58,8 +55,6 @@ Meteor.subscribe('accounts', function(){
 var tooltip;
 var error_marker;
 // var chain3js;
-
-
 // on startup run resizing event
 Meteor.startup(function() {
   $(window).resize(function() {
@@ -216,7 +211,6 @@ var createNewUserName = function(address, userName, callback) {
             });
         }
       })
-        
       }
       
     });
@@ -466,11 +460,6 @@ Template.map.rendered = function() {
     maxZoom: 19
   }).addTo(map);
  $(".leaflet-container").css("cursor","pointer");
-
-  
-  // var bound = [{lat:66.08342,lng:26.76727},{lat:66.5125,lng:26.2381}];
-  // OpenedAreaData.geometry.coordinates.push(openedArea(bound));
-  // uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style}).addTo(map);
   
 
   map.addControl(L.control.locate({
@@ -484,10 +473,12 @@ Template.map.rendered = function() {
   var container = L.DomUtil.create('div','popup_container');
 
 this.autorun(function(){
-  
+  console.log(Session.get("AreaInfo"));
   uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style}).addTo(map);
-  // allAreas = L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature});
-  // console.log(uncharted);
+  L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature});
+  // console.log("areas",allAreas);
+  // allAreas.bringToBack();
+  console.log("uncharted",uncharted);
   uncharted.on('mouseover',function(event){
          Session.set("gUncharted",true);
          if(polygon && circle_move && tooltip){
@@ -501,7 +492,9 @@ this.autorun(function(){
         Session.set("gUncharted",false);
          poly_center = [null,null];
       })
+})  
 
+this.autorun(function(){
   map.on('click', function(event) {
     if (event.originalEvent && event.originalEvent.key == "Enter") {
       return;
@@ -631,7 +624,6 @@ this.autorun(function(){
         else{
            alert("Please set game in your Area");
         }
-
     }
    
       if (!gUserName) {
@@ -686,7 +678,7 @@ this.autorun(function(){
   });
 
   var bounds = map.getBounds().pad(0.25); // slightly out of screen
-  
+
   tooltip = L.tooltip({
     position: 'bottom',
     noWrap: true
@@ -843,8 +835,10 @@ var areas = Areas.find({});
 areas.observe({
   added: function(document){
      map.removeLayer(uncharted);
+     // if(allAreas){ map.removeLayer(allAreas);}
      OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
      Session.set("unchartedArea",OpenedAreaData);
+     console.log(openedArea(document.bounds))
 
      // var AreaObj =  {
      //    "type":"Feature",
@@ -859,6 +853,7 @@ areas.observe({
      //      openedArea(document.bounds)
      //    ]
      //    }};
+     //    console.log(AreaObj);
      //  AreaInfo.features.push(AreaObj);
      //  Session.set("AreaInfo",AreaInfo);  
 

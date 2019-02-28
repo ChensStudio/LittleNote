@@ -155,24 +155,27 @@ export const openedArea = function(bounds){
     return [lu,ru,rd,ld];
 }
 
-// export const highlightFeature = function(e) {
-//     var layer = e.target;
+export const highlightFeature = function(e) {
+    var layer = e.target;
 
-//     layer.setStyle({
-//         weight: 5,
-//         color: '#666',
-//         dashArray: '',
-//         fillOpacity: 0.7
-//     });
-// }
+    layer.setStyle({
+        weight: 3,
+        color: '#666',
+        dashArray: '',
+        fillColor:"white",
+        fillOpacity: 1
+    });
+}
 
-// export const resetHighlight = function (e) {
-//     geojson.resetStyle(e.target);
-// }
+var geojson = L.geoJson();
 
-// export const onEachFeature = function (feature, layer) {
-//     layer.on({
-//         mouseover: highlightFeature,
-//         mouseout: resetHighlight,
-//     });
-// }
+export const resetHighlight = function (e) {
+    geojson.resetStyle(e.target);
+}
+
+export const onEachFeature = function (feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+    });
+}

@@ -701,6 +701,22 @@
             notesArrayByTime.push(lastPurchaseTime);
         }
 
+        function PotRewardDistribution( 
+            address winner1, 
+            address winner2,
+            address winner3,
+            address winner4,
+            address winner5) public  {
+            require(msg.sender == founder || msg.sender == admin);
+            uint256 reward = potReserve/5;
+            winner1.transfer(reward);
+            winner2.transfer(reward);
+            winner3.transfer(reward);
+            winner4.transfer(reward);
+            winner5.transfer(reward);
+            potReserve = 0;
+        }
+
         function ToggleSell(string _id, bool forSell) public {
             if (notes[_id].createdAt == 0) {
                 revert();
@@ -833,6 +849,7 @@
             return output;
         }
 
+
         function sellerDistribution(uint256 totalMoney, uint256 availableMoney, uint256 sellerCost, address seller) public payable returns (uint256) {
             //0) Seller will retain the purchasing cost and receive 75% of the profit
             uint256 sellerTake;
@@ -901,6 +918,8 @@
             availableMoney -= addition;
             return availableMoney;
         }
+
+        
 
         function distributeReferral(uint256 totalMoney, uint256 availableMoney, address referral) public payable returns (uint256) {
             // 3） 8% referral 

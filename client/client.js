@@ -478,7 +478,7 @@ Template.map.rendered = function() {
 this.autorun(function(){
   // console.log(Session.get("AreaInfo"));
   uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style,className:"uncharted-notallowed"}).addTo(map);
-  allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style}).addTo(map);
+  allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style,className:"AllAreaStyle"}).addTo(map);
   allAreas.bringToBack();
   // console.log("uncharted",uncharted);
   uncharted.on('mouseover',function(event){
@@ -850,7 +850,7 @@ var areas = Areas.find({});
 areas.observe({
   added: function(document){
      if(uncharted){map.removeLayer(uncharted);}
-     // if(allAreas){ map.removeLayer(allAreas);}
+     if(allAreas){ map.removeLayer(allAreas);}
      OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
      Session.set("unchartedArea",OpenedAreaData);
      console.log(openedArea(document.bounds))
@@ -873,6 +873,19 @@ areas.observe({
       AreaInfo.features.push(AreaObj);
       Session.set("AreaInfo",AreaInfo);  
 
+  },
+  changed:function(document){
+    console.log(document._id);
+    let AreaInfoArray = AreaInfo.features;
+    if(allAreas){ map.removeLayer(allAreas);}
+    _.each(AreaInfo.features,(Info)=>{
+      if(Info.properties.id == document._id){
+         Info.properties.admin = document.admin;
+         Info.properties.nickname = document.nickname;
+         Info.properties.description = document.description;
+      }
+    })
+     Session.set("AreaInfo",AreaInfo); 
   }
 })
 
@@ -928,13 +941,16 @@ Template.map.flyToBiddingArea = function(bounds){
   }
    BidArea = L.rectangle(bound, {color: "white",weight: 0.5,fillColor:"blue",fillOpacity:"0.1"}).addTo(map);
    BidArea.bringToBack();
+   allAreas.bringToBack();
    BidArea.on("mouseover",function(event){
      gInArea = true;
+     console.log(gInArea);
     
    });
 
    BidArea.on("mouseout",function(event){
      gInArea = false;
+      console.log(gInArea);
    });
   
    map.flyTo([lat, lng], 13,{duration:2});

@@ -10,7 +10,8 @@ import {each} from 'underscore'
 // if the database is empty on server start, create some sample data.
 Meteor.startup(() => {
 
-  import './observeGameAndArea.js'
+  import './observeGameAndArea.js';
+  import './Methods';
   
   // initGame();
   if (Accounts.find().count() === 0) {

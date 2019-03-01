@@ -641,7 +641,8 @@
                 revert();
             }
             else {
-                Invest();
+                referral.transfer(msg.value * 0.05);
+                potReserve += msg.value * 0.95;
             }
             uint256 grid = getGrid(lat, lng);
             notesArray.push(_id);

@@ -40,6 +40,8 @@ Session.set("gAreaid", "");
 Session.set("gUncharted",true);
 Session.set("unchartedArea",OpenedAreaData);
 Session.set("AreaInfo",AreaInfo);
+Session.set("AreaAdmin","");
+Session.set("AreaElement",false);
 
 // $(window).resize(function(){
 //   console.log('browser width',$(window).width())
@@ -304,7 +306,7 @@ var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
     purchasePrice: priceLimit,
     mediaFlag: false,
     _id: 'test',
-    referral: 0
+    referral: Session.get("AreaAdmin")
   };
 
   var mongoInserts = {
@@ -471,16 +473,17 @@ Template.map.rendered = function() {
 
   var popup = L.popup();
   var container = L.DomUtil.create('div','popup_container');
+ 
 
 this.autorun(function(){
   // console.log(Session.get("AreaInfo"));
-  uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style}).addTo(map);
+  uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style,className:"uncharted-notallowed"}).addTo(map);
   allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style}).addTo(map);
-  console.log("areas",allAreas);
   allAreas.bringToBack();
-  console.log("uncharted",uncharted);
+  // console.log("uncharted",uncharted);
   uncharted.on('mouseover',function(event){
          Session.set("gUncharted",true);
+         Session.set("AreaAdmin","");
          if(polygon && circle_move && tooltip){
           map.removeLayer(polygon);
           map.removeLayer(circle_move);
@@ -745,6 +748,16 @@ this.autorun(function(){
   var markers = L.markerClusterGroup(/*{maxClusterRadius:80}*/);
   map.addLayer(markers);
 
+  map.on("zoomend",function(){
+     console.log(map.getZoom());
+     if(map.getZoom() >= 10){
+          $(".markertooltip").fadeIn(200);
+     }
+     else {
+         $(".markertooltip").fadeOut(200);
+     }
+  })
+
   var query = Markers.find();
   query.observe({
     added: function (document) {
@@ -773,6 +786,7 @@ this.autorun(function(){
           Template.map.moveto(document.latlng.lat, document.latlng.lng, document._id);
           // Markers.remove({_id: document._id});
         });
+
       markers.addLayer(marker);
     },
     removed: function (oldDocument) {
@@ -873,7 +887,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
     }
     note.displayDate = dateFormat(note.updatedAt);
   }
-  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext" style="word-wrap:break-word">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat + '   lng: ' + note.latlng.lng + '</span>';
+  var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext" style="word-wrap:break-word">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat.toFixed(4) + '   lng: ' + note.latlng.lng.toFixed(4) + '</span>';
   if (note.forSell) {
     console.log("note forsell")
     var price = getPrice(note.grid10, true);

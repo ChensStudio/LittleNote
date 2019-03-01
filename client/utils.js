@@ -164,7 +164,7 @@ info.onAdd = function (map) {
 };
 
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Area Information</h4>' +  (props ?
+    this._div.innerHTML = '<h4>Area Information</h4>' +  ( (props&&!Session.get("AreaElement")) ?
 
         '<div class="AreaInfoContent">ADMIN: ' +props.admin + '<br />REGION: ' + props.nickname + '<br />DESCRIPTION: ' + props.description +'</div>'
         : 'Hover over a area');
@@ -177,9 +177,9 @@ export const highlightFeature = function(e) {
         weight:2,
         color:"black",
         fillOpacity:0,
-        opacity:1
+        opacity:0.5
     });
-
+    Session.set("AreaAdmin",layer.feature.properties.admin);    
     info.update(layer.feature.properties);
 }
 
@@ -195,7 +195,7 @@ export const resetHighlight = function (e) {
         fillColor:"white",
         fillOpacity:0
     });
-
+     Session.set("AreaAdmin","");
      info.update();
 }
 

@@ -5,7 +5,7 @@ export var OpenedAreaData = {
         "weight":1,
         "fillOpacity":0.5,
         "color":"white",
-         "cursor": "not-allowed"
+        "cursor": "not-allowed"
     },
     "geometry":{
         "type":"Polygon",

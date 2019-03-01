@@ -49,7 +49,6 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
 
 var Area_id = Random.id(17);
 var Pos_id =  Random.id(17);
-
 console.log('position ID:',Pos_id);
 console.log('area ID:',Area_id);
 // console.log('tonumber:',typeof 2.5);

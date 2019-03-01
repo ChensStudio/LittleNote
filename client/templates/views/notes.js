@@ -11,20 +11,8 @@ var accountsLoaded = false;
 var hide = false;
 Meteor.subscribe('notes', function(){ notesLoaded = true; });
 Meteor.subscribe('accounts', function(){ accountsLoaded = true; });
-
-Meteor.startup(function() {
-    MoacConnect.InitChain3();
-    var filter = chain3js.mc.filter("latest");
-    filter.watch(function(e,r){
-     if(e){
-        console.log("error",e);
-        }
-     else{
-        console.log("latest block",r);
-     }
-})
-});
-
+MoacConnect.InitChain3();
+var filter = chain3js.mc.filter("latest");
 
 Template.body.onRendered(function(){
     Meteor.setInterval(function()
@@ -143,6 +131,8 @@ Template.notesbody.helpers({
             if (n.forSell) {
                 n.forSellInfo = n.price;
             }
+            n.latlng.lat = n.latlng.lat.toFixed(5);
+            n.latlng.lng = n.latlng.lng.toFixed(5);
         });
 
         if (typeof(myNotesSort) !== 'undefined' && myNotesSort === 'price')
@@ -218,23 +208,6 @@ Template.note.helpers({
         var nd = new Date(inputDate.replace(/-/g, "/"));
         return nd.toLocaleDateString() +' '+ nd.toLocaleTimeString();
     },
-    'jackpot': function(gameNumber) {
-
-        if (!contractInstance && (typeof chain3 !== 'undefined')) {
-            contractInstance = chain3.mc.contract(contractAbi).at(contractAddress);
-        }
-
-        if (contractInstance) {
-            var match = contractInstance.matches(gameNumber);
-            var index = 8;
-            return Math.floor(match[index]/1000000000000000000 + 0.5)+ ' WCT';
-        } else {
-            return "";
-        }
-    },
-    'betTokenBalances': function() {
-
-    },
     'isShowButton': function(inputTime){
         var currentTimeStamp = new Date().getTime();
         var gameTimeStamp = new Date(inputTime).getTime();
@@ -283,7 +256,11 @@ Template.header.onCreated(function(){
     var template = this;
     TemplateVar.set(template, 'headline', 'Retrieving Jackpot........');
 
-    Meteor.setInterval(()=>{
+     filter.watch(function(e,r){
+     if(e){
+        console.log("error",e);
+        }
+     else{
         try
         {
             MoacConnect.GetJackpot(function(e,c) {
@@ -302,7 +279,9 @@ Template.header.onCreated(function(){
         catch(e)
         {
             TemplateVar.set(template, 'headline', TAPi18n.__("app.NoJackpotInfo"));
-        }}, 5000);
+        }
+     }
+     })
 });
 
 Template.map.onRendered(function (){

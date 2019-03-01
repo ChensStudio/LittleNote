@@ -1,5 +1,5 @@
 export const httpProvider = 'http://gateway.moac.io/testnet';
-export const littleNoteContractAddr = '0x9b58e5ccb4a77ac4392bbda5b01617dcfc869029';
+export const littleNoteContractAddr = '0x05a3ddfc2f87eb8e8ac2acc8817f4dc6e75e6133';
 export const littleNoteContractAbi = [
 	{
 		"constant": false,

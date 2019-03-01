@@ -867,8 +867,8 @@
     background-color: rgba(255, 255, 255, 0.8 );
     opacity: 1;
   }
+  
 
- 
   .errormarkertip {
     display: block;
     font-style: normal;
@@ -1022,6 +1022,14 @@
 
 .AreaInfoContent {
   font: 12px/20px "Gill Sans", sans-serif;
+}
+
+.tooltip {
+  pointer-events: none;
+}
+
+path.uncharted-notallowed {
+  cursor: not-allowed;
 }
 /*
 .fade-polygon{

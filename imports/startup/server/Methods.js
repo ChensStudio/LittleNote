@@ -2,7 +2,6 @@ import {littleNoteContractAddr, littleNoteContractAbi, areaGameContractAddr,area
 import {newBidding, insertarea} from '../../api/areas/methods.js';
 
 var networkId = chain3.version.network;
-
 let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
 let noteContractInstance = chain3.mc.contract(littleNoteContractAbi).at(littleNoteContractAddr);
 var founderInfo = {
@@ -106,8 +105,8 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
         callContractMethod(founderInfo,littleNoteContractAddr,gasEstimate+100,0,networkId,PotRewardDistributionData);
       },
       AddNote(moacInserts){
-
+        
       }
   })
 
-   Meteor.apply("AdminAddArea",[AreaInsert]);
+   // Meteor.apply("AdminAddArea",[AreaInsert]);

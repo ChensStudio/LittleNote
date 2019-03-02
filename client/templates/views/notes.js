@@ -58,17 +58,18 @@ Template.body.events({
 
    hide = !hide;
    if(hide){
-    $('.mapcontainer').css('width','95%');
+    $('.mapcontainer').css('width','78%');
     // $('.close_ico').css('background','url(drawer_icon.png)');
-    $('#drawer').removeClass('close_ico');
-    $('#drawer').addClass('draw_icon');
+    $('#drawer').removeClass('draw_icon');
+    $('#drawer').addClass('close_ico');
+    
     
    }
    else{
-    $('.mapcontainer').css('width','78%');
+    $('.mapcontainer').css('width','95%');
     // $('.close_ico').css('background','url(close_ico.png)');
-    $('#drawer').removeClass('draw_icon');
-    $('#drawer').addClass('close_ico');
+    $('#drawer').removeClass('close_ico');
+    $('#drawer').addClass('draw_icon');
     
    }
 },

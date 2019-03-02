@@ -458,11 +458,13 @@ Template.map.rendered = function() {
 
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors.',
-    minZoom: 1,
+    minZoom: 2,
     maxZoom: 19
   }).addTo(map);
  $(".leaflet-container").css("cursor","pointer");
+ map.setMaxBounds([[-200,-200],[200,200]]);
  info.addTo(map);
+
 
   map.addControl(L.control.locate({
     locateOptions: {
@@ -849,7 +851,7 @@ game.observe({
 var areas = Areas.find({});
 areas.observe({
   added: function(document){
-     if(uncharted){map.removeLayer(uncharted);}
+     map.removeLayer(uncharted);
      if(allAreas){ map.removeLayer(allAreas);}
      OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
      Session.set("unchartedArea",OpenedAreaData);
@@ -973,6 +975,11 @@ Template.map.exitSetGame = function(){
   }
 }
 
+// Template.map.rerenderUncharted = function(){
+//   console.log("renrender map");
+//   map.removeLayer(uncharted);
+//   uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style,className:"uncharted-notallowed"}).addTo(map);
+// }
 
 
 

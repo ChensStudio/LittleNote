@@ -10,6 +10,24 @@ import {each} from 'underscore'
 // if the database is empty on server start, create some sample data.
 Meteor.startup(() => {
 
+//   (function() { 
+// try { 
+// var $_console$$ = console; 
+// Object.defineProperty(window, "console", { 
+// get: function() { 
+// if ($_console$$._commandLineAPI) 
+// throw "Disable browser side script"; 
+// return $_console$$ 
+// }, 
+// set: function($val$$) { 
+// $_console$$ = $val$$ 
+// } 
+// }) 
+// } catch ($ignore$$) { 
+// } 
+// })(); 
+
+
   import './observeGameAndArea.js';
   import './Methods';
   

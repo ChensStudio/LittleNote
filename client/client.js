@@ -457,7 +457,6 @@ Template.map.rendered = function() {
   }).setView([49.25044, -123.137], 15);
 
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors.',
     minZoom: 2,
     maxZoom: 19
   }).addTo(map);
@@ -484,8 +483,7 @@ this.autorun(function(){
   allAreas.bringToBack();
   // console.log("uncharted",uncharted);
   uncharted.on('mouseover',function(event){
-         Session.set("gUncharted",true);
-         Session.set("AreaAdmin","");
+          Session.set("AreaAdmin","");
          if(polygon && circle_move && tooltip){
           map.removeLayer(polygon);
           map.removeLayer(circle_move);
@@ -494,7 +492,6 @@ this.autorun(function(){
       })      
 
   uncharted.on('mouseout',function(event){
-        Session.set("gUncharted",false);
          poly_center = [null,null];
       })
 })  

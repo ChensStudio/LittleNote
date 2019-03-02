@@ -16,12 +16,6 @@ Template.areainfobody.onCreated(function(){
 });
 
 Template.areainfobody.onRendered(function(){
-
-Tracker.autorun(function () {
-      console.log(Session.get('gUserAddress'));
-  	  //  Blaze.remove(); // this will remove the current template.
-	  // Blaze.render(this); // rerender
-   });
     
 });
 

@@ -1,6 +1,7 @@
 import {littleNoteContractAddr, littleNoteContractAbi, areaGameContractAddr,areaGameContractAbi,founderAddr,founderKey} from '../../api/const';
 import {newBidding, insertarea} from '../../api/areas/methods.js';
 
+
 var networkId = chain3.version.network;
 let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
 let noteContractInstance = chain3.mc.contract(littleNoteContractAbi).at(littleNoteContractAddr);

@@ -179,7 +179,8 @@ export const highlightFeature = function(e) {
         fillOpacity:0,
         opacity:0.5
     });
-    Session.set("AreaAdmin",layer.feature.properties.admin);    
+    Session.set("AreaAdmin",layer.feature.properties.admin);   
+    Session.set("gUncharted",false);
     info.update(layer.feature.properties);
 }
 
@@ -197,6 +198,8 @@ export const resetHighlight = function (e) {
     });
      Session.set("AreaAdmin","");
      info.update();
+     Session.set("gUncharted",true);
+
 }
 
 export const onEachFeature = function (feature, layer) {

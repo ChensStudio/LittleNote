@@ -641,8 +641,8 @@
                 revert();
             }
             else {
-                referral.transfer(msg.value * 0.05);
-                potReserve += msg.value * 0.95;
+                referral.transfer(msg.value / 20 );
+                potReserve += (msg.value/20 * 19);
             }
             uint256 grid = getGrid(lat, lng);
             notesArray.push(_id);

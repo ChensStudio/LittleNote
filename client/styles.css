@@ -1050,3 +1050,6 @@ path.fade-polygon {
   transition: all 0.2s ease 0s;
 }
 
+div.leaflet-control-attribution {
+ display: none;
+}

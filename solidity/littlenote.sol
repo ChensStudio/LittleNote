@@ -141,6 +141,10 @@
             return (pos.lat0, pos.lng0, pos.lat1,pos.lng1);
         }
 
+        function getPosRangeId(string area_id) public view returns(string) {
+            return (areas[area_id].posRangeId);
+        }
+
         event AddGameEvent(string uid);
 
         function AddGame(
@@ -184,9 +188,6 @@
             return (game.parentAreaId, game.admin, game.lat,game.lng, game.question,game.activeFlag,game.distributed);
         }
 
-        function GetGame(string gameId) public returns (Game) {
-            return games[gameId];
-        }
 
         event addAnswerEvent(string _answerid);
 
@@ -226,10 +227,6 @@
         function showAnswer (string _answerid) public view returns(string, string, address, string){
             Answer awr = answer[_answerid];
             return (awr._id, awr.gameid, awr.participant, awr.content);
-        }
-
-        function ifAnswered (string _gameid, address participant) public view returns (bool){
-            return hasAnswered[_gameid][participant];
         }
 
         function endGame(string gameid) public {
@@ -399,13 +396,13 @@
         }
  
 
-        function AddGameNote(string gameId, string noteId) public {
-            gameNotes[gameId].push(noteId);
-        }
+        // function AddGameNote(string gameId, string noteId) public {
+        //     gameNotes[gameId].push(noteId);
+        // }
 
-        function GetGameNote(string gameId, uint256 i) public returns (string) {
-            return gameNotes[gameId][i];
-        }
+        // function GetGameNote(string gameId, uint256 i) public returns (string) {
+        //     return gameNotes[gameId][i];
+        // }
 
         function GetGameNoteLength(string gameId) public returns (uint256) {
             return gameNotes[gameId].length;
@@ -453,6 +450,12 @@
         uint256 public potDistBasisPointLimit = 50;
         uint256 public mediaRate = 10;
 
+        uint256 public lat0;
+        uint256 public lat1;
+        uint256 public lng0;
+        uint256 public lng1;
+        string pid;
+
         //lat and lng:
         //1) both are turned into positive numbers by adding 360 to each.
         //2) both will be multiplied by 10**16
@@ -499,14 +502,14 @@
         address[] public investorsArray; 
         uint256 totalInvestment = 0;
 
-        // address public AreaGameAddress;
-        // AreaGame public AreaGameContract;
+        address public AreaGameAddress;
+        AreaGame public AreaGameContract;
 
-        function LittleNote(address _founder) public {
+        function LittleNote(address _founder,address _areaGameAddress) public {
             founder = _founder;
             haltFlag = false;
-            // AreaGameAddress = _areaGameAddress;
-            // AreaGameContract = AreaGame(AreaGameAddress);
+            AreaGameAddress = _areaGameAddress;
+            AreaGameContract = AreaGame(AreaGameAddress);
             initPriceTable();
         }
 
@@ -626,7 +629,9 @@
         }
 
         event AddNoteEvent(string _id);
-        function AddNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
+        function AddNote(string areaid, string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
+            (pid) = AreaGameContract.getPosRangeId(areaid);
+            require(InArea(pid, lat, lng));
             if (accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength || notes[_id].createdAt > 0) {
                 revert();
             }
@@ -666,6 +671,18 @@
             notesArrayByTime.push(lastPurchaseTime);
             accounts[msg.sender].noteNumber++;
             AddNoteEvent(_id);
+        }
+
+        function InArea(string pos_id,uint256 lat, uint256 lng) public returns (bool) {
+           (lat0,lng0,lat1,lng1) = AreaGameContract.getPosRange(pos_id);
+           lat -= 360*1e15;
+           lng -= 360*1e15;
+           if(lat0 < lat && lat < lat1 && lng0 < lng && lng < lng1 ){
+            return true;
+           }
+           else {
+            return false;
+           }
         }
 
         function BuyNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
@@ -1017,48 +1034,48 @@
         //     }
         // }
 
-        function last24HourCount() public view returns (uint256) {
-            uint256 len = notesArrayByTime.length;
-            if (len == 0) {
-                return 0;
-            }
+        // function last24HourCount() public view returns (uint256) {
+        //     uint256 len = notesArrayByTime.length;
+        //     if (len == 0) {
+        //         return 0;
+        //     }
 
-            for (uint256 i = len - 1; i >= 0; i--) {
-                if (notesArrayByTime[i] - now > 1 days) {
-                    return len - i -1;
-                }
-            } 
+        //     for (uint256 i = len - 1; i >= 0; i--) {
+        //         if (notesArrayByTime[i] - now > 1 days) {
+        //             return len - i -1;
+        //         }
+        //     } 
 
-            return len;
-        }
+        //     return len;
+        // }
 
-        function last24HourBasisPoint() public view returns (uint256) {
-            uint256 count = last24HourCount();
-            uint256 baseCount = notesArrayByTime.length - count;
-            if (baseCount == 0) {
-                return 1000000;
-            }
-            uint256 basisPoint = count * 100 / baseCount;
-            return basisPoint;
-        }
+        // function last24HourBasisPoint() public view returns (uint256) {
+        //     uint256 count = last24HourCount();
+        //     uint256 baseCount = notesArrayByTime.length - count;
+        //     if (baseCount == 0) {
+        //         return 1000000;
+        //     }
+        //     uint256 basisPoint = count * 100 / baseCount;
+        //     return basisPoint;
+        // }
 
-        function canDistributePotReserve() public view returns (bool) {
-            if (potReserve >= threshold && last24HourCount() < potDistCountLimit) {
-                if (last24HourBasisPoint() < potDistBasisPointLimit) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        // function canDistributePotReserve() public view returns (bool) {
+        //     if (potReserve >= threshold && last24HourCount() < potDistCountLimit) {
+        //         if (last24HourBasisPoint() < potDistBasisPointLimit) {
+        //             return true;
+        //         }
+        //     }
+        //     return false;
+        // }
 
-        function deleteHourlyPotReserves() private {
-            uint256 len = hourlyPotReservesArray.length;
-            for (uint256 i=0; i<len; i++) {
-                delete hourlyPotReserves[hourlyPotReservesArray[i]];
-            }
+        // function deleteHourlyPotReserves() private {
+        //     uint256 len = hourlyPotReservesArray.length;
+        //     for (uint256 i=0; i<len; i++) {
+        //         delete hourlyPotReserves[hourlyPotReservesArray[i]];
+        //     }
 
-            delete hourlyPotReservesArray;
-        }
+        //     delete hourlyPotReservesArray;
+        // }
 
         function ManualTransfer(uint256 amount, address to) public payable {
             if (msg.sender != founder) revert();

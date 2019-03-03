@@ -52,7 +52,7 @@ Template.game.events({
 		var areaid = this.areaid;
 		console.log("areaid",areaid);
 		var area = Areas.findOne({_id: areaid});
-		Template.map.flyToBiddingArea(area.bounds);
+		Template.map.flyToOpenedArea(area.bounds);
 		Template.map.joinGame(this.latlng.lat,this.latlng.lng);
 
 	}

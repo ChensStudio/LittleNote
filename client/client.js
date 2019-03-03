@@ -293,7 +293,10 @@ var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
   var grid = getGrid(latlng4);
   var grid10 = getGrid10(latlng4);
   var forSell = true;
+  var areaHolder = Session.get("AreaAdmin");
+  console.log(areaHolder);
   var moacInserts = {
+    areaid:areaHolder.areaid,
     address: gUserAddress,
     latlng: latlng4,
     lat: latlng4.lat,
@@ -306,9 +309,9 @@ var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
     purchasePrice: priceLimit,
     mediaFlag: false,
     _id: 'test',
-    referral: Session.get("AreaAdmin")
+    referral: areaHolder.admin
   };
-
+  console.log("moaciserts",moacInserts);
   var mongoInserts = {
     address: gUserAddress,
     latlng: latlng4,
@@ -477,12 +480,10 @@ Template.map.rendered = function() {
  
 
 this.autorun(function(){
-  // console.log(Session.get("AreaInfo"));
-  uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style,className:"uncharted-notallowed"}).addTo(map);
-  allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style,className:"AllAreaStyle"}).addTo(map);
-  allAreas.bringToBack();
-  // console.log("uncharted",uncharted);
-  uncharted.on('mouseover',function(event){
+  console.log("change");
+
+    uncharted = L.geoJson(Session.get("unchartedArea"),{style:OpenedAreaData.style,className:"uncharted-notallowed"}).addTo(map);
+    uncharted.on('mouseover',function(event){
           Session.set("AreaAdmin","");
          if(polygon && circle_move && tooltip){
           map.removeLayer(polygon);
@@ -494,7 +495,14 @@ this.autorun(function(){
   uncharted.on('mouseout',function(event){
          poly_center = [null,null];
       })
-})  
+
+ 
+    allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style,className:"AllAreaStyle"}).addTo(map);
+    allAreas.bringToBack();
+  
+
+  // console.log("uncharted",uncharted);
+  })  
 
 this.autorun(function(){
   map.on('click', function(event) {
@@ -873,19 +881,19 @@ areas.observe({
       Session.set("AreaInfo",AreaInfo);  
 
   },
-  changed:function(document){
-    console.log(document._id);
-    let AreaInfoArray = AreaInfo.features;
-    if(allAreas){ map.removeLayer(allAreas);}
-    _.each(AreaInfo.features,(Info)=>{
-      if(Info.properties.id == document._id){
-         Info.properties.admin = document.admin;
-         Info.properties.nickname = document.nickname;
-         Info.properties.description = document.description;
-      }
-    })
-     Session.set("AreaInfo",AreaInfo); 
-  }
+  // changed:function(document){
+  //   console.log(document._id);
+  //   let AreaInfoArray = AreaInfo.features;
+  //   map.removeLayer(allAreas);
+  //   _.each(AreaInfo.features,(Info)=>{
+  //     if(Info.properties.id == document._id){
+  //        Info.properties.admin = document.admin;
+  //        Info.properties.nickname = document.nickname;
+  //        Info.properties.description = document.description;
+  //     }
+  //   })
+  //    Session.set("AreaInfo",AreaInfo); 
+  // }
 })
 
 Template.map.moveto = function(lat, lng, noteid, zoomFlag) {

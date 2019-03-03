@@ -4,26 +4,43 @@ import { Notes } from '../../api/notes/notes.js';
 import Chain3 from 'chain3';
 import { Random } from 'meteor/random';
 import './chain3Init';
+import {littleNoteContractAddr, littleNoteContractAbi,areaGameContractAddr,areaGameContractAbi} from '../../api/const';
+
+let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
+let noteContractInstance = chain3.mc.contract(littleNoteContractAbi).at(littleNoteContractAddr);
+
+let fs = require('fs');
+ 
+let options = {
+  flags: 'a',     // append模式
+  encoding: 'utf8',  // utf8编码
+};
+ 
+let stdout = fs.createWriteStream('./stdout.log', options);
+let stderr = fs.createWriteStream('./stderr.log', options);
+ 
+// 创建logger
+let logger = new console.Console(stdout, stderr);
 
 
 //Distribute Jackpot, from 7PM every day, after 50 blocks, distribute
 var filter = chain3.mc.filter("latest");
-var RandomCount = 0;
+var RandomCount = -1;
 var done = true;
 console.log(new Date().getHours());
 filter.watch(Meteor.bindEnvironment(function(e,r){
   if(!e){
      console.log(RandomCount,r);
 
-     if(new Date().getHours() == 23 && done == true) {
+     if(new Date().getHours() == 20 && done == true) {
         done = false;
         RandomCount = 5;
      }
-     else if (new Date().getHours() != 23 && done == false){
+     else if (new Date().getHours() != 20 && done == false){
          console.log("reset");
          done = true;
      }
-     else if (new Date().getHours() == 23 && done == false && RandomCount != -1) {
+     else if (new Date().getHours() == 20 && done == false && RandomCount != -1) {
         RandomCount --;
      }
      if (done == false && RandomCount == 0){
@@ -32,7 +49,8 @@ filter.watch(Meteor.bindEnvironment(function(e,r){
            console.log("not enough paticipants");
         }
         else{
-           //Distribute 
+           Meteor.call("DistributeJackpot",WinArray[0].address,WinArray[1].address,WinArray[2].address,WinArray[3].address,WinArray[4].address);
+           logger.log(new Date().toLocaleString(),"distribute jackpot to: ",WinArray[0].address,WinArray[1].address,WinArray[2].address,WinArray[3].address,WinArray[4].address)
            console.log(WinArray[0].address,WinArray[1].address,WinArray[2].address,WinArray[3].address,WinArray[4].address)
         }
         RandomCount--;

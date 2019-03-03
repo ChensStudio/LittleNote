@@ -29,7 +29,7 @@ Meteor.startup(() => {
 
 
   import './observeGameAndArea.js';
-  import './Methods';
+  import './Methods.js';
   
   // initGame();
   if (Accounts.find().count() === 0) {

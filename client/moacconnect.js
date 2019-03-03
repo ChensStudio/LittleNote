@@ -99,6 +99,7 @@ export var AddNote = function(inserts, callback) {
     gasPrice: 20000000000,
   };
   gContractInstance.AddNote.sendTransaction(
+    inserts.areaid,
     inserts.noteText,
     inserts.lat*1e15 + 360*1e15,
     inserts.lng*1e15 + 360*1e15,

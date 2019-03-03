@@ -1,6 +1,6 @@
 import {littleNoteContractAddr, littleNoteContractAbi, areaGameContractAddr,areaGameContractAbi,founderAddr,founderKey} from '../../api/const';
 import {newBidding, insertarea} from '../../api/areas/methods.js';
-
+import './chain3Init';
 
 var networkId = chain3.version.network;
 let contractInstance = chain3.mc.contract(areaGameContractAbi).at(areaGameContractAddr);
@@ -11,7 +11,7 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:70.08342,lng:27.76727},{lat:70.5125,lng:27.2381}];
+var bounds = [{lat:71.08342,lng:28},{lat:71.5125,lng:28.2381}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
@@ -21,7 +21,7 @@ var AreaInsert = {
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*4)
+  endTime:new Date(new Date().getTime() + 1000*60*10)
 }
 
 function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){
@@ -104,9 +104,6 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       DistributeJackpot(win1,win2,win3,win4,win5){
         var PotRewardDistributionData = noteContractInstance.PotRewardDistribution.getData(win1,win2,win3,win4,win5);
         callContractMethod(founderInfo,littleNoteContractAddr,gasEstimate+100,0,networkId,PotRewardDistributionData);
-      },
-      AddNote(moacInserts){
-        
       }
   })
 

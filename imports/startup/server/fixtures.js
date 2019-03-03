@@ -6,10 +6,12 @@ import {Areas} from  '../../api/areas/areas.js'
 import {newBidding, insertarea} from '../../api/areas/methods.js';
 import {Questions} from  '../../api/questions/questions.js';
 import {each} from 'underscore'
+import './observeGameAndArea.js';
+import './Methods.js';
+
 
 // if the database is empty on server start, create some sample data.
 Meteor.startup(() => {
-
 //   (function() { 
 // try { 
 // var $_console$$ = console; 
@@ -28,9 +30,7 @@ Meteor.startup(() => {
 // })(); 
 
 
-  import './observeGameAndArea.js';
-  import './Methods.js';
-  
+
   // initGame();
   if (Accounts.find().count() === 0) {
     var timestamp = (new Date()).getTime();

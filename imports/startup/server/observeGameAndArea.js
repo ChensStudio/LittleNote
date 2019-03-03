@@ -19,16 +19,16 @@ filter.watch(Meteor.bindEnvironment(function(e,r){
   if(!e){
      console.log(RandomCount,r);
 
-     if(new Date().getHours() == 23 && done == true) {
+     if(new Date().getHours() == 19 && done == true) {
         Jackpotlogger.info("Trigger countdown for distribute");
         done = false;
         RandomCount = 5;
      }
-     else if (new Date().getHours() != 23 && done == false){
+     else if (new Date().getHours() != 19 && done == false){
           Jackpotlogger.info("Close countdown until next day");
          done = true;
      }
-     else if (new Date().getHours() == 23 && done == false && RandomCount != -1) {
+     else if (new Date().getHours() == 19 && done == false && RandomCount != -1) {
         RandomCount --;
      }
      if (done == false && RandomCount == 0){
@@ -60,8 +60,7 @@ var games = Questions.find({endTime:{$gte: new Date()}});
       else{
         console.log("area ",area," is expired");
         //Set activeFlag to 0
-        var EndBidData = contractInstance.endBid.getData(area._id);
-        callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,EndBidData);
+        Meteor.call("EndBid",area._id);
     }
   })
   }
@@ -75,8 +74,7 @@ var games = Questions.find({endTime:{$gte: new Date()}});
   			console.log('game to end', toEnd)
   			if(toEnd <= 0){
   				console.log('game',document,'expired')
-          var EndGameData = contractInstance.endGame.getData(document._id);
-          callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,EndGameData);
+          Meteor.call("EndGame",document._id);
   				Meteor.clearInterval(toExpired);
   			}
   		},

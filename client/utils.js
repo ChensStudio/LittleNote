@@ -49,7 +49,7 @@ export const dateFormat = function(d) {
 
 export const countDownFormat = function(end){
     var now = new Date();
-    var diff = end - now;
+    var diff = end - now -5000;
     if(diff <= 0){
         return "expired";
     }
@@ -180,7 +180,7 @@ export const highlightFeature = function(e) {
         opacity:0.5
     });
     Session.set("AreaAdmin",{areaid:layer.feature.properties.id,admin:layer.feature.properties.admin});   
-    console.log(Session.get("AreaAdmin"));
+    // console.log(Session.get("AreaAdmin"));
     Session.set("gUncharted",false);
     info.update(layer.feature.properties);
 }

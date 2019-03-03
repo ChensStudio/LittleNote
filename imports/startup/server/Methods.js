@@ -11,7 +11,7 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:71.08342,lng:28},{lat:71.5125,lng:28.2381}];
+var bounds = [{lat:72.08342,lng:28},{lat:72.5125,lng:28.5381}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
@@ -21,7 +21,7 @@ var AreaInsert = {
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*10)
+  endTime:new Date(new Date().getTime() + 1000*60*100)
 }
 
 function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){
@@ -100,6 +100,14 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
                 }
               }))
          },10000);
+      },
+      EndGame(game_id){
+        var EndGameData = contractInstance.endGame.getData(game_id);
+        callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,EndGameData);
+      },
+      EndBid(area_id){
+        var EndBidData = contractInstance.endBid.getData(area_id);
+        callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,EndBidData);
       },
       DistributeJackpot(win1,win2,win3,win4,win5){
         var PotRewardDistributionData = noteContractInstance.PotRewardDistribution.getData(win1,win2,win3,win4,win5);

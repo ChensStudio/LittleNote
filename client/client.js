@@ -496,13 +496,14 @@ this.autorun(function(){
          poly_center = [null,null];
       })
 
- 
-    allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style,className:"AllAreaStyle"}).addTo(map);
-    allAreas.bringToBack();
-  
-
   // console.log("uncharted",uncharted);
   })  
+
+this.autorun(function(){
+  console.log("add area",Session.get("AreaInfo"));
+  allAreas=L.geoJson(Session.get("AreaInfo"),{onEachFeature:onEachFeature,style:AreaInfo.style}).addTo(map);
+  allAreas.bringToBack();
+})
 
 this.autorun(function(){
   map.on('click', function(event) {
@@ -756,7 +757,6 @@ this.autorun(function(){
   map.addLayer(markers);
 
   map.on("zoomend",function(){
-     console.log(map.getZoom());
      if(map.getZoom() >= 10){
           $(".markertooltip").fadeIn(200);
      }
@@ -881,19 +881,20 @@ areas.observe({
       Session.set("AreaInfo",AreaInfo);  
 
   },
-  // changed:function(document){
-  //   console.log(document._id);
-  //   let AreaInfoArray = AreaInfo.features;
-  //   map.removeLayer(allAreas);
-  //   _.each(AreaInfo.features,(Info)=>{
-  //     if(Info.properties.id == document._id){
-  //        Info.properties.admin = document.admin;
-  //        Info.properties.nickname = document.nickname;
-  //        Info.properties.description = document.description;
-  //     }
-  //   })
-  //    Session.set("AreaInfo",AreaInfo); 
-  // }
+  changed:function(document){
+    console.log(document);
+    map.removeLayer(allAreas);
+    _.each(AreaInfo.features,(Info)=>{
+      if(Info.properties.id == document._id){
+         //HOW TO AVIOD "CHANGED" EVENT FIRE MORE THAN ONCE?
+         Info.properties.admin = document.admin;
+         Info.properties.nickname = document.nickname;
+         Info.properties.description = document.description;
+         Session.set("AreaInfo","");
+         Session.set("AreaInfo",AreaInfo); 
+      }
+    })
+  }
 })
 
 Template.map.moveto = function(lat, lng, noteid, zoomFlag) {

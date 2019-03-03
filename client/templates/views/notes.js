@@ -4,7 +4,6 @@ import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
 import MoacConnect from '../../moacconnect.js';
 import { type } from 'os';
-// import '../../client.js';
 
 var notesLoaded = false;
 var accountsLoaded = false;

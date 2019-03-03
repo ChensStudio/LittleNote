@@ -4,7 +4,7 @@ Meteor.rootPath     = path.resolve('.');
 Meteor.rootPath  =  Meteor.rootPath.split(path.sep + '.meteor')[0];
 
 log4js.configure({
-  appenders: { Jackpot: { type: 'file', filename: Meteor.rootPath + `\\LOGS\\JackpotDistribute.log` } },
+  appenders: { Jackpot: { type: 'file', filename: Meteor.rootPath + path.sep +'LOGS' + path.sep + 'JackpotDistribute.log' } },
   categories: { default: { appenders: ['Jackpot'], level: 'info' } }
 });
 

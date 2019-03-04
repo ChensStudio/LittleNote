@@ -11,7 +11,7 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:72.08342,lng:28},{lat:72.5125,lng:28.5381}];
+var bounds = [{lat:72.08342,lng:-10},{lat:72.5125,lng:-8}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
@@ -21,7 +21,7 @@ var AreaInsert = {
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*100)
+  endTime:new Date(new Date().getTime() + 1000*60*5)
 }
 
 function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){
@@ -75,7 +75,7 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
        AreaInsert._id = Area_id;
      
        console.log(AreaInsert);
-       let AddPosData = contractInstance.AddPosRange.getData(Pos_id,AreaInsert.bounds[0].lat*1e15,AreaInsert.bounds[0].lng*1e15,AreaInsert.bounds[1].lat*1e15,AreaInsert.bounds[1].lng*1e15);
+       let AddPosData = contractInstance.AddPosRange.getData(Pos_id,AreaInsert.bounds[0].lat*1e15 + 360*1e15,AreaInsert.bounds[0].lng*1e15 + 360*1e15,AreaInsert.bounds[1].lat*1e15 + 360*1e15,AreaInsert.bounds[1].lng*1e15 + 360*1e15);
        let AddAreaData = contractInstance.AddArea.getData(AreaInsert._id, AreaInsert.nickname,AreaInsert.description,founderAddr,Pos_id,AreaInsert.highestBidding*1e18,5*1e17,Math.round(AreaInsert.startTime.getTime()/1000), Math.round(AreaInsert.endTime.getTime()/1000));
        callContractMethod(founderInfo,areaGameContractAddr,gasEstimate+100,0,networkId,AddPosData);
        Meteor.setTimeout(
@@ -115,4 +115,4 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       }
   })
 
-   // Meteor.apply("AdminAddArea",[AreaInsert]);
+   Meteor.apply("AdminAddArea",[AreaInsert]);

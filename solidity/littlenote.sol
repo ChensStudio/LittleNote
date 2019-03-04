@@ -675,8 +675,6 @@
 
         function InArea(string pos_id,uint256 lat, uint256 lng) public returns (bool) {
            (lat0,lng0,lat1,lng1) = AreaGameContract.getPosRange(pos_id);
-           lat -= 360*1e15;
-           lng -= 360*1e15;
            if(lat0 < lat && lat < lat1 && lng0 < lng && lng < lng1 ){
             return true;
            }
@@ -767,17 +765,19 @@
         function getPrice(bool freeFlag, bool newFlag, uint256 grid10, bool mediaFlag) public view returns (uint256) {
             uint256 count = notesCountByGrid10[grid10];
 
-            // if (newFlag) {
-            //     if (count == 0) {
-            //         if (freeFlag) {
-            //             return 0;
-            //         } else {
-            //             return MinPrice;
-            //         }
-            //     } else {
-            //         count++;
-            //     }
-            // } else {
+            if (newFlag) {
+                if (count == 0) {
+                    if (freeFlag) {
+                        return 0;
+                    } else {
+                        return MinPrice;
+                    }
+                }
+                //  else {
+                //     count++;
+                // }
+            } 
+            // else {
             //     if (count == 0) {
             //         count++;
             //     }

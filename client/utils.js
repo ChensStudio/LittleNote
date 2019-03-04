@@ -92,7 +92,7 @@ export const getPrice = function(grid10, selfFlag, freeFlag) {
         } 
     }
 
-    var price = Math.floor(0.05 * Math.pow(1.35, count-1) * 100 + 0.5)/100;
+    var price = Math.ceil(0.05 * Math.pow(1.3, count-1) * 100)/100;
     return price;
 }
 

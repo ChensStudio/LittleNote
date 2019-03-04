@@ -1,5 +1,5 @@
 import {Notes} from '../imports/api/notes/notes.js';
-
+import {Accounts} from '../imports/api/accounts/accounts.js';
 Meteor.subscribe('notes');
 Meteor.subscribe('accounts');
 
@@ -67,7 +67,16 @@ export const countDownFormat = function(end){
 
 export const getPrice = function(grid10, selfFlag, freeFlag) {
     var count = Notes.find({"grid10": grid10}).count();
+    var thisAccount = Accounts.findOne({address:Session.get("gUserAddress")});
+    var accountNotes = 0;
+    if(thisAccount){
+         accountNotes = thisAccount.noteCounts;
+    }
+    // console.log(count,accountNotes);
     // console.log("getPrice count", count, "grid10", grid10);
+    if(count > 0 || accountNotes >= 10) {
+        freeFlag = false;
+    }
 
     if (selfFlag) {
         if (count == 0) {
@@ -76,13 +85,11 @@ export const getPrice = function(grid10, selfFlag, freeFlag) {
     } else {
         if (count == 0) {
             if (freeFlag) {
-                return 'FREE';
-            } else {
                 return 0;
+            } else {
+                return 0.5;
             }
-        } else {
-            count++;
-        }
+        } 
     }
 
     var price = Math.floor(0.05 * Math.pow(1.35, count-1) * 100 + 0.5)/100;
@@ -110,25 +117,24 @@ var limitLat = function(lat) {
 }
 
 export const getGrid = function(latlng) {
-    var lat = limitLat(latlng.lat);
-    var lng = limitLng(latlng.lng);
-    var latGrid = Math.floor((lat + 360) * 100) + '';
-    var lngGrid = Math.floor((lng + 360) * 100) + '';
+    // var lat = limitLat(latlng.lat);
+    // var lng = limitLng(latlng.lng);
+    var latGrid = Math.floor(latlng.lat*100)*1000000;
+    var lngGrid =Math.floor(latlng.lng*100);
     return latGrid + lngGrid;
 }
 
 export const getGrid10 = function(latlng) {
-    var lat = limitLat(latlng.lat);
-    var lng = limitLng(latlng.lng);
-    var latGrid = Math.floor((lat + 360) * 10) + '';
-    var lngGrid = Math.floor((lng + 360) * 10) + '';
-    return latGrid + lngGrid;
+    // var lat = limitLat(latlng.lat);
+    // var lng = limitLng(latlng.lng);
+    var latGrid = Math.floor(latlng.lat*10)*100000;
+    var lngGrid = Math.floor(latlng.lng*10);
+    return latGrid + lngGrid + '';
 }
 
 export const getLatLng4 = function(latlng) {
-  var lat4 = Math.floor(latlng.lat * 10000 + 0.5) / 10000;
-  var lng4 = Math.floor(latlng.lng * 10000 + 0.5) / 10000;
-
+  var lat4 = (latlng.lat + 360);
+  var lng4 = (latlng.lng  + 360);
   return {lat: lat4, lng: lng4};
 }
 

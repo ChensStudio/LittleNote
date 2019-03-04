@@ -89,6 +89,7 @@ var monitorUserAddress = function() {
     }
     var accountInterval = setInterval(function() {
       if (chain3js.mc.accounts[0] !== gUserAddress) {
+        map.closePopup();
         if (gSetGame == true){
           gSetGame = false;
           Template.map.exitSetGame();
@@ -289,18 +290,20 @@ var isFromChina = function(callback) {
 }
 
 var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
+
   var latlng4 = getLatLng4(latlng);
   var grid = getGrid(latlng4);
   var grid10 = getGrid10(latlng4);
+  console.log("to create note latlng",latlng,latlng4,grid10);
   var forSell = true;
   var areaHolder = Session.get("AreaAdmin");
   console.log(areaHolder);
   var moacInserts = {
     areaid:areaHolder.areaid,
     address: gUserAddress,
-    latlng: latlng4,
-    lat: latlng4.lat,
-    lng: latlng4.lng,
+    latlng: latlng,
+    lat: latlng.lat,
+    lng: latlng.lng,
     grid: grid,
     grid10: grid10,
     noteText: noteText,
@@ -314,7 +317,7 @@ var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
   console.log("moaciserts",moacInserts);
   var mongoInserts = {
     address: gUserAddress,
-    latlng: latlng4,
+    latlng: latlng,
     grid: grid,
     grid10: grid10,
     noteText: noteText,
@@ -408,12 +411,16 @@ Template.map.rendered = function() {
 
 
   var updateTooltip = function(evt) {
-    var grid10 = getGrid10(evt.latlng);
+
+    var latlng4 = getLatLng4(evt.latlng);
+    var grid10 = getGrid10(latlng4);
     // console.log('updateTooltip');
     var price = getPrice(grid10, false, true);
-    if (price != 'FREE') {
+    if (price != 0) {
       price += ' ' + TAPi18n.__("app.Unit");
     }
+
+
     else{
       price = TAPi18n.__("app.Free");
     }
@@ -446,8 +453,9 @@ Template.map.rendered = function() {
           toCreateNote(latlng, noteText);
         })
       } else {
-        var grid10 = getGrid10(latlng);
-        var price = getPrice(grid10,false, false)
+       var latlng4 = getLatLng4(latlng);
+       var grid10 = getGrid10(latlng4);
+       var price = getPrice(grid10, false, true);
         toCreateNote(latlng, noteText,price);
       }
     });
@@ -512,9 +520,10 @@ this.autorun(function(){
     }
 
     var coordinates = displayCoordinates(event.latlng);
-    var grid10 = getGrid10(event.latlng);
+    var latlng4 = getLatLng4(event.latlng);
+    var grid10 = getGrid10(latlng4);
     var price = getPrice(grid10, false, true);
-    if (price != 'FREE') {
+    if (price != 0) {
       price += ' MOAC';
     }
 

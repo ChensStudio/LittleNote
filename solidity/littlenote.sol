@@ -431,7 +431,7 @@
         bool public anybodyAddOtherUser;
         uint256 public MaxUserNameLength = 20;
         uint256 public MaxNoteLength = 128;
-        uint256 public MaxFreeNoteCount = 1;
+        uint256 public MaxFreeNoteCount = 10;
 
         uint256 public MinPrice = 5 * 10 ** 16;
         uint256 public MaxPrice = 4 * 10 ** 29;
@@ -767,21 +767,21 @@
         function getPrice(bool freeFlag, bool newFlag, uint256 grid10, bool mediaFlag) public view returns (uint256) {
             uint256 count = notesCountByGrid10[grid10];
 
-            if (newFlag) {
-                if (count == 0) {
-                    if (freeFlag) {
-                        return 0;
-                    } else {
-                        return MinPrice;
-                    }
-                } else {
-                    count++;
-                }
-            } else {
-                if (count == 0) {
-                    count++;
-                }
-            }
+            // if (newFlag) {
+            //     if (count == 0) {
+            //         if (freeFlag) {
+            //             return 0;
+            //         } else {
+            //             return MinPrice;
+            //         }
+            //     } else {
+            //         count++;
+            //     }
+            // } else {
+            //     if (count == 0) {
+            //         count++;
+            //     }
+            // }
 
             uint256 price = 0;
             if (count <= MaxPresetPricePower && PriceTable.length > count) {

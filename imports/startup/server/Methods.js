@@ -115,4 +115,10 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       }
   })
 
-   // Meteor.apply("AdminAddArea",[AreaInsert]);
+    if(bounds[0].lat < bounds[1].lat && bounds[0].lng < boungs[1].lng){
+        // Meteor.apply("AdminAddArea",[AreaInsert]);
+    }
+    else {
+      console.log("incorrect area cooridinate format");
+    }
+        

@@ -490,6 +490,11 @@
   }
 
   @media screen and (max-width: 1610px) {
+
+    .slideOption { 
+    margin-left: 80%;
+    }
+
     .timeprice {
      display: flex;
      margin-left: 10px;
@@ -1029,6 +1034,7 @@
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
     pointer-events: none;
+    max-width: 400px;
 }
 .info h4 {
     margin: 0 0 5px;
@@ -1036,6 +1042,7 @@
 
 .AreaInfoContent {
   font: 12px/20px "Gill Sans", sans-serif;
+  
 }
 
 .tooltip {

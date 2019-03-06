@@ -121,6 +121,7 @@ Template.notesbody.helpers({
         var query = Notes.find({}, sortOption);
         var notes = query.fetch();
         notes.forEach(function(n) {
+            // console.log(n.createdAt.getDate());
             var q = {address: n.address};
             var account = Accounts.find(q).fetch();
             n.displayDate = dateFormat(n.updatedAt);

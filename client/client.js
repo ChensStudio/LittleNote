@@ -592,7 +592,7 @@ this.autorun(function(){
             answers:[],
             // answerCost:answerCost,
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*4)
+            endTime:new Date(new Date().getTime() + 1000*60*10)
            }
 
           MoacConnect.AddGame(
@@ -761,6 +761,27 @@ this.autorun(function(){
   })
 
 });
+
+map.on('mousemove', function(event) {
+    if (overlap === true){
+    if(error_marker){
+      map.removeLayer(error_marker);
+    }
+    if (circle_move){
+      map.removeLayer(circle_move);
+     }
+      circle_move = L.circle([event.latlng.lat,event.latlng.lng],
+      {color:'#929292',
+      fillColor:'#929292',
+      fillOpacity:0.5,
+      weight:0.1,
+      radius:rad,
+      color:'red',
+      fillColor:'red'}).addTo(map);
+
+      circle_move.bringToBack();
+    }
+  })
   // add clustermarkers
   var markers = L.markerClusterGroup(/*{maxClusterRadius:80}*/);
   map.addLayer(markers);

@@ -10,7 +10,11 @@
 		"BtnHottest": "最热",
 		"BtnBidding":"正在竞拍",
 		"BtnOwnedAsset":"我的地产",
-		"BuyNoteMessage": "购买此贴士位置的价格"
+		"BuyNoteMessage": "购买此贴士位置的价格",
+		"Close":"关闭",
+		"Notes":"贴士",
+		"AreaInfo":"区域信息",
+		"OngoingGame":"进行中游戏"
 	},
 	"notice":{
 		"main_l1": "永久保存您的笔录到墨客区块链上.",

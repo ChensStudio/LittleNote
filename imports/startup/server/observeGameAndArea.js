@@ -18,7 +18,6 @@ console.log(new Date().getHours());
 filter.watch(Meteor.bindEnvironment(function(e,r){
   if(!e){
      console.log(RandomCount,r);
-
      if(new Date().getHours() == 19 && done == true) {
         Jackpotlogger.info("Trigger countdown for distribute");
         done = false;

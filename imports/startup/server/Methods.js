@@ -11,13 +11,13 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:72.08342,lng:-10},{lat:72.5125,lng:-8}];
+var bounds = [{lat:29.420460341013158,lng:121.2495803833008},{lat:30.240086360983426,lng:121.9966506958008}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
   bounds:bounds,
-  nickname:"Wuhu",
-  description:"University",
+  nickname:"上海市",
+  description:".96亿元，增长8.7%。第三产业增加值占上海市生产总值的比重为69.9%，比上年提高0.7个百分点。",
   highestBidding:2.5,
   history:[],
   startTime:new Date(),

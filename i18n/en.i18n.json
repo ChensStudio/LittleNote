@@ -13,7 +13,10 @@
 		"BtnBidding":"Bidding",
 		"BtnOwnedAsset":"My Area",
 		"BuyNoteMessage": "Buy this Note for",
-		"Close":"Close"
+		"Close":"Close",
+		"Notes":"Notes",
+		"AreaInfo":"Area Info",
+		"OngoingGame":"Ongoing Game"
 	},
 	"notice":{
 		"main_l1": "Post your note permanently on MOAC Blockchain.",

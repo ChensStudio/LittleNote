@@ -49,9 +49,9 @@
 
 <template name='slideOption'>
 <div class="slideOption">
-  <span class="slideNote btn btn-default {{slideOption 'notesbody'}}" >Notes</span>
-  <span class="slideBidding btn btn-default {{slideOption 'areainfobody'}}">Area Info</span>
-  <span class="slideGame btn btn-default {{slideOption 'gamebody'}}">Ongoing Game</span>
+  <span class="slideNote btn btn-default {{slideOption 'notesbody'}}" > {{_ "app.Notes"}}</span>
+  <span class="slideBidding btn btn-default {{slideOption 'areainfobody'}}">{{_ "app.AreaInfo"}}</span>
+  <span class="slideGame btn btn-default {{slideOption 'gamebody'}}">{{_ "app.OngoingGame"}}</span>
 </div>
 </template>
 
@@ -78,8 +78,6 @@
   <hr>
   <div class="notice">
           {{_ "notice.main_l1"}}
-          <br>
-          {{_ "notice.main_l2"}}
   </div>
     
 </template>

@@ -663,9 +663,13 @@ this.autorun(function(){
       
      var noteText = $('.notetobeposted').val();
      var userName = $('.username').val();
-     
-      // alert(noteText);
+      if (!noteText){
+       alert("notetext",noteText);
+        alert("You must write Something");
+      }
+     else{
       createNoteModal(popup, event.latlng, noteText, userName);
+     }
       
     });
 
@@ -886,7 +890,7 @@ game.observe({
 var areas = Areas.find({});
 areas.observe({
   added: function(document){
-     map.removeLayer(uncharted);
+     if(uncharted){map.removeLayer(uncharted);}
      if(allAreas){ map.removeLayer(allAreas);}
      OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
      Session.set("unchartedArea",OpenedAreaData);
@@ -913,7 +917,7 @@ areas.observe({
   },
   changed:function(document){
     console.log(document);
-    map.removeLayer(allAreas);
+    if(allAreas){map.removeLayer(allAreas);}
     _.each(AreaInfo.features,(Info)=>{
       if(Info.properties.id == document._id){
          //HOW TO AVIOD "CHANGED" EVENT FIRE MORE THAN ONCE?

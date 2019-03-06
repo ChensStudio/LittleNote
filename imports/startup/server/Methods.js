@@ -11,13 +11,13 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:29.420460341013158,lng:121.2495803833008},{lat:30.240086360983426,lng:121.9966506958008}];
+var bounds = [{lat:0.420460341013158,lng:121.2495803833008},{lat:1.240086360983426,lng:121.9966506958008}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
   bounds:bounds,
-  nickname:"上海市",
-  description:".96亿元，增长8.7%。第三产业增加值占上海市生产总值的比重为69.9%，比上年提高0.7个百分点。",
+  nickname:"测试",
+  description:"测试。",
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
@@ -115,4 +115,4 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       }
   })
 
-   Meteor.apply("AdminAddArea",[AreaInsert]);
+   // Meteor.apply("AdminAddArea",[AreaInsert]);

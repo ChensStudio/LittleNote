@@ -27,6 +27,7 @@ var notesLoaded = false;
 var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
+var StartView = [null,null]
 
 var poly_center = [null,null];
 var uncharted;
@@ -53,6 +54,19 @@ Meteor.subscribe('accounts', function(){
   accountsLoaded = true; 
   monitorUserAddress();
 });
+ Meteor.subscribe('areas',function(){
+    console.log('areas subscribed');
+   var latestArea = Areas.find({},{sort:{endTime:-1},limit:1}).fetch();
+   console.log(latestArea);
+   var x = (latestArea[0].bounds[0].lat + latestArea[0].bounds[1].lat)/2;
+   var y = (latestArea[0].bounds[0].lng + latestArea[0].bounds[1].lng)/2;
+   StartView = [x,y];
+   if(map){
+    map.setView(StartView,8);
+   }
+  });
+
+
 
 var tooltip;
 var error_marker;
@@ -371,23 +385,23 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
           return;
         }
         else{
-           Session.set("loadContent","Deploying your note to chain, please wait");
-           $('div.loaderBack').show();
-          var AddNoteEvent = gContractInstance.AddNoteEvent(function(error,result){
-            if(!error){
-               $('div.loaderBack').hide();
-               createNoteInDatabase(mongoInserts, function(err, _id) {
+           // Session.set("loadContent","Deploying your note to chain, please wait");
+           // $('div.loaderBack').show();
+            createNoteInDatabase(mongoInserts, function(err, _id) {
                   console.log('createNoteInDatabase called', mongoInserts, err, _id);
                   if (err) {
                    console.log('createNoteInDatabase err', err);
-                  return;
+                   return;
                   }
                   });
-               AddNoteEvent.stopWatching();
-               map.closePopup();
-            }
-          })
-           
+          // var AddNoteEvent = gContractInstance.AddNoteEvent(function(error,result){
+          //   if(!error){
+          //      $('div.loaderBack').hide();
+              
+          //      AddNoteEvent.stopWatching();
+          //      map.closePopup();
+          //   }
+          // })
         }
         //TODO: update onChainFlag
       });
@@ -401,15 +415,17 @@ var createNoteInDatabase = function(mongoInserts, callback) {
 }
 
 Template.map.rendered = function() {
-  var setPosition =  function(position) {
-    currLongitude = position.coords.longitude;
-    currLatitude = position.coords.latitude;
-    if (map) {
-      map.setView([currLatitude, currLongitude], 15);
-    }
-  }
+  // var setPosition =  function(position) {
+  //   currLongitude = position.coords.longitude;
+  //   currLatitude = position.coords.latitude;
+  //   if (map) {
+  //     map.setView([currLatitude, currLongitude], 15);
+  //   }
+  // }
 
+ 
 
+  
   var updateTooltip = function(evt) {
 
     var latlng4 = getLatLng4(evt.latlng);
@@ -466,12 +482,13 @@ Template.map.rendered = function() {
     doubleClickZoom: true,
     worldCopyJump: true
   }).setView([49.25044, -123.137], 15);
-
+ // console.log(Areas.find({},{sort:{endTime:-1},limit:1}).fetch());
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     minZoom: 2,
     maxZoom: 19
   }).addTo(map);
  $(".leaflet-container").css("cursor","pointer");
+ 
  map.setMaxBounds([[-200,-200],[200,200]]);
  info.addTo(map);
 
@@ -481,7 +498,7 @@ Template.map.rendered = function() {
             enableHighAccuracy: true
   }}));
 
-  navigator.geolocation.getCurrentPosition(setPosition);
+  // navigator.geolocation.getCurrentPosition(setPosition);
 
   var popup = L.popup();
   var container = L.DomUtil.create('div','popup_container');
@@ -684,6 +701,7 @@ this.autorun(function(){
               $('.creatediv').fadeOut(500);
               $('.creatediv').children().fadeOut(500);
               $('#post').fadeIn(500);
+              map.closePopup();
             }
           
         });
@@ -848,7 +866,7 @@ map.on('mousemove', function(event) {
 var game = games.find();
 game.observe({
   added: function(document){
-    console.log(document);  
+    // console.log(document);  
     var myIcon = L.icon({
         iconUrl:'question.png',
         iconSize: [15, 15],
@@ -888,13 +906,14 @@ game.observe({
 };
 
 var areas = Areas.find({});
+
 areas.observe({
   added: function(document){
      if(uncharted){map.removeLayer(uncharted);}
      if(allAreas){ map.removeLayer(allAreas);}
      OpenedAreaData.geometry.coordinates.push(openedArea(document.bounds));
      Session.set("unchartedArea",OpenedAreaData);
-     console.log(openedArea(document.bounds))
+     // console.log(openedArea(document.bounds))
 
      var AreaObj =  {
         "type":"Feature",
@@ -910,7 +929,7 @@ areas.observe({
           openedArea(document.bounds)
         ]
         }};
-        console.log(AreaObj);
+        // console.log(AreaObj);
       AreaInfo.features.push(AreaObj);
       Session.set("AreaInfo",AreaInfo);  
 

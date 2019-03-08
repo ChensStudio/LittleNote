@@ -11,17 +11,17 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:0.420460341013158,lng:121.2495803833008},{lat:1.240086360983426,lng:121.9966506958008}];
+var bounds = [{lat:30.59536556558809,lng:121.15456581115724},{lat:31.438037173124464,lng:122.02797889709474}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
   bounds:bounds,
-  nickname:"测试",
-  description:"测试。",
+  nickname:"上海",
+  description:"2018年，全年上海口岸货物进出口总额85317.0亿元，比上年增长7.7%。其中，进口36403.1亿元，增长8.8%;出口48913.9亿元，增长6.9%。全年上海关区货物进出口总额64064.29亿元，比上年增长7.3%。其中，进口26965.19亿元，增长9.2%;出口37099.10亿元，增长6.0%。",
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*5)
+  endTime:new Date(new Date().getTime() + 1000*60*60*24)
 }
 
 function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){
@@ -115,8 +115,8 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       }
   })
 
-    if(bounds[0].lat < bounds[1].lat && bounds[0].lng < boungs[1].lng){
-        // Meteor.apply("AdminAddArea",[AreaInsert]);
+    if(bounds[0].lat < bounds[1].lat && bounds[0].lng < bounds[1].lng){
+        Meteor.apply("AdminAddArea",[AreaInsert]);
     }
     else {
       console.log("incorrect area cooridinate format");

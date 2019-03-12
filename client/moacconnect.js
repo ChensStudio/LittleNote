@@ -117,6 +117,27 @@ export var AddNote = function(inserts, callback) {
   )
 }
 
+export var BuyNote = function(noteText, note_id, area_owner,price,callback){
+  var opt =  {
+    from: chain3js.mc.accounts[0],
+    gas: 5000000,
+    value: price*1e18,
+    gasPrice: 20000000000,
+  };
+
+  gContractInstance.BuyNote.sendTransaction(
+    noteText,
+    note_id, 
+    area_owner,
+    opt,
+    function(e,c){
+      if(callback){
+        callback(e,c);
+      }
+    }
+  )
+}
+
 export var HelpAddNote = function(inserts, callback) {
   //TODO: add helper api to create notes for the user.
   var opt =  {
@@ -250,6 +271,10 @@ export var GetAccount = function(userAddress, callback) {
 
 export var GetNote = function(_id, callback) {
   return gContractInstance.getNote(_id, callback);
+}
+
+export var GetPurchasePrice = function(note_id,callback){
+  return gContractInstance.GetPurchasePrice(note_id,callback);
 }
 
 export var GetJackpot = function(callback) {

@@ -435,7 +435,6 @@
 
         uint256 public MinPrice = 5 * 10 ** 16;
         uint256 public MaxPrice = 4 * 10 ** 29;
-        uint256 public ratio = 130;
         uint256 public MaxPresetPricePower = 100;
 
         uint256[] public PriceTable;
@@ -661,6 +660,9 @@
             notes[_id].forSell = forSell;
             notes[_id].referral = referral;
             notes[_id].mediaFlag = mediaFlag;
+            if(!freeFlag){ notes[_id].purchasePrice = msg.value/10*13;}
+            else{ notes[_id].purchasePrice = MinPrice;}
+           
             notes[_id].createdAt = now;
             lastPurchaseTime = now;
             notesCountByGrid10[grid10]++;
@@ -673,6 +675,10 @@
             AddNoteEvent(_id);
         }
 
+        function GetPurchasePrice(string note_id) external view returns(uint256){
+            return notes[note_id].purchasePrice;
+        }
+
         function InArea(string pos_id,uint256 lat, uint256 lng) public returns (bool) {
            (lat0,lng0,lat1,lng1) = AreaGameContract.getPosRange(pos_id);
            if(lat0 < lat && lat < lat1 && lng0 < lng && lng < lng1 ){
@@ -683,36 +689,18 @@
            }
         }
 
-        function BuyNote(string noteText, uint256 lat, uint256 lng, string _id, bool forSell, address referral, bool mediaFlag) public payable {
-            if (notes[_id].createdAt == 0 || !notes[_id].forSell || accounts[msg.sender].userAddress == 0 || bytes(noteText).length > MaxNoteLength) {
+        function BuyNote(string noteText,string _id,address areaOwner) public payable {
+            if (notes[_id].createdAt == 0 || !notes[_id].forSell || bytes(noteText).length > MaxNoteLength) {
                 revert();
             }
-            uint256 grid10 = getGrid10(lat, lng);
-            bool freeFlag = true;
-            if (notesCountByGrid10[grid10] > 0 || accounts[msg.sender].noteNumber > MaxFreeNoteCount) {
-                freeFlag = false;
-            }
-            bool newFlag = false;
-            uint256 price = getPrice(freeFlag, newFlag, grid10, mediaFlag);
-            if (!freeFlag && msg.value < price) {
-                revert();
-            } else {
-                distributePayment(referral, grid10, notes[_id].userAddress, notes[_id].purchasePrice);
-            }
-            uint256 grid = getGrid(lat, lng);
-            notes[_id]._id = _id;
+         
+            distributePayment(areaOwner, notes[_id].userAddress, msg.value);
+            
             notes[_id].userAddress = msg.sender;
             notes[_id].note = noteText;
-            notes[_id].lat = lat;
-            notes[_id].lng = lng;
-            notes[_id].grid = grid;
-            notes[_id].grid10 = grid10;
-            notes[_id].referral = referral;
-            notes[_id].forSell = forSell;
-            notes[_id].mediaFlag = mediaFlag;
+            notes[_id].purchasePrice = notes[_id].purchasePrice/10*13;
             notes[_id].createdAt = now;
             lastPurchaseTime = now;
-            potNotesId.push(_id);
             notesArrayByTime.push(lastPurchaseTime);
         }
 
@@ -883,49 +871,49 @@
             return availableMoney;
         }
 
-        function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public payable returns (uint256) {
-            //1) 20% patron bonus
-            // 1.1) 20% to patrons in this grid10
-            if (notesIdByGrid10[grid10].length != 0 ) {
-                uint256 grid10TotalPatronBonus = totalMoney * 20 / 100;
-                uint256 grid10Len = notesIdByGrid10[grid10].length;
-                uint256 grid10Bonus = grid10TotalPatronBonus / grid10Len;
-                for (uint256 i=0; i<grid10Len; i++) {
-                    string _id = notesIdByGrid10[grid10][i];
+        // function gridPatronDistribution(uint256 totalMoney, uint256 availableMoney, uint256 grid10) public payable returns (uint256) {
+        //     //1) 20% patron bonus
+        //     // 1.1) 20% to patrons in this grid10
+        //     if (notesIdByGrid10[grid10].length != 0 ) {
+        //         uint256 grid10TotalPatronBonus = totalMoney * 20 / 100;
+        //         uint256 grid10Len = notesIdByGrid10[grid10].length;
+        //         uint256 grid10Bonus = grid10TotalPatronBonus / grid10Len;
+        //         for (uint256 i=0; i<grid10Len; i++) {
+        //             string _id = notesIdByGrid10[grid10][i];
 
-                    if (availableMoney < grid10Bonus) {
-                        grid10Bonus = availableMoney;
-                    }
-                    availableMoney -= grid10Bonus;
-                    if (notes[_id].userAddress != 0) {
-                        notes[_id].userAddress.transfer(grid10Bonus);
-                    }
-                }
-            }
+        //             if (availableMoney < grid10Bonus) {
+        //                 grid10Bonus = availableMoney;
+        //             }
+        //             availableMoney -= grid10Bonus;
+        //             if (notes[_id].userAddress != 0) {
+        //                 notes[_id].userAddress.transfer(grid10Bonus);
+        //             }
+        //         }
+        //     }
 
-            return availableMoney;
-        }
+        //     return availableMoney;
+        // }
 
-        function allPatronDistribution(uint256 totalMoney, uint256 availableMoney) public payable returns (uint256) {
-            // 1.2) 20% to all patrons
-            if (notesArray.length != 0) {
-                uint256 allPatronBonus = totalMoney * 20 / 100;
-                uint256 arrayLen = notesArray.length;
-                uint256 patronBonus = allPatronBonus / arrayLen;
-                for (uint256 i=0; i<arrayLen; i++) {
-                    // noteId = notesArray[i];
-                    if (availableMoney < patronBonus) {
-                        patronBonus = availableMoney;
-                    }
-                    availableMoney -= patronBonus;
-                    notes[notesArray[i]].userAddress.transfer(patronBonus);
-                }
-            }
+        // function allPatronDistribution(uint256 totalMoney, uint256 availableMoney) public payable returns (uint256) {
+        //     // 1.2) 20% to all patrons
+        //     if (notesArray.length != 0) {
+        //         uint256 allPatronBonus = totalMoney * 20 / 100;
+        //         uint256 arrayLen = notesArray.length;
+        //         uint256 patronBonus = allPatronBonus / arrayLen;
+        //         for (uint256 i=0; i<arrayLen; i++) {
+        //             // noteId = notesArray[i];
+        //             if (availableMoney < patronBonus) {
+        //                 patronBonus = availableMoney;
+        //             }
+        //             availableMoney -= patronBonus;
+        //             notes[notesArray[i]].userAddress.transfer(patronBonus);
+        //         }
+        //     }
 
-            return availableMoney;
-        }
+        //     return availableMoney;
+        // }
 
-        function updatePotReserves(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+        function updatePotReserves(uint256 totalMoney, uint256 availableMoney) private returns (uint256) {
             // 2) 20% last note pot
             uint256 addition= totalMoney * 20 / 100;
             potReserve += addition;
@@ -936,20 +924,28 @@
             return availableMoney;
         }
 
-        
+        // function distributeReferral(uint256 totalMoney, uint256 availableMoney, address referral) public payable returns (uint256) {
+        //     // 3） 8% referral 
+        //     uint256 referralReward = totalMoney * 8 / 100;
+        //     if (availableMoney < referralReward) {
+        //         referralReward = availableMoney;
+        //     }
+        //     availableMoney -= referralReward;
+        //     referral.transfer(referralReward);
+        //     return availableMoney;
+        // }
 
-        function distributeReferral(uint256 totalMoney, uint256 availableMoney, address referral) public payable returns (uint256) {
-            // 3） 8% referral 
-            uint256 referralReward = totalMoney * 8 / 100;
-            if (availableMoney < referralReward) {
-                referralReward = availableMoney;
+        function distributeOwner(uint256 totalMoney,uint256 availableMoney,address areaOwner)  private returns (uint256){
+            uint256 ownerShare = totalMoney*48/100;
+            if (availableMoney < ownerShare) {
+                ownerShare = availableMoney;
             }
-            availableMoney -= referralReward;
-            referral.transfer(referralReward);
+            availableMoney -= ownerShare;
+            areaOwner.transfer(ownerShare);
             return availableMoney;
         }
 
-        function devTeamDistribution(uint256 totalMoney, uint256 availableMoney) public returns (uint256) {
+        function devTeamDistribution(uint256 totalMoney, uint256 availableMoney) private returns (uint256) {
             // 4） 15% developer team
             uint256 developerShare = totalMoney * 15 / 100;
             if (availableMoney < developerShare) {
@@ -960,7 +956,7 @@
             return availableMoney;
         }
 
-        function investorDistribution(uint256 totalMoney, uint256 availableMoney) public payable returns (uint256) {
+        function investorDistribution(uint256 totalMoney, uint256 availableMoney) private returns (uint256) {
             // 5） 8% investors
             if (totalInvestment == 0) {
                 return availableMoney;
@@ -987,25 +983,27 @@
             return 0;
         }
 
-        function distributePayment(address referral, uint256 grid10, address seller, uint256 sellerCost) public payable {
+        function distributePayment(address areaOwner, address seller, uint256 sellerCost) public payable {
             uint256 totalMoney = msg.value;
             uint256 availableMoney = totalMoney;
 
             //0) Seller will retain the purchasing cost and receive 75% of the profit
             availableMoney = sellerDistribution(totalMoney, availableMoney, sellerCost, seller);
 
-            //1) 40% patron bonus
+            //1) 48% patron bonus
+            //area owner
+            availableMoney = distributeOwner(totalMoney,availableMoney,areaOwner);
             // 1.1) 20% to patrons in this grid10
-            availableMoney = gridPatronDistribution(totalMoney, availableMoney, grid10);
+            // availableMoney = gridPatronDistribution(totalMoney, availableMoney, grid10);
 
             // 1.2) 20% to all patrons
-            availableMoney = allPatronDistribution(totalMoney, availableMoney);
+            // availableMoney = allPatronDistribution(totalMoney, availableMoney);
 
             // 2) 20% last note pot
             availableMoney = updatePotReserves(totalMoney, availableMoney);
 
             // 3） 8% referral reward
-            availableMoney = distributeReferral(totalMoney, availableMoney, referral);
+            // availableMoney = distributeReferral(totalMoney, availableMoney, referral);
 
             // 4） 15% developer team
             availableMoney = devTeamDistribution(totalMoney, availableMoney);

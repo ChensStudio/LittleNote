@@ -4,6 +4,7 @@ import {Accounts} from '../../../imports/api/accounts/accounts.js';
 import {dateFormat, getPrice} from '../../utils.js';
 import MoacConnect from '../../moacconnect.js';
 import { type } from 'os';
+import {SellNote} from '../../../imports/api/notes/methods.js';
 
 var notesLoaded = false;
 var accountsLoaded = false;
@@ -129,10 +130,8 @@ Template.notesbody.helpers({
                 n.name = account[0].name;
             }
             console.log("getnotes from views");
-            n.price = getPrice(n.grid10, true)
-            if (n.forSell) {
-                n.forSellInfo = n.price;
-            }
+            
+            
             n.latlng.lat = n.latlng.lat.toFixed(5);
             n.latlng.lng = n.latlng.lng.toFixed(5);
         });
@@ -204,6 +203,13 @@ Template.notesbody.events({
         TemplateVar.set(template, 'hottestViewClick', true);
     },
 });
+
+Template.note.onRendered(function(){
+   var template =this;
+   MoacConnect.GetPurchasePrice(this.data._id,function(e,r){
+            TemplateVar.set(template,"PriceTag", Math.ceil(r.toNumber()/1e16)/100);
+            })
+})
 
 Template.note.helpers({
     'localTime': function(inputDate){
@@ -375,5 +381,41 @@ Template.slideOption.events({
     },
     'click .slideGame'(){
         Session.set('slideOption',"gamebody");
+    }
+})
+
+Template.EditNoteModal.onCreated(function(){
+    console.log(this);
+})
+
+Template.EditNoteModal.events({
+    'click .BuyNote'(){
+        let template = Template.instance();
+        let note = template.data.note;
+        let NewNoteText = $("#NewNotes").val();
+        console.log(NewNoteText);
+        if(!NewNoteText){
+            alert("New note cannot be empty");
+            return;
+        }
+        let confirmed = confirm("Are you sure to buy this note with " + template.data.price + " MOAC?");
+        if(confirmed){
+            MoacConnect.GetNote(note._id,function(e,r){
+                if(!e){
+                    let price = Math.ceil(r[8].toNumber()/1e16)/100;
+                    console.log(typeof r[9]);
+                    MoacConnect.BuyNote(NewNoteText, note._id, r[9],price,function(e,r){
+                     if(!e){
+                        $(".modal").hide();
+                        $(".modal-backdrop").hide();
+                        SellNote.call({noteId:note._id, address:note.address, NewNoteText:NewNoteText});
+                     }
+                })
+                }
+            })       
+        }
+        else {
+            return;
+        }
     }
 })

@@ -115,12 +115,12 @@ Template.area.events({
   			// console.log('yourbid',yourbid)
     		var confirmed = confirm("Are you sure to bid with " + yourbid+ " MOAC?");
     		if (confirmed == true){
-    				if(yourbid < this.highestBidding + 0.5){
+    			if(yourbid < this.highestBidding + 0.5){
  				alert("Bid price must add 0.5MOAC on base price")
- 			}
- 			else if (yourbid > balance){
+ 				}
+ 				else if (yourbid > balance){
  				alert("Not enough MOAC in your account")
- 			}
+ 				}
  			else{
  				var bid_id = Random.id(17);
  				console.log('bid_id',bid_id);

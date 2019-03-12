@@ -1,5 +1,5 @@
 export const httpProvider = 'http://gateway.moac.io/testnet';
-export const littleNoteContractAddr = '0x0f19730e9884d9771db6c75d3702a8628fe5ebb4';
+export const littleNoteContractAddr = '0xab032d25fd2ef9423f2e9b7c334f0225a751e983';
 export const littleNoteContractAbi = [
 	{
 		"constant": false,
@@ -70,55 +70,16 @@ export const littleNoteContractAbi = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "allPatronDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
 				"name": "noteText",
 				"type": "string"
-			},
-			{
-				"name": "lat",
-				"type": "uint256"
-			},
-			{
-				"name": "lng",
-				"type": "uint256"
 			},
 			{
 				"name": "_id",
 				"type": "string"
 			},
 			{
-				"name": "forSell",
-				"type": "bool"
-			},
-			{
-				"name": "referral",
+				"name": "areaOwner",
 				"type": "address"
-			},
-			{
-				"name": "mediaFlag",
-				"type": "bool"
 			}
 		],
 		"name": "BuyNote",
@@ -131,35 +92,8 @@ export const littleNoteContractAbi = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "devTeamDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "referral",
+				"name": "areaOwner",
 				"type": "address"
-			},
-			{
-				"name": "grid10",
-				"type": "uint256"
 			},
 			{
 				"name": "seller",
@@ -172,33 +106,6 @@ export const littleNoteContractAbi = [
 		],
 		"name": "distributePayment",
 		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "referral",
-				"type": "address"
-			}
-		],
-		"name": "distributeReferral",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"payable": true,
 		"stateMutability": "payable",
 		"type": "function"
@@ -256,33 +163,6 @@ export const littleNoteContractAbi = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "grid10",
-				"type": "uint256"
-			}
-		],
-		"name": "gridPatronDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
 				"name": "pos_id",
 				"type": "string"
 			},
@@ -320,29 +200,6 @@ export const littleNoteContractAbi = [
 		"inputs": [],
 		"name": "Invest",
 		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "investorDistribution",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"payable": true,
 		"stateMutability": "payable",
 		"type": "function"
@@ -525,29 +382,6 @@ export const littleNoteContractAbi = [
 		],
 		"name": "ToggleSell",
 		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "totalMoney",
-				"type": "uint256"
-			},
-			{
-				"name": "availableMoney",
-				"type": "uint256"
-			}
-		],
-		"name": "updatePotReserves",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -996,6 +830,25 @@ export const littleNoteContractAbi = [
 	},
 	{
 		"constant": true,
+		"inputs": [
+			{
+				"name": "note_id",
+				"type": "string"
+			}
+		],
+		"name": "GetPurchasePrice",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [],
 		"name": "haltFlag",
 		"outputs": [
@@ -1377,7 +1230,7 @@ export const littleNoteContractAbi = [
 ];
 // export const areaGameContractAddr = '0x4e3506a73C2fEE70d28286392868B85a5D690664';
 // export const areaGameContractAbi = [{"constant":false,"inputs":[{"name":"gameId","type":"string"},{"name":"noteId","type":"string"}],"name":"AddGameNote","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"},{"name":"lat0","type":"uint256"},{"name":"lng0","type":"uint256"},{"name":"lat1","type":"uint256"},{"name":"lng1","type":"uint256"}],"name":"AddPosRange","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"gamesArray","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"},{"name":"nickname","type":"string"},{"name":"description","type":"string"},{"name":"_admin","type":"address"},{"name":"_startBidding","type":"uint256"},{"name":"_increaseAmount","type":"uint256"},{"name":"_startTime","type":"uint256"},{"name":"_endTime","type":"uint256"}],"name":"AddArea","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"SafetySendout","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"haltFlag","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"string"}],"name":"RefundBid","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"},{"name":"parentAreaId","type":"string"},{"name":"nickname","type":"string"},{"name":"description","type":"string"},{"name":"_admin","type":"address"},{"name":"startTime","type":"uint256"},{"name":"endTime","type":"uint256"},{"name":"question","type":"string"}],"name":"AddGame","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"founder","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"areaId","type":"string"}],"name":"TriggerAreaAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newAdmin","type":"address"}],"name":"SetAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"bidHistoryArray","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"gameId","type":"string"},{"name":"posRangeId","type":"string"}],"name":"SetGamePosRange","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"gameId","type":"string"}],"name":"GetGameNoteLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"}],"name":"AddMoneyToArea","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"gameId","type":"string"}],"name":"GetGame","outputs":[{"components":[{"name":"_id","type":"string"},{"name":"parentAreaId","type":"string"},{"name":"nickname","type":"string"},{"name":"description","type":"string"},{"name":"balance","type":"uint256"},{"name":"startTime","type":"uint256"},{"name":"endTime","type":"uint256"},{"name":"enabled","type":"uint256"},{"name":"question","type":"string"},{"name":"admin","type":"address"},{"name":"proposing","type":"uint256"},{"name":"activeFlag","type":"uint256"},{"name":"updatedAt","type":"uint256"},{"name":"posRangeId","type":"string"}],"name":"","type":"tuple"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"areaId","type":"string"},{"name":"posRangeId","type":"string"}],"name":"SetAreaPosRange","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newFounder","type":"address"}],"name":"SetFounder","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"},{"name":"to","type":"address"}],"name":"ManualTransfer","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"gameId","type":"string"},{"name":"i","type":"uint256"}],"name":"GetGameNote","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"halt","type":"bool"}],"name":"SetHalt","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"areasArray","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"},{"name":"activeFlag","type":"uint256"}],"name":"ActivateArea","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"string"},{"name":"areaId","type":"string"}],"name":"AddBid","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"}],"name":"GetArea","outputs":[{"components":[{"name":"uid","type":"string"},{"name":"activeFlag","type":"uint256"},{"name":"nickname","type":"string"},{"name":"description","type":"string"},{"name":"admin","type":"address"},{"name":"highestBidding","type":"uint256"},{"name":"increaseAmount","type":"uint256"},{"name":"startTime","type":"uint256"},{"name":"endTime","type":"uint256"},{"name":"updatedAt","type":"uint256"},{"name":"balance","type":"uint256"},{"name":"highBidId","type":"string"},{"name":"posRangeId","type":"string"}],"name":"","type":"tuple"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"posRangesArray","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"admin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"uid","type":"string"},{"name":"activeFlag","type":"uint256"}],"name":"ActivateGame","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_founder","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}];
-export const areaGameContractAddr = "0x1353a6c34aea4a097249865f6714180f65e56be7";
+export const areaGameContractAddr = "0x7b732fc153d2ed511ba39ee96b9e1e6d055f9234";
 export const areaGameContractAbi =[
 	{
 		"constant": false,

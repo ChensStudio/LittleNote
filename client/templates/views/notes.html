@@ -13,7 +13,7 @@
             <div>
                 <span class="notecoordinates" data-lat={{latlng.lat}} data-lng={{latlng.lng}} data-noteid={{_id}}>{{_ "app.Lat"}}{{latlng.lat}}   {{_ "app.Lng"}}{{latlng.lng}}</span>
                 {{#if forSell}}
-                    <span class="forsell">{{_ "app.Price"}}{{forSellInfo}} {{_ "app.Unit"}}</span>
+                    <span class="forsell">{{_ "app.Price"}}{{TemplateVar.get "PriceTag"}} {{_ "app.Unit"}}</span>
                 {{else}}
                     <div class="notforsell">{{notenotforsell}}</div>
                 {{/if}}
@@ -67,6 +67,27 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{_ "app.Close"}}</button>
+                </div>
+            </div>
+        </div>
+    </div>   
+</template>
+
+<template name="EditNoteModal">
+    <div class="modal fade" style="color:black;margin-top:100px" align="center" >
+         <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header" style="text-align: left">
+                    <h4 class="modal-title" style="font-family: impact">You will buy this note with {{price}} MOAC</h4>
+                </div>
+
+                <div class="modal-body">
+                     <textarea autofocus placeholder="Input your new note ... " id="NewNotes"></textarea>
+                </div>
+
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-default BuyNote">Buy</button>
                 </div>
             </div>
         </div>

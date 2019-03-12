@@ -52,6 +52,27 @@ export const insert = new ValidatedMethod({
     },
 });
 
+export const SellNote = new ValidatedMethod({
+    name: 'notes.SellNote',
+    validate: new SimpleSchema({
+        noteId: Notes.simpleSchema().schema('_id'),
+        address: Notes.simpleSchema().schema('address'),
+        NewNoteText: Notes.simpleSchema().schema('note'),
+    }).validator({ clean: true, filter: false }),
+    run({ noteId, address,NewNoteText }) {
+    const note = Notes.findOne(noteId);
+    Notes.update(noteId, {
+        $set: { 
+            note:NewNoteText,
+            address:address,
+            updatedAt: new Date(),
+        },
+    });
+    console.log(note);
+  },
+});
+
+
 export const updateAddress = new ValidatedMethod({
     name: 'notes.updateAddress',
     validate: new SimpleSchema({

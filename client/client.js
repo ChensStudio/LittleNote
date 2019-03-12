@@ -9,7 +9,8 @@ import MoacConnect from './moacconnect.js';
 import { Random } from 'meteor/random';
 import {insertquestion,latestAnswer} from '../imports/api/questions/methods.js';
 import {Questions} from '../imports/api/questions/questions.js';
-import {Areas} from  '../imports/api/areas/areas.js'
+import {Areas} from  '../imports/api/areas/areas.js';
+
 
 // import {encode, decode} from 'rlp';
 import { OpenedAreaData } from './OpenedAreaData';
@@ -964,7 +965,7 @@ areas.observe({
 
 Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   var n = Notes.find({_id: noteid}).fetch();
-  var note;
+  var note,price;
   if (n.length > 0) {
     note = n[0];
     var accounts = Accounts.find({address: note.address}).fetch();
@@ -975,33 +976,42 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
   var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext" style="word-wrap:break-word">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat.toFixed(4) + '   lng: ' + note.latlng.lng.toFixed(4) + '</span>';
   if (note.forSell) {
-    console.log("note forsell")
-    var price = getPrice(note.grid10, true);
-    // console.log("popup price", price);
-    content += '<br><br><span class="popupforsell">Buy this note for' + price + ' MOAC</span>';
-  }
-  content +='</div></div>';
-  if (zoomFlag) {
-    map.flyTo([lat, lng], 16,{duration:2});
-  } else {
-    map.setView([lat, lng]);
-  }
-  if (noteid) {
-    var popup = L.popup();
-    popup
-      .setLatLng({lat:lat, lng:lng})
-      .setContent(content)
-      .openOn(map);
-    console.log("popup", popup);
-    L.DomEvent.on(popup._container, 'mousemove', function(e) {
+    MoacConnect.GetPurchasePrice(noteid,function(e,r){
+      if(!e){
+         price = Math.ceil(r.toNumber()/1e16)/100;
+         content += '<br><br><span class="popupforsell">Buy this note for ' + price + ' MOAC</span>';
+          content +='</div></div>';
+      if (zoomFlag) {
+         map.flyTo([lat, lng], 16,{duration:2});
+      } else {
+         map.setView([lat, lng]);
+      }
+      if (noteid) {
+         var popup = L.popup();
+          popup
+          .setLatLng({lat:lat, lng:lng})
+          .setContent(content)
+         .openOn(map);
+        console.log("popup", popup);
+        $(".popupforsell").click(function(){
+       Modal.show('EditNoteModal',{note:n[0],price:price});
+         })
+          L.DomEvent.on(popup._container, 'mousemove', function(e) {
       // console.log("mousemove popup._container");
-      e.preventDefault();
-      e.stopPropagation();
-      if (tooltip) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (tooltip) {
         tooltip.hide();
       }
-    })
+      })
+    }
+      }
+    });
+    
+    // console.log("popup price", price);
+    
   }
+ 
 }
 
 var BidArea;

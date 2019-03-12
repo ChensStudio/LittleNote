@@ -20,7 +20,7 @@ done
 if test ${target} != "exit"
 then
     meteor build --architecture os.linux.x86_64  ../build/LittleNote
-    scp -i /Users/ychen/innowells/pem/moacdappwallet.pem ../build/LittleNote/LittleNote.tar.gz ${target}
+    scp -i /Users/weiqiwang/Documents/PEM/LittleNote.pem ../build/LittleNote/LittleNote.tar.gz ${target}
 fi
 
 echo ${message}

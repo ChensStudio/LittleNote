@@ -115,10 +115,10 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       }
   })
 
-    if(bounds[0].lat < bounds[1].lat && bounds[0].lng < bounds[1].lng){
-        Meteor.apply("AdminAddArea",[AreaInsert]);
-    }
-    else {
-      console.log("incorrect area cooridinate format");
-    }
+    // if(bounds[0].lat < bounds[1].lat && bounds[0].lng < bounds[1].lng){
+    //     Meteor.apply("AdminAddArea",[AreaInsert]);
+    // }
+    // else {
+    //   console.log("incorrect area cooridinate format");
+    // }
         

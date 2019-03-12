@@ -120,6 +120,10 @@ Template.answerModal.helpers({
 Template.answerModal.events({
 	'click #submitAnswer'(){
 		var content = $('#answerArea').val();
+		if(!content){
+			alert("Answer cannot be empty");
+			return;
+		}
 		var answerId = Random.id(17);
 		var questionId = this.questionId;
 		var template = Template.instance();
@@ -144,19 +148,18 @@ Template.answerModal.events({
     //                 addAnswerEvent.stopWatching();
     //                 alert("Timeout, Please try again later")
     //               },1000*60*3);
-
-				Session.set("loadContent","Deploying your answer to chain, please wait");
-				$('div.loaderBack').show();
+    			latestAnswer.call(answers);
+				// Session.set("loadContent","Deploying your answer to chain, please wait");
+				// $('div.loaderBack').show();
                 var addAnswerEvent = gAreaGameContractInstance.addAnswerEvent(function(error,result){
                   if(error){
                     console.log("error on write area info to chain:",error);
                    }
                   else{
                     console.log("Answer insert with id:",result.args);
-                    $('div.loaderBack').hide();
+                    // $('div.loaderBack').hide();
  					console.log("addAnswer");
-                    latestAnswer.call(answers);
-                     MoacConnect.getGameBalance(questionId,function(e,r){
+                    MoacConnect.getGameBalance(questionId,function(e,r){
 					TemplateVar.set(template,"Reward",r/1e18.toFixed(3));
     				});
                     addAnswerEvent.stopWatching();

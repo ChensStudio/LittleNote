@@ -556,7 +556,7 @@ this.autorun(function(){
     '</p><p style="margin:6px auto">Your permanent note for ' + price + '</p><hr class="divider" style="margin-bottom:5px; margin-top:15px;transition: all 0.8s ease 0s;"></div>';
     var body = '<div style="margin-top:1px">' + createUserDiv + 
     '<textarea class="notetobeposted" type="text" style="margin-left:5%" maxlength="128" rows="4" cols="40" placeholder="type your note here....."></textarea><span id="signature">' + userNameDiv + '</span></div>';
-    var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="post" >post</button><button id="getqr" value="QR">QR</button></span></div>';
+    var footer = '<hr class="divider" style="margin-top:5px;margin-bottom:15px"><div style="display:flex"><span style="margin:0 auto"><button id="post" >post</button></span></div>'; //<button id="getqr" value="QR">QR</button>
      
     container.innerHTML = header + body + footer;
     // var canvas = $('#cvs')[0];
@@ -609,7 +609,7 @@ this.autorun(function(){
             answers:[],
             // answerCost:answerCost,
             startTime:new Date(),
-            endTime:new Date(new Date().getTime() + 1000*60*10)
+            endTime:new Date(new Date().getTime() + 1000*60*60*48)
            }
 
           MoacConnect.AddGame(
@@ -686,6 +686,7 @@ this.autorun(function(){
       }
      else{
       createNoteModal(popup, event.latlng, noteText, userName);
+      map.closePopup();
      }
       
     });
@@ -867,10 +868,15 @@ var game = games.find();
 game.observe({
   added: function(document){
     // console.log(document);  
-    var myIcon = L.icon({
+    var ongoingIco = L.icon({
         iconUrl:'question.png',
         iconSize: [15, 15],
+        });
+    var expIco = L.icon({
+        iconUrl:'questionExp.png',
+        iconSize: [15, 15],
         })
+    var showIco;
 
       circle_drop = L.circle(document.latlng,
            {color:'#13EDDB',
@@ -885,9 +891,15 @@ game.observe({
 
       circle_drop.on('mouseout',function(event){
         overlap = false;
-      })    
+      })  
+
     // console.log("add game distribute:",document.distributed);
-    L.marker(document.latlng,{icon: myIcon}).addTo(map)
+    if (document.endTime > new Date()){
+      showIco = ongoingIco;
+    }else{
+      showIco = expIco;
+    }
+    L.marker(document.latlng,{icon: showIco}).addTo(map)
     .bindPopup(document.noteText)
     .on('click', function(event) {
           Modal.show('answerModal',{
@@ -966,7 +978,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
     console.log("note forsell")
     var price = getPrice(note.grid10, true);
     // console.log("popup price", price);
-    content += '<br><br><span class="popupforsell">Buy this Note for ' + price + ' MOAC</span>';
+    content += '<br><br><span class="popupforsell">Buy this note for' + price + ' MOAC</span>';
   }
   content +='</div></div>';
   if (zoomFlag) {

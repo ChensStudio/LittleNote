@@ -406,8 +406,6 @@ Template.EditNoteModal.events({
                     console.log(typeof r[9]);
                     MoacConnect.BuyNote(NewNoteText, note._id, r[9],price,function(e,r){
                      if(!e){
-                        $(".modal").hide();
-                        $(".modal-backdrop").hide();
                         SellNote.call({noteId:note._id, address:note.address, NewNoteText:NewNoteText});
                      }
                 })

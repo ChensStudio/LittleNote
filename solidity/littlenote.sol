@@ -693,8 +693,12 @@
             if (notes[_id].createdAt == 0 || !notes[_id].forSell || bytes(noteText).length > MaxNoteLength) {
                 revert();
             }
+
+            if(msg.value < notes[_id].purchasePrice){
+                revert();
+            }
          
-            distributePayment(areaOwner, notes[_id].userAddress, msg.value);
+            distributePayment(areaOwner, notes[_id].userAddress, notes[_id].purchasePrice);
             
             notes[_id].userAddress = msg.sender;
             notes[_id].note = noteText;

@@ -111,6 +111,9 @@ Notes.schema = new SimpleSchema({
     max: 128,
     optional: false,
   },
+  purchasePrice:{
+    type:Number
+  },
   forSell:{
     type: Boolean,
     // default: false,
@@ -139,6 +142,7 @@ Notes.publicFields = {
     grid: 1,
     grid10: 1,
     note: 1,
+    purchasePrice:1,
     forSell: 1,
     onChainFlag: 1,
     createdAt: 1,

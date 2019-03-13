@@ -30,11 +30,15 @@ export const insert = new ValidatedMethod({
         noteText: {   //onchain
           type: String,
         },
+        purchasePrice:{
+         type: Number, 
+         decimal: true
+        },
         forSell:{
           type: Boolean,
         },
     }).validator(),
-    run({_id,address, latlng, grid, grid10, noteText, forSell}) {
+    run({_id,address, latlng, grid, grid10, noteText, purchasePrice,forSell}) {
         const note={
             _id:_id,
             address: address,
@@ -42,6 +46,7 @@ export const insert = new ValidatedMethod({
             grid: grid,
             grid10: grid10,
             note: noteText,
+            purchasePrice:purchasePrice,
             forSell: forSell,
             onChainFlag: false,
             createdAt: new Date(),
@@ -61,9 +66,11 @@ export const SellNote = new ValidatedMethod({
     }).validator({ clean: true, filter: false }),
     run({ noteId, address,NewNoteText }) {
     const note = Notes.findOne(noteId);
+    var purchasePrice = note.purchasePrice;
     Notes.update(noteId, {
         $set: { 
             note:NewNoteText,
+            purchasePrice:purchasePrice*1.3,
             address:address,
             updatedAt: new Date(),
         },
@@ -133,7 +140,6 @@ export const setOnChainFlag = new ValidatedMethod({
     }).validator({ clean: true, filter: false }),
     run({ noteId, onChainFlag }) {
         const note = Notes.findOne(noteId);
-
         if (!note.editableBy(this.address)) {
             throw new Meteor.Error('notes.updateForSell.accessDenied',
                 'You don\'t have permission to edit this note.');

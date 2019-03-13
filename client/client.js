@@ -28,7 +28,7 @@ var notesLoaded = false;
 var accountsLoaded = false;
 var overlap = false;
 var rad = 50;
-var StartView = [null,null]
+var StartView = [null,null];
 
 var poly_center = [null,null];
 var uncharted;
@@ -330,12 +330,14 @@ var toCreateNote = function(latlng, noteText, priceLimit, freeFlag) {
     referral: areaHolder.admin
   };
   console.log("moaciserts",moacInserts);
+  priceLimit = priceLimit == 0? 0.05 : priceLimit*1.3;
   var mongoInserts = {
     address: gUserAddress,
     latlng: latlng,
     grid: grid,
     grid10: grid10,
     noteText: noteText,
+    purchasePrice: priceLimit,
     forSell: forSell
   }
 
@@ -850,6 +852,44 @@ map.on('mousemove', function(event) {
 
       markers.addLayer(marker);
     },
+    changed:function(document){
+      layers = map._layers;
+      var key, val;
+      for (key in layers) {
+        val = layers[key];
+        if (val._latlng) {
+        if (val._latlng.lat === document.latlng.lat && val._latlng.lng === document.latlng.lng) {
+             markers.removeLayer(val);
+             circle_drop = L.circle(document.latlng,
+           {color:'#13EDDB',
+            fillColor:'#13EDDB',
+            fillOpacity:0.5,
+            weight:0.1,
+            radius:rad}).addTo(map);
+            circle_drop.bringToFront();
+
+      circle_drop.on('mouseover',function(event){
+            overlap = true;
+       })      
+
+      circle_drop.on('mouseout',function(event){
+        overlap = false;
+      })    
+      var marker = L.marker(document.latlng, {
+        icon: new L.DivIcon({
+            className: 'marker-tooltip',
+            html: '<div class="markertooltip"><div class="markertooltip-tip-container"><div class="markertooltip-tip"></div></div><div class="markertooltip-inner">' + document.note + '</div></div>'
+        })})
+        .on('click', function(event) {
+          Template.map.moveto(document.latlng.lat, document.latlng.lng, document._id);
+          // Markers.remove({_id: document._id});
+        });
+
+        map.addLayer(marker);
+        }
+        }
+      }
+    },
     removed: function (oldDocument) {
       layers = map._layers;
       var key, val;
@@ -976,9 +1016,8 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
   }
   var content = '<div class="notevalue"><div><span class="notelink"><a href="https://google.com"><i class="fas fa-link"></i></a></span><span class="noteuser"> ' + note.name + '  </span><span class="notetime">' + note.displayDate + '</span></div><div class="popupnoteaccount">' + note.address + '</div><hr class="divider"><div class="popupnotetext" style="word-wrap:break-word">' + note.note + '</div><hr class="divider"><div><span class="notecoordinates">lat: ' + note.latlng.lat.toFixed(4) + '   lng: ' + note.latlng.lng.toFixed(4) + '</span>';
   if (note.forSell) {
-    MoacConnect.GetPurchasePrice(noteid,function(e,r){
-      if(!e){
-         price = Math.ceil(r.toNumber()/1e16)/100;
+         console.log(note);
+         price = Math.ceil(note.purchasePrice*100)/100;
          content += '<br><br><span class="popupforsell">Buy this note for ' + price + ' MOAC</span>';
           content +='</div></div>';
       if (zoomFlag) {
@@ -994,7 +1033,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
          .openOn(map);
         console.log("popup", popup);
         $(".popupforsell").click(function(){
-       Modal.show('EditNoteModal',{note:n[0],price:price});
+            Modal.show('EditNoteModal',{note:n[0],price:price});
          })
           L.DomEvent.on(popup._container, 'mousemove', function(e) {
       // console.log("mousemove popup._container");
@@ -1005,8 +1044,7 @@ Template.map.moveto = function(lat, lng, noteid, zoomFlag) {
       }
       })
     }
-      }
-    });
+      
     
     // console.log("popup price", price);
     

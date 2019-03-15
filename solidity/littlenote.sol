@@ -435,6 +435,7 @@
 
         uint256 public MinPrice = 5 * 10 ** 16;
         uint256 public MaxPrice = 4 * 10 ** 29;
+        uint256 public ratio = 130;
         uint256 public MaxPresetPricePower = 100;
 
         uint256[] public PriceTable;

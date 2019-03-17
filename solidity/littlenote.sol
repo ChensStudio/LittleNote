@@ -918,13 +918,13 @@
         //     return availableMoney;
         // }
 
-        function updatePotReserves(uint256 totalMoney, uint256 availableMoney) private returns (uint256) {
+        function updatePotReserves(uint256 availableMoney) private returns (uint256) {
             // 2) 20% last note pot
-            uint256 addition= totalMoney * 20 / 100;
-            potReserve += addition;
-            if (availableMoney > addition) {
-                addition = availableMoney;
+            uint256 addition= availableMoney * 20 / 100;
+            if(addition > msg.value){
+                addition = msg.value;
             }
+            potReserve += addition;
             availableMoney -= addition;
             return availableMoney;
         }
@@ -940,33 +940,33 @@
         //     return availableMoney;
         // }
 
-        function distributeOwner(uint256 totalMoney,uint256 availableMoney,address areaOwner)  private returns (uint256){
-            uint256 ownerShare = totalMoney*48/100;
-            if (availableMoney < ownerShare) {
-                ownerShare = availableMoney;
+        function distributeOwner(uint256 availableMoney,address areaOwner)  private returns (uint256){
+            uint256 ownerShare = availableMoney*48/100;
+            if(ownerShare > msg.value){
+                ownerShare = msg.value;
             }
             availableMoney -= ownerShare;
             areaOwner.transfer(ownerShare);
             return availableMoney;
         }
 
-        function devTeamDistribution(uint256 totalMoney, uint256 availableMoney) private returns (uint256) {
+        function devTeamDistribution(uint256 availableMoney) private returns (uint256) {
             // 4） 15% developer team
-            uint256 developerShare = totalMoney * 15 / 100;
-            if (availableMoney < developerShare) {
-                developerShare = availableMoney;
+            uint256 developerShare = availableMoney * 15 / 100;
+            if(developerShare > msg.value){
+                developerShare = msg.value;
             }
             availableMoney -= developerShare;
             developerAmount += developerShare;
             return availableMoney;
         }
 
-        function investorDistribution(uint256 totalMoney, uint256 availableMoney) private returns (uint256) {
+        function investorDistribution(uint256 availableMoney) private returns (uint256) {
             // 5） 8% investors
             if (totalInvestment == 0) {
                 return availableMoney;
             }
-            uint256 investorShare = totalMoney * 8 / 100;
+            uint256 investorShare = availableMoney * 8 / 100;
 
             uint256 uintShare = investorShare / totalInvestment;
             uint256 len = investorsArray.length; 
@@ -997,7 +997,7 @@
 
             //1) 48% patron bonus
             //area owner
-            availableMoney = distributeOwner(totalMoney,availableMoney,areaOwner);
+            availableMoney = distributeOwner(availableMoney,areaOwner);
             // 1.1) 20% to patrons in this grid10
             // availableMoney = gridPatronDistribution(totalMoney, availableMoney, grid10);
 
@@ -1005,16 +1005,16 @@
             // availableMoney = allPatronDistribution(totalMoney, availableMoney);
 
             // 2) 20% last note pot
-            availableMoney = updatePotReserves(totalMoney, availableMoney);
+            availableMoney = updatePotReserves(availableMoney);
 
             // 3） 8% referral reward
             // availableMoney = distributeReferral(totalMoney, availableMoney, referral);
 
             // 4） 15% developer team
-            availableMoney = devTeamDistribution(totalMoney, availableMoney);
+            availableMoney = devTeamDistribution(availableMoney);
 
             // 5） 8% investors
-            availableMoney = investorDistribution(totalMoney, availableMoney);
+            availableMoney = investorDistribution(availableMoney);
 
             // 6） 9% other fees and charity
             availableMoney = feesAndCharityReserve(availableMoney);

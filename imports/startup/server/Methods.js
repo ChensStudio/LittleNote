@@ -21,7 +21,7 @@ var AreaInsert = {
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*60*24)
+  endTime:new Date(new Date().getTime() + 1000*60*60*36)
 }
 
 function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){

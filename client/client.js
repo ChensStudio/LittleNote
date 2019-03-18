@@ -388,23 +388,23 @@ var createNote = function(byMyselfFlag, moacInserts, mongoInserts) {
           return;
         }
         else{
-           // Session.set("loadContent","Deploying your note to chain, please wait");
-           // $('div.loaderBack').show();
-            createNoteInDatabase(mongoInserts, function(err, _id) {
+           Session.set("loadContent","Deploying your note to chain, please wait");
+           $('div.loaderBack').show();
+            
+          var AddNoteEvent = gContractInstance.AddNoteEvent(function(error,result){
+            if(!error){
+               $('div.loaderBack').hide();
+               createNoteInDatabase(mongoInserts, function(err, _id) {
                   console.log('createNoteInDatabase called', mongoInserts, err, _id);
                   if (err) {
                    console.log('createNoteInDatabase err', err);
                    return;
                   }
                   });
-          // var AddNoteEvent = gContractInstance.AddNoteEvent(function(error,result){
-          //   if(!error){
-          //      $('div.loaderBack').hide();
-              
-          //      AddNoteEvent.stopWatching();
-          //      map.closePopup();
-          //   }
-          // })
+               AddNoteEvent.stopWatching();
+               map.closePopup();
+            }
+          })
         }
         //TODO: update onChainFlag
       });
@@ -1092,6 +1092,10 @@ Template.map.exitSetGame = function(){
   if (BidArea){
     map.removeLayer(BidArea);
   }
+}
+
+Template.map.closePopup = function(){
+     map.closePopup();
 }
 
 // Template.map.rerenderUncharted = function(){

@@ -11,7 +11,7 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:30.59536556558809,lng:121.15456581115724},{lat:31.438037173124464,lng:122.02797889709474}];
+var bounds = [{lat:29.59536556558809,lng:121.15456581115724},{lat:30.438037173124464,lng:122.02797889709474}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",

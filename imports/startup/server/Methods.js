@@ -11,7 +11,7 @@ var founderInfo = {
 };
 var gasEstimate = 4000000;
 
-var bounds = [{lat:29.59536556558809,lng:121.15456581115724},{lat:30.438037173124464,lng:122.02797889709474}];
+var bounds = [{lat:1.59536556558809,lng:121.15456581115724},{lat:2.438037173124464,lng:122.02797889709474}];
 var AreaInsert = {
   _id:"Area_id",
   admin:"0x2cb3f047211d7b6c63c8ce51d1ffe7d4a34ff143",
@@ -21,7 +21,7 @@ var AreaInsert = {
   highestBidding:2.5,
   history:[],
   startTime:new Date(),
-  endTime:new Date(new Date().getTime() + 1000*60*60*36)
+  endTime:new Date(new Date().getTime() + 1000*60*2)
 }
 
 function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, inByteCode,callback){
@@ -73,7 +73,6 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
        console.log('position ID:',Pos_id);
        console.log('area ID:',Area_id);
        AreaInsert._id = Area_id;
-     
        console.log(AreaInsert);
        let AddPosData = contractInstance.AddPosRange.getData(Pos_id,AreaInsert.bounds[0].lat*1e15 + 360*1e15,AreaInsert.bounds[0].lng*1e15 + 360*1e15,AreaInsert.bounds[1].lat*1e15 + 360*1e15,AreaInsert.bounds[1].lng*1e15 + 360*1e15);
        let AddAreaData = contractInstance.AddArea.getData(AreaInsert._id, AreaInsert.nickname,AreaInsert.description,founderAddr,Pos_id,AreaInsert.highestBidding*1e18,5*1e17,Math.round(AreaInsert.startTime.getTime()/1000), Math.round(AreaInsert.endTime.getTime()/1000));
@@ -115,10 +114,10 @@ function callContractMethod(src, contractAddress, gasValue, MsgValue,inchainID, 
       }
   })
 
-    // if(bounds[0].lat < bounds[1].lat && bounds[0].lng < bounds[1].lng){
-    //     Meteor.apply("AdminAddArea",[AreaInsert]);
-    // }
-    // else {
-    //   console.log("incorrect area cooridinate format");
-    // }
-    //     
+    if(bounds[0].lat < bounds[1].lat && bounds[0].lng < bounds[1].lng){
+        Meteor.apply("AdminAddArea",[AreaInsert]);
+    }
+    else {
+      console.log("incorrect area cooridinate format");
+    }
+        
